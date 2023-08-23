@@ -6,37 +6,34 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 
 @Data
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
 @Builder
 @Entity
+
+@Table(name = "books")
 public class Book {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
-    @Column(nullable = false)
+    private Long bookId;
     private String title;
-
-    @Column(nullable = false)
     private String author;
-
-    @Column(nullable = false)
-    private String booksGenre;
-
-    private Double bookSize;
-
-    private Double bookWeight;
-
-    private Integer pagesNumber;
-
-    private Integer yearOfProduction;
-
-    @Column(length = 1000)
     private String description;
-
+    @ManyToOne
+    @JoinColumn(name = "category_id")
+    private Category category;
+    private String language;
+    private Integer pages;
+    private LocalDate publisherDate;
+    private String cover;
+    @ManyToOne
+    @JoinColumn(name = "owner")
+    private User owner;
+    private LocalDate dateCreate;
+    private String state;
 
 }
