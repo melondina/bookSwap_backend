@@ -20,18 +20,18 @@ import javax.validation.Valid;
         @Tag(name = "Registration")
 )
 public interface RegistrationApi {
-
-    @Operation(summary = "Create a user", description = "Available to everyone")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "201", description = "User is created",
-                    content = {
-                            @Content(mediaType = "application/json", schema = @Schema(implementation = UserDto.class))
-                    }),
-            @ApiResponse(responseCode = "400", description = "Validation error",
-                    content = {
-                            @Content(mediaType = "application/json", schema = @Schema(implementation = ValidationErrorsDto.class))
-                    })
-    })
-    @PostMapping
-    ResponseEntity<UserDto> register(@RequestBody @Valid RegisterDto registerData);
+//
+//    @Operation(summary = "Create a user", description = "Available to everyone")
+//    @ApiResponses(value = {
+//            @ApiResponse(responseCode = "201", description = "User is created",
+//                    content = {
+//                            @Content(mediaType = "application/json", schema = @Schema(implementation = UserDto.class))
+//                    }),
+//            @ApiResponse(responseCode = "400", description = "Validation error",
+//                    content = {
+//                            @Content(mediaType = "application/json", schema = @Schema(implementation = ValidationErrorsDto.class))
+//                    })
+//    })
+//    @PostMapping
+//         ResponseEntity<UserDto> register(@RequestBody @Valid RegisterDto registerData);
 }
