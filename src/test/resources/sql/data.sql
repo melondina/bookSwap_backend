@@ -1,0 +1,2 @@
+insert into users(email, password, agreement, postal_code, role, state)
+values ('test1234@user.com', '$2a$10$zQc8CZ3o0ho0stK2HETUu.LZtr0JlZ.D8jvfNZKTOxZiBs04Zq65a', 'true', '12345', 'USER', 'CONFIRMED');

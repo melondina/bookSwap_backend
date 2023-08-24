@@ -9,7 +9,7 @@ import javax.validation.constraints.*;
 @Data
 public class RegistrationDto {
 
-    @Schema(description = "Users email", example = "first.user@gmail.com")
+    @Schema(description = "User email", example = "first.user@gmail.com")
     @Email
     @NotNull
     @NotBlank

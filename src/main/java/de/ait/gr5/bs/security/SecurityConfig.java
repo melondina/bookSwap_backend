@@ -2,6 +2,9 @@ package de.ait.gr5.bs.security;
 
 import de.ait.gr5.bs.dto.StandardResponseDto;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpMethod;
@@ -21,8 +24,10 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import javax.servlet.http.HttpServletResponse;
 
 
+@RequiredArgsConstructor
 @EnableWebSecurity
-@EnableGlobalMethodSecurity(prePostEnabled = true)
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+@EnableGlobalMethodSecurity(securedEnabled = true, prePostEnabled = true, proxyTargetClass = true)
 public class SecurityConfig {
 
     @Autowired
@@ -40,6 +45,7 @@ public class SecurityConfig {
                 .antMatchers("/api/**").authenticated()
                 .and()
                 .formLogin()
+                .loginProcessingUrl("/api/login")
                 .successHandler((request, response, authentication) -> {
                     fillResponse(response, HttpStatus.OK, "Login successful");
                 })
@@ -60,6 +66,7 @@ public class SecurityConfig {
                 })
                 .and()
                 .logout()
+                .logoutUrl("/api/logout")
                 .logoutSuccessHandler((request, response, authentication) -> {
                     fillResponse(response, HttpStatus.OK, "Logout successful");
                 });
@@ -86,8 +93,9 @@ public class SecurityConfig {
     @Autowired
     public void bindUserDetailsServiceAndPasswordEncoder(
             PasswordEncoder passwordEncoder,
-            UserDetailsService authenticatedUsersService,
+            UserDetailsService userDetailsServiceImpl,
             AuthenticationManagerBuilder authenticationManager) throws Exception {
-        authenticationManager.userDetailsService(authenticatedUsersService).passwordEncoder(passwordEncoder);
+        authenticationManager.userDetailsService(userDetailsServiceImpl).passwordEncoder(passwordEncoder);
     }
+
 }

@@ -43,7 +43,7 @@ public class AuthenticatedUser implements UserDetails {
 
     @Override
     public boolean isAccountNonLocked() {
-        return !user.getState().equals(User.State.CONFIRMED);
+        return !user.getState().equals(User.State.DELETED);
     }
 
     @Override
