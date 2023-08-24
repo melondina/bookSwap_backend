@@ -17,23 +17,51 @@ import java.time.LocalDate;
 @Table(name = "books")
 public class Book {
 
+    public enum State{
+        AVAILABLE,
+        DELETED
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long bookId;
+
+    @Column(nullable = false)
     private String title;
+
+    @Column(nullable = false)
     private String author;
+
+    @Column(nullable = false)
     private String description;
+
     @ManyToOne
     @JoinColumn(name = "category_id")
+    @Column(nullable = false)
     private Category category;
+
+    @Column(nullable = false)
     private String language;
+
+    @Column(nullable = false)
     private Integer pages;
+
+    @Column(nullable = false)
     private LocalDate publisherDate;
+
+    @Column(nullable = false)
     private String cover;
+
     @ManyToOne
     @JoinColumn(name = "owner")
+    @Column(nullable = false)
     private User owner;
+
+    @Column(nullable = false)
     private LocalDate dateCreate;
-    private String state;
+
+    @Column(nullable = false)
+    @Enumerated(value = EnumType.STRING)
+    private State state;
 
 }
