@@ -37,7 +37,6 @@ public class Book {
 
     @ManyToOne
     @JoinColumn(name = "category_id")
-    @Column(nullable = false)
     private Category category;
 
     @Column(nullable = false)
@@ -53,8 +52,7 @@ public class Book {
     private String cover;
 
     @ManyToOne
-    @JoinColumn(name = "owner")
-    @Column(nullable = false)
+    @JoinColumn(name = "user_id")
     private User owner;
 
     @Column(nullable = false)

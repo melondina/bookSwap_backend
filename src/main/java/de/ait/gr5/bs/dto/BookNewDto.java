@@ -23,7 +23,7 @@ public class BookNewDto {
   @Schema(description = "Description (optional field)", example = "Drawing on her life as an indigenous scientist, and as a woman, Kimmerer shows how other living beings...")
   private String description;
 
-  @Schema(description = "Books categories", example = "Ecology, Essays, Cultural & Social")
+  @Schema(description = "Books categories ID", example = "1")
   private Long categoryId;
 
   @Schema(description = "Book language", example = "English")
@@ -38,10 +38,7 @@ public class BookNewDto {
   @Schema(description = "Book cover photo", example = "f:/db/1.jpg")
   private String cover;
 
-  @Schema(description = "Book owner", example = "User1")
+  @Schema(description = "Book owner ID", example = "1")
   private Long owner;
-
-  @Schema(description = "Date create of the book in the app, format YYYY-MM-DD", example = "2023-08-23")
-  private String dateCreate;
 
 }

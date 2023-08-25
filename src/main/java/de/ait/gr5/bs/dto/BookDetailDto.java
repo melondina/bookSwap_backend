@@ -45,8 +45,8 @@ public class BookDetailDto {
   @Schema(description = "Book cover photo", example = "f:/db/1.jpg")
   private String cover;
 
-//  @Schema(description = "Book owner", example = "User1")
-//  private UserDto owner;
+  @Schema(description = "Book owner", example = "User1")
+  private UserDto owner;
 
   @Schema(description = "Date create of the book in the app, format YYYY-MM-DD", example = "2023-08-23")
   private String dateCreate;
