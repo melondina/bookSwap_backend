@@ -1,7 +1,9 @@
 package de.ait.gr5.bs.controllers;
 
-
 import de.ait.gr5.bs.controllers.api.RegistrationApi;
+import de.ait.gr5.bs.dto.RegistrationDto;
+import de.ait.gr5.bs.dto.UserDto;
+import de.ait.gr5.bs.services.RegistrationService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -15,11 +17,12 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class RegistrationController implements RegistrationApi {
 
-//    RegistrationService registrationService;
-//
-//    @Override
-//    public ResponseEntity<UserDto> register(RegisterDto registerData) {
-//        return ResponseEntity
-//                .status(HttpStatus.CREATED)
-//                .body(registrationService.register(registerData));//   }
+    RegistrationService registrationService;
+
+    @Override
+    public ResponseEntity<UserDto> registration(RegistrationDto registerData) {
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body(registrationService.registration(registerData));
+    }
 }

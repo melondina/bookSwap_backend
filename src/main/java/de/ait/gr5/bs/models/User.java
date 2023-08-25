@@ -31,8 +31,12 @@ public class User {
     private Long userId;
     private String firstName;
     private String lastName;
+
+    @Column(nullable = false, unique = true)
     private String email;
+
     private String password;
+
     @ManyToOne
     @JoinColumn(name = "country_id")
     private Country country;
