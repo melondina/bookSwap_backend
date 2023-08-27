@@ -13,14 +13,17 @@ import java.util.List;
 @NoArgsConstructor
 @Builder
 @Entity
-
 @Table(name = "countries")
 public class Country {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
+
+  @Column(nullable = false)
   private String title;
+
   @OneToMany(mappedBy = "country")
+  @Column(nullable = false)
   private List<User> users;
 }

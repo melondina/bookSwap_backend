@@ -1,0 +1,16 @@
+### Add new book
+
+POST localhost:8080/api/books
+Content-Type: application/json
+
+{
+ "title": "Braiding Sweetgrass",
+ "author": "Robin Wall Kimmerer",
+ "description": "Drawing on her life as an indigenous scientist, and as a woman, Kimmerer shows how other living beings...",
+ "categoryId": 1,
+ "language": "English",
+ "pages": 408,
+ "publisherDate": "2015-04-11",
+ "cover": "f:/book_db/1.jpg",
+ "owner": 1
+}
