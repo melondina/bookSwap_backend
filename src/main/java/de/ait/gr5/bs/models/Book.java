@@ -13,7 +13,6 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @Builder
 @Entity
-
 @Table(name = "books")
 public class Book {
 

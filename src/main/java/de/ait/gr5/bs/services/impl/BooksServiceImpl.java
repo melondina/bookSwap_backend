@@ -1,6 +1,6 @@
 package de.ait.gr5.bs.services.impl;
 
-import de.ait.gr5.bs.dto.BookDetailDto;
+import de.ait.gr5.bs.dto.BookDto;
 import de.ait.gr5.bs.dto.BookNewDto;
 import de.ait.gr5.bs.handler.RestException;
 import de.ait.gr5.bs.models.Book;
@@ -18,7 +18,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 
-import static de.ait.gr5.bs.dto.BookDetailDto.from;
+import static de.ait.gr5.bs.dto.BookDto.from;
 
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 @RequiredArgsConstructor
@@ -32,14 +32,14 @@ public class BooksServiceImpl implements BooksService {
   CategoriesRepository categoriesRepository;
 
   @Override
-  public BookDetailDto addBook(BookNewDto newBook) {
+  public BookDto addBook(BookNewDto newBook) {
     User user = usersRepository.findById(newBook.getOwner())
         .orElseThrow(() -> new RestException(HttpStatus.NOT_FOUND,
-            "User with id<" + newBook.getOwner() + ">not found"));
+            "User with id <" + newBook.getOwner() + "> not found"));
 
     Category category = categoriesRepository.findById(newBook.getCategoryId())
         .orElseThrow(() -> new RestException(HttpStatus.NOT_FOUND,
-            "Category with id<" + newBook.getCategoryId() + ">not found"));
+            "Category with id <" + newBook.getCategoryId() + "> not found"));
 
     Book book = Book.builder()
         .title(newBook.getTitle())

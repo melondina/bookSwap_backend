@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 @Builder
 @Schema(description = "Book")
-public class BookDetailDto {
+public class BookDto {
 
   @Schema(description = "Book ID", example = "1")
   private Long bookId;
@@ -30,8 +30,8 @@ public class BookDetailDto {
   @Schema(description = "Description (optional field)", example = "Drawing on her life as an indigenous scientist, and as a woman, Kimmerer shows how other living beings...")
   private String description;
 
-  @Schema(description = "Books categories", example = "Ecology, Essays, Cultural & Social")
-  private String category;
+  @Schema(description = "Books categories", example = "Esse")
+  private CategoryDto category;
 
   @Schema(description = "Book language", example = "English")
   private String language;
@@ -54,16 +54,17 @@ public class BookDetailDto {
   @Schema(description = "State of the book - AVAILABLE, DELETED", example = "AVAILABLE")
   private String state;
 
-  public static BookDetailDto from(Book book) {
-    BookDetailDto result = BookDetailDto.builder()
+  public static BookDto from(Book book) {
+    BookDto result = BookDto.builder()
         .bookId(book.getBookId())
         .title(book.getTitle())
         .author(book.getAuthor())
         .description(book.getDescription())
-        .category(book.getCategory().getTitle())
+        .category(CategoryDto.from(book.getCategory()))
         .language(book.getLanguage())
         .pages(book.getPages())
         .cover(book.getCover())
+        .owner(UserDto.from(book.getOwner()))
         .state(book.getState().name())
         .build();
     if (book.getPublisherDate() != null) {
@@ -75,9 +76,10 @@ public class BookDetailDto {
     return result;
   }
 
-  public static List<BookDetailDto> from(Collection<Book> books) {
+  public static List<BookDto> from(Collection<Book> books) {
     return books.stream()
-        .map(BookDetailDto::from)
+        .map(BookDto::from)
         .collect(Collectors.toList());
   }
+
 }

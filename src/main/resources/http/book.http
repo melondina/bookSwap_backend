@@ -7,7 +7,7 @@ Content-Type: application/json
  "title": "Braiding Sweetgrass",
  "author": "Robin Wall Kimmerer",
  "description": "Drawing on her life as an indigenous scientist, and as a woman, Kimmerer shows how other living beings...",
- "category": 1,
+ "categoryId": 1,
  "language": "English",
  "pages": 408,
  "publisherDate": "2015-04-11",
