@@ -2,12 +2,6 @@ package de.ait.gr5.bs.handler;
 
 import org.springframework.http.HttpStatus;
 
-/**
- * 8/9/2023
- * REST API
- *
- * @author Marsel Sidikov (AIT TR)
- */
 public class RestException extends RuntimeException {
 
     private final HttpStatus httpStatus;

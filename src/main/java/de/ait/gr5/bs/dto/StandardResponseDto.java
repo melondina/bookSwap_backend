@@ -6,19 +6,13 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-/**
- * 8/16/2023
- * EducationCenter
- *
- * @author Marsel Sidikov (AIT TR)
- */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@Schema(description = "Сообщение с сервера. Ошибки и статусы")
+@Schema(description = "Message from the server. Errors and statuses")
 public class StandardResponseDto {
 
-    @Schema(description = "Текст сообщения")
+    @Schema(description = "Message text")
     private String message;
 }

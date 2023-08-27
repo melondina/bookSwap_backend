@@ -11,12 +11,6 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import java.util.List;
 import java.util.stream.Collectors;
 
-/**
- * 7/28/2023
- * REST API
- *
- * @author Marsel Sidikov (AIT TR)
- */
 @ControllerAdvice
 public class ValidationExceptionHandler {
 
