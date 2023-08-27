@@ -3,6 +3,7 @@ package de.ait.gr5.bs.controllers;
 import de.ait.gr5.bs.controllers.api.BooksApi;
 import de.ait.gr5.bs.dto.BookDto;
 import de.ait.gr5.bs.dto.BookNewDto;
+import de.ait.gr5.bs.dto.BookUpdateDto;
 import de.ait.gr5.bs.services.BooksService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -24,6 +25,14 @@ public class BooksController implements BooksApi {
     return ResponseEntity
         .status(HttpStatus.CREATED)
         .body(booksService.addBook(newBook));
+  }
+
+  //@PreAutorize("hasAuthority('USER','ADMIN'")
+  @Override
+  public ResponseEntity<BookDto> updateBook (Long bookId, BookUpdateDto updateBook){
+    return ResponseEntity
+        .status(HttpStatus.OK)
+        .body(booksService.updateBook(bookId, updateBook));
   }
 
 }
