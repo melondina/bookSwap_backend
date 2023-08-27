@@ -2,6 +2,7 @@ package de.ait.gr5.bs.services.impl;
 
 import de.ait.gr5.bs.dto.BookDto;
 import de.ait.gr5.bs.dto.BookNewDto;
+import de.ait.gr5.bs.dto.BookUpdateDto;
 import de.ait.gr5.bs.handler.RestException;
 import de.ait.gr5.bs.models.Book;
 import de.ait.gr5.bs.models.Category;
@@ -58,6 +59,42 @@ public class BooksServiceImpl implements BooksService {
     booksRepository.save(book);
 
     return from(book);
+  }
+
+
+  @Override
+  public BookDto updateBook(Long bookId, BookUpdateDto updateBook) {
+    Book book1 = booksRepository.findById(bookId)
+        .orElseThrow(() -> new RestException(HttpStatus.NOT_FOUND,
+            "Book with id <" + bookId + "> not found"));
+
+    User user = usersRepository.findById(updateBook.getOwner())
+        .orElseThrow(() -> new RestException(HttpStatus.NOT_FOUND,
+            "User with id <" + updateBook.getOwner() + "> not found"));
+
+    Category category = categoriesRepository.findById(updateBook.getCategoryId())
+        .orElseThrow(() -> new RestException(HttpStatus.NOT_FOUND,
+            "Category with id <" + updateBook.getCategoryId() + "> not found"));
+
+    Book book = getBookOrThrow(bookId);
+    book.setTitle(updateBook.getTitle());
+    book.setAuthor(updateBook.getAuthor());
+    book.setDescription(updateBook.getDescription());
+    book.setCategory(category);
+    book.setLanguage(updateBook.getLanguage());
+    book.setPages(updateBook.getPages());
+    book.setPublisherDate(LocalDate.parse(updateBook.getPublisherDate()));
+    book.setCover(updateBook.getCover());
+    book.setOwner(user);
+    book.setDateCreate(book1.getDateCreate());
+    book.setState(book1.getState());
+    booksRepository.save(book);
+    return from(book);
+  }
+
+  private Book getBookOrThrow(Long bookId) {
+    return booksRepository.findById(bookId).orElseThrow(
+        () -> new RestException(HttpStatus.NOT_FOUND, "Book not found"));
   }
 
 }

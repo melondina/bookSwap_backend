@@ -22,7 +22,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @DisplayNameGeneration(value = DisplayNameGenerator.ReplaceUnderscores.class)
 @ActiveProfiles("test")
 public class BookIntegrationTest {
-
+// Тесты не работают так как пользователь не залогинен - как сюда этот шаг добавить не знаю
   private static final BookNewDto NEW_BOOK = BookNewDto.builder()
       .title("Braiding Sweetgrass")
       .author("Robin Wall Kimmerer")
@@ -34,6 +34,19 @@ public class BookIntegrationTest {
       .cover("f:/book_db/1.jpg")
       .owner(1L)
       .build();
+
+  private static final BookNewDto UPDATE_BOOK = BookNewDto.builder()
+      .title("Update - Braiding Sweetgrass")
+      .author("Update - Robin Wall Kimmerer")
+      .description("Update - Drawing on her life as an indigenous scientist, and as a woman, Kimmerer shows how other living beings...")
+      .categoryId(1L)
+      .language("Update - English")
+      .pages(408)
+      .publisherDate("2005-04-11")
+      .cover("f:/book_db1/1.jpg")
+      .owner(1L)
+      .build();
+
 
   @Autowired
   private MockMvc mockMvc;
@@ -68,6 +81,34 @@ public class BookIntegrationTest {
               .header("Content-Type", "application/json")
               .content(body))
           .andExpect(status().isNotFound());
+    }
+  }
+
+  @Nested
+  @DisplayName("PUT /api/books is works: ")
+  class UpdateBookTest {
+
+    @Test
+    @Sql(scripts = "/sql/data_for_books.sql")
+    @DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD)
+    public void update_exist_book_positive() throws Exception {
+
+      String body = objectMapper.writeValueAsString(NEW_BOOK);
+      String body1 = objectMapper.writeValueAsString(UPDATE_BOOK);
+
+      mockMvc.perform(post("/api/books")
+              .header("Content-Type", "application/json")
+              .content(body)
+              .content(body1))
+          .andExpect(status().isOk())
+          .andExpect(jsonPath("$.id", is(1L)))
+          .andExpect(jsonPath("$.title", is("Update - Braiding Sweetgrass")))
+          .andExpect(jsonPath("$.author", is("Update - Robin Wall Kimmerer")))
+          .andExpect(jsonPath("$.description", is("Update - Drawing on her life as an indigenous scientist, and as a woman, Kimmerer shows how other living beings...")))
+          .andExpect(jsonPath("$.language", is("Update - English")))
+          .andExpect(jsonPath("$.pages", is("4008")))
+          .andExpect(jsonPath("$.publisherDate", is("2005-04-11")))
+          .andExpect(jsonPath("$.cover", is("f:/book_db1/1.jpg")));
     }
   }
 
