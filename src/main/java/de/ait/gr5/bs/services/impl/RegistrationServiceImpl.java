@@ -37,4 +37,5 @@ public class RegistrationServiceImpl implements RegistrationService {
 
         return from(user);
     }
+
 }
