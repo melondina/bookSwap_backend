@@ -1,8 +1,6 @@
 package de.ait.gr5.bs.services.impl;
 
-import de.ait.gr5.bs.dto.BookDto;
-import de.ait.gr5.bs.dto.BookNewDto;
-import de.ait.gr5.bs.dto.BookUpdateDto;
+import de.ait.gr5.bs.dto.*;
 import de.ait.gr5.bs.handler.RestException;
 import de.ait.gr5.bs.models.Book;
 import de.ait.gr5.bs.models.Category;
@@ -10,14 +8,17 @@ import de.ait.gr5.bs.models.User;
 import de.ait.gr5.bs.repositories.BooksRepository;
 import de.ait.gr5.bs.repositories.CategoriesRepository;
 import de.ait.gr5.bs.repositories.UsersRepository;
+import de.ait.gr5.bs.security.details.SecurityService;
 import de.ait.gr5.bs.services.BooksService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.data.domain.Sort;
 
 import java.time.LocalDate;
+import java.util.List;
 
 import static de.ait.gr5.bs.dto.BookDto.from;
 
@@ -27,20 +28,17 @@ import static de.ait.gr5.bs.dto.BookDto.from;
 public class BooksServiceImpl implements BooksService {
 
   BooksRepository booksRepository;
-
   UsersRepository usersRepository;
-
   CategoriesRepository categoriesRepository;
+  private final SecurityService securityService;
+  public static final Sort SORT_BY_DATA_CREATED_DESC = Sort.by(Sort.Direction.DESC, "dateCreate");
+
 
   @Override
   public BookDto addBook(BookNewDto newBook) {
-    User user = usersRepository.findById(newBook.getOwner())
-        .orElseThrow(() -> new RestException(HttpStatus.NOT_FOUND,
-            "User with id <" + newBook.getOwner() + "> not found"));
+    User user = getUserOrElseThrow(newBook.getOwner());
 
-    Category category = categoriesRepository.findById(newBook.getCategoryId())
-        .orElseThrow(() -> new RestException(HttpStatus.NOT_FOUND,
-            "Category with id <" + newBook.getCategoryId() + "> not found"));
+    Category category = getCategoryOrElseThrow(newBook.getCategoryId());
 
     Book book = Book.builder()
         .title(newBook.getTitle())
@@ -64,17 +62,11 @@ public class BooksServiceImpl implements BooksService {
 
   @Override
   public BookDto updateBook(Long bookId, BookUpdateDto updateBook) {
-    Book book1 = booksRepository.findById(bookId)
-        .orElseThrow(() -> new RestException(HttpStatus.NOT_FOUND,
-            "Book with id <" + bookId + "> not found"));
+    Book book1 = getBookOrElseThrow(bookId);
 
-    User user = usersRepository.findById(updateBook.getOwner())
-        .orElseThrow(() -> new RestException(HttpStatus.NOT_FOUND,
-            "User with id <" + updateBook.getOwner() + "> not found"));
+    User user = getUserOrElseThrow(updateBook.getOwner());
 
-    Category category = categoriesRepository.findById(updateBook.getCategoryId())
-        .orElseThrow(() -> new RestException(HttpStatus.NOT_FOUND,
-            "Category with id <" + updateBook.getCategoryId() + "> not found"));
+    Category category = getCategoryOrElseThrow(updateBook.getCategoryId());
 
     Book book = getBookOrThrow(bookId);
     book.setTitle(updateBook.getTitle());
@@ -92,9 +84,47 @@ public class BooksServiceImpl implements BooksService {
     return from(book);
   }
 
-  private Book getBookOrThrow(Long bookId) {
+
+  @Override
+  public BooksShortDto getBooks(Long userId) {
+    List<Book> books;
+    if (userId == null) {
+      books = booksRepository.findAll(SORT_BY_DATA_CREATED_DESC);
+    } else {
+      if (!securityService.isUserAuthorized(userId)) {
+        throw new RestException(HttpStatus.FORBIDDEN, "Not have permission to access this resource");
+      } else {
+        User user = getUserOrElseThrow(userId);
+        books = booksRepository.findAllByOwner(user, SORT_BY_DATA_CREATED_DESC);
+      }
+    }
+    return BooksShortDto.from(BookShortDto.from(books));
+  }
+
+  public Category getCategoryOrElseThrow(Long categoryId) {
+    Category category = categoriesRepository.findById(categoryId)
+        .orElseThrow(() -> new RestException(HttpStatus.NOT_FOUND,
+            "Category with id <" + categoryId + "> not found"));
+    return category;
+  }
+
+  public Book getBookOrElseThrow(Long bookId) {
+    Book book1 = booksRepository.findById(bookId)
+        .orElseThrow(() -> new RestException(HttpStatus.NOT_FOUND,
+            "Book with id <" + bookId + "> not found"));
+    return book1;
+  }
+
+  public Book getBookOrThrow(Long bookId) {
     return booksRepository.findById(bookId).orElseThrow(
         () -> new RestException(HttpStatus.NOT_FOUND, "Book not found"));
+  }
+
+  public User getUserOrElseThrow(Long userId) {
+    User user = usersRepository.findById(userId)
+        .orElseThrow(() -> new RestException(HttpStatus.NOT_FOUND,
+            "User with id <" + userId + "> not found"));
+    return user;
   }
 
 }
