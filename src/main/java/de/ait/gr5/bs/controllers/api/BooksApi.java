@@ -1,9 +1,7 @@
 package de.ait.gr5.bs.controllers.api;
 
-import de.ait.gr5.bs.dto.BookDto;
-import de.ait.gr5.bs.dto.BookNewDto;
-import de.ait.gr5.bs.dto.BookUpdateDto;
-import de.ait.gr5.bs.dto.StandardResponseDto;
+import de.ait.gr5.bs.dto.*;
+import de.ait.gr5.bs.handler.RestException;
 import de.ait.gr5.bs.validation.dto.ValidationErrorsDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -19,6 +17,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @RequestMapping("api/books")
 @Tags(value =
@@ -61,6 +60,23 @@ public interface BooksApi {
   ResponseEntity<BookDto> updateBook(@Parameter(required = true, description = "Book ID", example = "1")
                                      @PathVariable("book-id") Long bookId,
                                      @RequestBody @Valid BookUpdateDto updateBook);
+
+
+  @Operation(summary = "List of books", description = "List of books with short information")
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "200", description = "List of books",
+          content = {
+              @Content(mediaType = "application/json", schema = @Schema(implementation = BooksShortDto.class))
+          }),
+      @ApiResponse(responseCode = "403", description = "Not have permission",
+          content = {
+              @Content(mediaType = "application/json", schema = @Schema(implementation = RestException.class))
+          })
+  })
+  @PreAuthorize("@securityService.isUserAuthorized(#userId) or hasAnyAuthority('USER','ADMIN')")
+  @GetMapping()
+  ResponseEntity<BooksShortDto> getBooks(@Parameter(required = false, description = "User id", example = "2")
+                                         @RequestParam(name = "user_id", required = false) Long userId);
 
 
 }
