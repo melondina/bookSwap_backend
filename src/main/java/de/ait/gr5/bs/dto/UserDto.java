@@ -31,12 +31,27 @@ public class UserDto {
     @Schema(description = "Users state - NOT_CONFIRMED, CONFIRMED, DELETED", example = "CONFIRMED")
     private String state;
 
+    @Schema(description = "Users firstname", example = "Peter")
+    private String firstName;
+
+    @Schema(description = "Users lastname", example = "Wolf")
+    private String lastName;
+
+    // country, city?
+    // private String country;
+
+    @Schema(description = "Users postal code", example = "23654")
+    private Integer postalCode;
+
     public static UserDto from(User user) {
         return UserDto.builder()
                 .id(user.getUserId())
                 .email(user.getEmail())
                 .role(user.getRole().name())
                 .state(user.getState().name())
+                .postalCode(user.getPostalCode())
+                .firstName(user.getFirstName())
+                .lastName(user.getLastName())
                 .build();
     }
 
@@ -45,4 +60,5 @@ public class UserDto {
                 .map(UserDto::from)
                 .collect(Collectors.toList());
     }
+
 }

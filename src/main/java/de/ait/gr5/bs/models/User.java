@@ -40,7 +40,7 @@ public class User {
     @ManyToOne
     @JoinColumn(name = "country_id")
     private Country country;
-    private int postalCode;
+    private Integer postalCode;
     private boolean agreement;
     @Enumerated(value = EnumType.STRING)
     private Role role;
