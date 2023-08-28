@@ -31,3 +31,11 @@ Content-Type: application/json
   "cover": "f:/book_db/1.jpg",
   "owner": 1
 }
+
+###
+GET localhost:8080/api/books/
+Content-Type: application/json
+
+###
+GET localhost:8080/api/books/?user_id=1
+Content-Type: application/json
