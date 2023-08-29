@@ -41,5 +41,10 @@ public class BooksController implements BooksApi {
         .body(booksService.getBooks(userId));
   }
 
-  //here will be a new controller *commit for test push
+  @Override
+  public ResponseEntity<BookDto> addBookToUserBooks(Long bookId, Long userId) {
+    return ResponseEntity
+            .status(HttpStatus.OK)
+            .body(booksService.addBookToUserBooks(bookId, userId));
+  }
 }

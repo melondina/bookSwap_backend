@@ -8,6 +8,7 @@ import de.ait.gr5.bs.models.User;
 import de.ait.gr5.bs.repositories.BooksRepository;
 import de.ait.gr5.bs.repositories.CategoriesRepository;
 import de.ait.gr5.bs.repositories.UsersRepository;
+import de.ait.gr5.bs.repositories.WaitLinesRepository;
 import de.ait.gr5.bs.security.details.SecurityService;
 import de.ait.gr5.bs.services.BooksService;
 import lombok.AccessLevel;
@@ -30,6 +31,8 @@ public class BooksServiceImpl implements BooksService {
   BooksRepository booksRepository;
   UsersRepository usersRepository;
   CategoriesRepository categoriesRepository;
+  WaitLinesRepository waitLinesRepository;
+
   private final SecurityService securityService;
   public static final Sort SORT_BY_DATA_CREATED_DESC = Sort.by(Sort.Direction.DESC, "dateCreate");
 
@@ -127,4 +130,8 @@ public class BooksServiceImpl implements BooksService {
     return user;
   }
 
+  @Override
+  public BookDto addBookToUserBooks(Long bookId, Long userId) {
+    return null;
+  }
 }

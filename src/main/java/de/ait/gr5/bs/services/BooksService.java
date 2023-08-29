@@ -10,4 +10,6 @@ public interface BooksService {
   BookDto updateBook(Long bookId, BookUpdateDto updateBook);
 
   BooksShortDto getBooks(Long userId);
+
+  BookDto addBookToUserBooks(Long bookId, Long userId);
 }
