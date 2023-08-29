@@ -93,7 +93,6 @@ public interface BooksApi {
                   })
     })
   @PostMapping("/getting/{book-id}/{user-id}")
-  ResponseEntity<BookDto> addBookToUserBooks(@Parameter(required = true, description = "Book ID, User ID", example = "1, 2")
-                                          @PathVariable("book-id") Long bookId,
-                                             @PathVariable("user-id") Long userId);
+  ResponseEntity<WaitLinePlaceDto> addBookToUserBooks(@Parameter(required = true, description = "Book ID, User ID", example = "1, 2")
+                                          @PathVariable("book-id") Long bookId, @PathVariable("user-id") Long userId);
 }

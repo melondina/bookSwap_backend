@@ -2,8 +2,6 @@ package de.ait.gr5.bs.services;
 
 import de.ait.gr5.bs.dto.*;
 
-import java.util.List;
-
 public interface BooksService {
   BookDto addBook(BookNewDto newBook);
 
@@ -11,5 +9,5 @@ public interface BooksService {
 
   BooksShortDto getBooks(Long userId);
 
-  BookDto addBookToUserBooks(Long bookId, Long userId);
+  WaitLinePlaceDto addBookToUserBooks(Long bookId, Long userId);
 }

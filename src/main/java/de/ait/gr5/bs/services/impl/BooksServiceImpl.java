@@ -131,7 +131,7 @@ public class BooksServiceImpl implements BooksService {
   }
 
   @Override
-  public BookDto addBookToUserBooks(Long bookId, Long userId) {
+  public WaitLinePlaceDto addBookToUserBooks(Long bookId, Long userId) {
     return null;
   }
 }
