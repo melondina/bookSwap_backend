@@ -4,7 +4,8 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 import lombok.Data;
 
-import javax.validation.constraints.*;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 @Data
 @Builder
@@ -29,7 +30,6 @@ public class BookNewDto {
 
   @Schema(description = "Books categories ID", example = "1")
   @NotNull
-  @NotBlank
   private Long categoryId;
 
   @Schema(description = "Book language", example = "English")
@@ -39,7 +39,6 @@ public class BookNewDto {
 
   @Schema(description = "Number of pages in the book", example = "408")
   @NotNull
-  @NotBlank
   private Integer pages;
 
   @Schema(description = "Publisher date of the book, format YYYY-MM-DD", example = "2015-04-11")
@@ -52,7 +51,6 @@ public class BookNewDto {
 
   @Schema(description = "Book owner ID", example = "1")
   @NotNull
-  @NotBlank
   private Long owner;
 
 }
