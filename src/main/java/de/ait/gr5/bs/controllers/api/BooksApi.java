@@ -35,7 +35,7 @@ public interface BooksApi {
               @Content(mediaType = "application/json", schema = @Schema(implementation = ValidationErrorsDto.class))
           })
   })
-  @PreAuthorize("hasAnyAuthority('USER','ADMIN')")
+  //@PreAuthorize("hasAnyAuthority('USER','ADMIN')")
   @PostMapping
   @ResponseStatus(HttpStatus.CREATED)
   ResponseEntity<BookDto> addBook(@Parameter(required = true, description = "New book") @RequestBody @Valid BookNewDto newBook);

@@ -6,6 +6,8 @@ import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
@@ -22,7 +24,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @DisplayNameGeneration(value = DisplayNameGenerator.ReplaceUnderscores.class)
 @ActiveProfiles("test")
 public class BookIntegrationTest {
-// Тесты не работают так как пользователь не залогинен - как сюда этот шаг добавить не знаю
+  // Тесты не работают так как пользователь не залогинен - как сюда этот шаг добавить не знаю
   private static final BookNewDto NEW_BOOK = BookNewDto.builder()
       .title("Braiding Sweetgrass")
       .author("Robin Wall Kimmerer")
@@ -60,14 +62,17 @@ public class BookIntegrationTest {
 
     @Test
     @Sql(scripts = "/sql/data_for_books.sql")
+    @Sql(scripts = "/sql/data.sql")
     @DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD)
+    @WithMockUser(username = "test1234@user.com", password = "Qwerty007!")
     public void add_new_book_positive() throws Exception {
 
       String body = objectMapper.writeValueAsString(NEW_BOOK);
 
       mockMvc.perform(post("/api/books")
               .header("Content-Type", "application/json")
-              .content(body))
+              .content(body)
+              .with(SecurityMockMvcRequestPostProcessors.csrf()))
           .andExpect(status().isCreated())
           //.andExpect(jsonPath("$.id", is(1L)))
           .andExpect(jsonPath("$.title", is("Braiding Sweetgrass")));
