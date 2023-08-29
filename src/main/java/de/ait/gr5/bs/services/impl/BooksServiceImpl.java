@@ -1,10 +1,12 @@
 package de.ait.gr5.bs.services.impl;
 
 import de.ait.gr5.bs.dto.*;
+import de.ait.gr5.bs.dto.UserDto;
 import de.ait.gr5.bs.handler.RestException;
 import de.ait.gr5.bs.models.Book;
 import de.ait.gr5.bs.models.Category;
 import de.ait.gr5.bs.models.User;
+import de.ait.gr5.bs.models.WaitLine;
 import de.ait.gr5.bs.repositories.BooksRepository;
 import de.ait.gr5.bs.repositories.CategoriesRepository;
 import de.ait.gr5.bs.repositories.UsersRepository;
@@ -19,6 +21,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.data.domain.Sort;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.List;
 
 import static de.ait.gr5.bs.dto.BookDto.from;
@@ -132,6 +136,28 @@ public class BooksServiceImpl implements BooksService {
 
   @Override
   public WaitLinePlaceDto addBookToUserBooks(Long bookId, Long userId) {
-    return null;
+    User user = usersRepository.findById(userId).orElseThrow(() -> new RestException(HttpStatus.NOT_FOUND,
+            "User with id <" + userId + "> not found"));
+    Book book = booksRepository.findById(bookId).orElseThrow(
+            () -> new RestException(HttpStatus.NOT_FOUND, "Book with <" + bookId + "> not found"));
+    //todo - if the user have a permition
+    //todo - if the user already have that book
+
+    WaitLine waitLine = WaitLine.builder()
+            .book(book)
+            .user(user)
+            .dateCreate(LocalDate.from(LocalDateTime.now()))
+            .build();
+
+    waitLinesRepository.save(waitLine);
+
+    List<WaitLine> checkTheNumbers = waitLinesRepository.findAllById(Collections.singleton(bookId));
+
+    return WaitLinePlaceDto.builder()
+            .lineId(waitLine.getLineId())
+            .bookDto(BookDto.from(book))
+            .userDto(UserDto.from(user))
+            .numberUserInLine(checkTheNumbers.size())
+            .build();
   }
 }
