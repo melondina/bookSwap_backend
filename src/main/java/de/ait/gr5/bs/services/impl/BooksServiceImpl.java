@@ -136,10 +136,9 @@ public class BooksServiceImpl implements BooksService {
 
   @Override
   public WaitLinePlaceDto addBookToUserBooks(Long bookId, Long userId) {
-    User user = usersRepository.findById(userId).orElseThrow(() -> new RestException(HttpStatus.NOT_FOUND,
-            "User with id <" + userId + "> not found"));
-    Book book = booksRepository.findById(bookId).orElseThrow(
-            () -> new RestException(HttpStatus.NOT_FOUND, "Book with <" + bookId + "> not found"));
+    User user = getUserOrElseThrow(userId);
+    Book book = getBookOrElseThrow(bookId);
+
     //todo - if the user not have a permission
     //todo - if the user already have that book
 
@@ -153,11 +152,6 @@ public class BooksServiceImpl implements BooksService {
 
     List<WaitLine> checkTheNumbers = waitLinesRepository.findAllByBook(book);
 
-    return WaitLinePlaceDto.builder()
-            .lineId(waitLine.getLineId())
-            .bookDto(BookDto.from(book))
-            .userDto(UserDto.from(user))
-            .numberUserInLine(checkTheNumbers.size())
-            .build();
+    return WaitLinePlaceDto.from(checkTheNumbers, waitLine);
   }
 }
