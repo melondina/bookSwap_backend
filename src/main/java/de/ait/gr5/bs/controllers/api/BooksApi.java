@@ -78,17 +78,33 @@ public interface BooksApi {
 
   @Operation(summary = "Get book from list to user books", description = "Available for authorised users")
   @ApiResponses(value = {
-          @ApiResponse(responseCode = "200", description = "Books have been added to the wait list of user",
-                    content = {
-                            @Content(mediaType = "application/json", schema = @Schema(implementation = BookDto.class))
-                    }),
-          @ApiResponse(responseCode = "401", description = "User unauthorized",
-                  content = {
-                          @Content(mediaType = "application/json", schema = @Schema(implementation = RestException.class))
-                  })
-          //todo add additional documentation
-    })
+      @ApiResponse(responseCode = "200", description = "Books have been added to the wait list of user",
+          content = {
+              @Content(mediaType = "application/json", schema = @Schema(implementation = BookDto.class))
+          }),
+      @ApiResponse(responseCode = "401", description = "User unauthorized",
+          content = {
+              @Content(mediaType = "application/json", schema = @Schema(implementation = RestException.class))
+          })
+      //todo add additional documentation
+  })
   @PostMapping("/getting/{book-id}/{user-id}")
   ResponseEntity<WaitLinePlaceDto> addBookToUserBooks(@Parameter(required = true, description = "Book ID, User ID", example = "1, 2")
-                                          @PathVariable("book-id") Long bookId, @PathVariable("user-id") Long userId);
+                                                      @PathVariable("book-id") Long bookId, @PathVariable("user-id") Long userId);
+
+  @Operation(summary = "Book detail", description = "Detailed information about the book")
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "404", description = "Book not found",
+          content = {
+              @Content(mediaType = "application/json", schema = @Schema(implementation = RestException.class))
+          }),
+      @ApiResponse(responseCode = "200", description = "Book detail",
+          content = {
+              @Content(mediaType = "application/json", schema = @Schema(implementation = BookDto.class))
+          })
+  })
+  @GetMapping("/{book_id}/detail")
+  ResponseEntity<BookDto> getBookDetail(@Parameter(required = true, description = "Book id", example = "2")
+                                        @PathVariable(name = "book_id", required = true) Long bookId);
+
 }
