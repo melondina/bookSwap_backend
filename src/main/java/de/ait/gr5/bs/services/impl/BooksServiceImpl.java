@@ -140,7 +140,7 @@ public class BooksServiceImpl implements BooksService {
             "User with id <" + userId + "> not found"));
     Book book = booksRepository.findById(bookId).orElseThrow(
             () -> new RestException(HttpStatus.NOT_FOUND, "Book with <" + bookId + "> not found"));
-    //todo - if the user have a permition
+    //todo - if the user not have a permission
     //todo - if the user already have that book
 
     WaitLine waitLine = WaitLine.builder()
@@ -151,7 +151,7 @@ public class BooksServiceImpl implements BooksService {
 
     waitLinesRepository.save(waitLine);
 
-    List<WaitLine> checkTheNumbers = waitLinesRepository.findAllById(Collections.singleton(bookId));
+    List<WaitLine> checkTheNumbers = waitLinesRepository.findAllByBook(book);
 
     return WaitLinePlaceDto.builder()
             .lineId(waitLine.getLineId())
