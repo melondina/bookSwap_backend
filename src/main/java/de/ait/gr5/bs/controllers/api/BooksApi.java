@@ -72,7 +72,6 @@ public interface BooksApi {
               @Content(mediaType = "application/json", schema = @Schema(implementation = RestException.class))
           })
   })
-  @PreAuthorize("@securityService.isUserAuthorized(#userId) or hasAnyAuthority('USER','ADMIN')")
   @GetMapping()
   ResponseEntity<BooksShortDto> getBooks(@Parameter(required = false, description = "User id", example = "2")
                                          @RequestParam(name = "user_id", required = false) Long userId);
