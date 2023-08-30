@@ -17,7 +17,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.List;
 
 @RequestMapping("api/books")
 @Tags(value =
@@ -78,5 +77,19 @@ public interface BooksApi {
   ResponseEntity<BooksShortDto> getBooks(@Parameter(required = false, description = "User id", example = "2")
                                          @RequestParam(name = "user_id", required = false) Long userId);
 
-
+  @Operation(summary = "Get book from list to user books", description = "Available for authorised users")
+  @ApiResponses(value = {
+          @ApiResponse(responseCode = "200", description = "Books have been added to the wait list of user",
+                    content = {
+                            @Content(mediaType = "application/json", schema = @Schema(implementation = BookDto.class))
+                    }),
+          @ApiResponse(responseCode = "401", description = "User unauthorized",
+                  content = {
+                          @Content(mediaType = "application/json", schema = @Schema(implementation = RestException.class))
+                  })
+          //todo add additional documentation
+    })
+  @PostMapping("/getting/{book-id}/{user-id}")
+  ResponseEntity<WaitLinePlaceDto> addBookToUserBooks(@Parameter(required = true, description = "Book ID, User ID", example = "1, 2")
+                                          @PathVariable("book-id") Long bookId, @PathVariable("user-id") Long userId);
 }

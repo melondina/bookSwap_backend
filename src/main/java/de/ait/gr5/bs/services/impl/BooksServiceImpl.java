@@ -1,13 +1,16 @@
 package de.ait.gr5.bs.services.impl;
 
 import de.ait.gr5.bs.dto.*;
+import de.ait.gr5.bs.dto.UserDto;
 import de.ait.gr5.bs.handler.RestException;
 import de.ait.gr5.bs.models.Book;
 import de.ait.gr5.bs.models.Category;
 import de.ait.gr5.bs.models.User;
+import de.ait.gr5.bs.models.WaitLine;
 import de.ait.gr5.bs.repositories.BooksRepository;
 import de.ait.gr5.bs.repositories.CategoriesRepository;
 import de.ait.gr5.bs.repositories.UsersRepository;
+import de.ait.gr5.bs.repositories.WaitLinesRepository;
 import de.ait.gr5.bs.security.details.SecurityService;
 import de.ait.gr5.bs.services.BooksService;
 import lombok.AccessLevel;
@@ -18,6 +21,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.data.domain.Sort;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.List;
 
 import static de.ait.gr5.bs.dto.BookDto.from;
@@ -30,6 +35,8 @@ public class BooksServiceImpl implements BooksService {
   BooksRepository booksRepository;
   UsersRepository usersRepository;
   CategoriesRepository categoriesRepository;
+  WaitLinesRepository waitLinesRepository;
+
   private final SecurityService securityService;
   public static final Sort SORT_BY_DATA_CREATED_DESC = Sort.by(Sort.Direction.DESC, "dateCreate");
 
@@ -127,4 +134,28 @@ public class BooksServiceImpl implements BooksService {
     return user;
   }
 
+  @Override
+  public WaitLinePlaceDto addBookToUserBooks(Long bookId, Long userId) {
+    User user = getUserOrElseThrow(userId);
+    Book book = getBookOrElseThrow(bookId);
+
+    //todo - if the user not have a permission
+    //todo - if the user already have that book
+
+    WaitLine waitLine = WaitLine.builder()
+            .book(book)
+            .user(user)
+            .dateCreate(LocalDate.from(LocalDateTime.now()))
+            .build();
+
+    waitLinesRepository.save(waitLine);
+
+    return WaitLinePlaceDto.from(waitLine, getTheNumberInLine(waitLine.getBook()));
+  }
+
+  public Integer getTheNumberInLine(Book book) {
+    //todo check, if we do not have book
+    List<WaitLine> checkTheNumbers = waitLinesRepository.findAllByBook(book);
+    return checkTheNumbers.size();
+  }
 }

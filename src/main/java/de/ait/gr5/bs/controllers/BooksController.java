@@ -10,8 +10,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
-
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 @RequiredArgsConstructor
 @RestController
@@ -41,4 +39,10 @@ public class BooksController implements BooksApi {
         .body(booksService.getBooks(userId));
   }
 
+  @Override
+  public ResponseEntity<WaitLinePlaceDto> addBookToUserBooks(Long bookId, Long userId) {
+    return ResponseEntity
+            .status(HttpStatus.OK)
+            .body(booksService.addBookToUserBooks(bookId, userId));
+  }
 }
