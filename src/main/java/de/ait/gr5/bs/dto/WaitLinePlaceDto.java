@@ -28,7 +28,6 @@ public class WaitLinePlaceDto {
   @Schema(description = "The place of user in line for that book", example = "2")
   private Integer numberUserInLine;
 
-  //todo - create more independent method, only for waitline
   public static WaitLinePlaceDto from(WaitLine waitLine, Integer numberUserInLine) {
     return WaitLinePlaceDto.builder()
             .lineId(waitLine.getLineId())

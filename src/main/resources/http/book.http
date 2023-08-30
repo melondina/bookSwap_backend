@@ -17,7 +17,7 @@ Content-Type: application/json
 
 ### Update information of the book
 
-PUT localhost:8080/api/books/1
+PUT localhost:8080/api/books/2
 Content-Type: application/json
 
 {

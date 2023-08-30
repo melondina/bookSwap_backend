@@ -137,8 +137,11 @@ public class BooksServiceImpl implements BooksService {
     User user = getUserOrElseThrow(userId);
     Book book = getBookOrElseThrow(bookId);
 
-    //todo - if the user not have a permission
     //todo - if the user already have that book
+    //1. Get owner for that book
+    //2. Check if UserId from owner == userId from user
+    //3. throw exception if yes
+
 
     WaitLine waitLine = WaitLine.builder()
             .book(book)
@@ -152,7 +155,6 @@ public class BooksServiceImpl implements BooksService {
   }
 
   public Integer getTheNumberInLine(Book book) {
-    //todo check, if we do not have book
     List<WaitLine> checkTheNumbers = waitLinesRepository.findAllByBook(book);
     return checkTheNumbers.size();
   }
