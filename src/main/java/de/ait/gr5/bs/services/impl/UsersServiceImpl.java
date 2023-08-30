@@ -50,4 +50,8 @@ public class UsersServiceImpl implements UsersService {
         return from(user);
     }
 
+    public UserDto getUser(Long userId) {
+        return from(getUserOrThrow(userId));
+    }
+
 }

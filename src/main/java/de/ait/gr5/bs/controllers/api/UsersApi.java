@@ -1,8 +1,10 @@
 package de.ait.gr5.bs.controllers.api;
 
 import de.ait.gr5.bs.dto.ErrorDto;
+import de.ait.gr5.bs.dto.StandardResponseDto;
 import de.ait.gr5.bs.dto.UpdateUserDto;
 import de.ait.gr5.bs.dto.UserDto;
+import de.ait.gr5.bs.security.details.AuthenticatedUser;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -12,10 +14,8 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import io.swagger.v3.oas.annotations.tags.Tags;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.*;
 
 @Tags(value = {
         @Tag(name = "Users")
@@ -42,4 +42,19 @@ public interface UsersApi {
     ResponseEntity<UserDto> updateUser(@Parameter(required = true, description = "User ID", example = "2")
                                        @PathVariable("user-id") Long userId,
                                        @RequestBody UpdateUserDto updateUser);
+
+    @Operation(summary = "Get users profile", description = "Available to authenticated users. Allows you to get the current user based on the session")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Users profile",
+                    content = {
+                            @Content(mediaType = "application/json", schema = @Schema(implementation = UserDto.class))
+                    }),
+            @ApiResponse(responseCode = "401", description = "User not authenticated",
+                    content = {
+                            @Content(mediaType = "application/json", schema = @Schema(implementation = StandardResponseDto.class))
+                    })
+    })
+    @GetMapping("/me")
+    ResponseEntity<UserDto> getMyProfile(@Parameter(hidden = true) @AuthenticationPrincipal AuthenticatedUser currentUser);
+
 }
