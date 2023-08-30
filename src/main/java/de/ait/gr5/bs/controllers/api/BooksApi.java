@@ -87,6 +87,7 @@ public interface BooksApi {
                   content = {
                           @Content(mediaType = "application/json", schema = @Schema(implementation = RestException.class))
                   })
+          //todo add additional documentation
     })
   @PostMapping("/getting/{book-id}/{user-id}")
   ResponseEntity<WaitLinePlaceDto> addBookToUserBooks(@Parameter(required = true, description = "Book ID, User ID", example = "1, 2")
