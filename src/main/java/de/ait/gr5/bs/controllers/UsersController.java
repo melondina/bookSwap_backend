@@ -4,6 +4,7 @@ package de.ait.gr5.bs.controllers;
 import de.ait.gr5.bs.controllers.api.UsersApi;
 import de.ait.gr5.bs.dto.UpdateUserDto;
 import de.ait.gr5.bs.dto.UserDto;
+import de.ait.gr5.bs.security.details.AuthenticatedUser;
 import de.ait.gr5.bs.services.UsersService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +21,12 @@ public class UsersController implements UsersApi {
     public ResponseEntity<UserDto> updateUser(Long userId, UpdateUserDto updateUser) {
         return ResponseEntity
                 .ok(usersService.updateUser(userId, updateUser));
+    }
+
+    @Override
+    public ResponseEntity<UserDto> getMyProfile(AuthenticatedUser currentUser) {
+        Long userId = currentUser.id();
+        return ResponseEntity.ok(usersService.getUser(userId));
     }
 
 }
