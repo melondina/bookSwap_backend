@@ -1,7 +1,6 @@
 package de.ait.gr5.bs.services.impl;
 
 import de.ait.gr5.bs.dto.*;
-import de.ait.gr5.bs.dto.UserDto;
 import de.ait.gr5.bs.handler.RestException;
 import de.ait.gr5.bs.models.Book;
 import de.ait.gr5.bs.models.Category;
@@ -22,7 +21,6 @@ import org.springframework.data.domain.Sort;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Collections;
 import java.util.List;
 
 import static de.ait.gr5.bs.dto.BookDto.from;
@@ -98,8 +96,8 @@ public class BooksServiceImpl implements BooksService {
     if (userId == null) {
       books = booksRepository.findAll(SORT_BY_DATA_CREATED_DESC);
     } else {
-      if (!securityService.isUserAuthorized(userId)) {
-        throw new RestException(HttpStatus.FORBIDDEN, "Not have permission to access this resource");
+      if (!securityService.isUserPermission(userId)) {
+        throw new RestException(HttpStatus.FORBIDDEN, "Not have permission");
       } else {
         User user = getUserOrElseThrow(userId);
         books = booksRepository.findAllByOwner(user, SORT_BY_DATA_CREATED_DESC);

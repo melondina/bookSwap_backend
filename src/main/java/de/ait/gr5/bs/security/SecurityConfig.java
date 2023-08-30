@@ -30,72 +30,73 @@ import javax.servlet.http.HttpServletResponse;
 @EnableGlobalMethodSecurity(securedEnabled = true, prePostEnabled = true, proxyTargetClass = true)
 public class SecurityConfig {
 
-    @Autowired
-    private ObjectMapper objectMapper;
+  @Autowired
+  private ObjectMapper objectMapper;
 
-    @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
-        httpSecurity.csrf().disable();
-        httpSecurity.headers().frameOptions().disable();
+  @Bean
+  public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
+    httpSecurity.csrf().disable();
+    httpSecurity.headers().frameOptions().disable();
 
-        httpSecurity
-                .authorizeRequests()
-                .antMatchers("/swagger-ui/**").permitAll()
-                .antMatchers(HttpMethod.POST, "/api/registration/**").permitAll()
-                .antMatchers("/api/**").authenticated()
-                .and()
-                .formLogin()
-                .loginProcessingUrl("/api/login")
-                .successHandler((request, response, authentication) -> {
-                    fillResponse(response, HttpStatus.OK, "Login successful");
-                })
-                .failureHandler(((request, response, exception) -> {
-                    fillResponse(response, HttpStatus.UNAUTHORIZED, "Incorrect username or password");
-                }))
-                .and()
-                .exceptionHandling()
-                .defaultAuthenticationEntryPointFor(((request, response, authException) -> {
-                    fillResponse(response, HttpStatus.UNAUTHORIZED, "User unauthorized");
-                }), new AntPathRequestMatcher("/api/**"))
-                .accessDeniedHandler((request, response, accessDeniedException) -> {
-                    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+    httpSecurity
+        .authorizeRequests()
+        .antMatchers("/swagger-ui/**").permitAll()
+        .antMatchers(HttpMethod.POST, "/api/registration/**").permitAll()
+        .antMatchers(HttpMethod.GET, "/api/books/").permitAll()
+        .antMatchers("/api/**").authenticated()
+        .and()
+        .formLogin()
+        .loginProcessingUrl("/api/login")
+        .successHandler((request, response, authentication) -> {
+          fillResponse(response, HttpStatus.OK, "Login successful");
+        })
+        .failureHandler(((request, response, exception) -> {
+          fillResponse(response, HttpStatus.UNAUTHORIZED, "Incorrect username or password");
+        }))
+        .and()
+        .exceptionHandling()
+        .defaultAuthenticationEntryPointFor(((request, response, authException) -> {
+          fillResponse(response, HttpStatus.UNAUTHORIZED, "User unauthorized");
+        }), new AntPathRequestMatcher("/api/**"))
+        .accessDeniedHandler((request, response, accessDeniedException) -> {
+          Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
-                    fillResponse(response, HttpStatus.FORBIDDEN, "Access denied for user with email <" +
-                            authentication.getName() + "> and role " + authentication.getAuthorities());
+          fillResponse(response, HttpStatus.FORBIDDEN, "Access denied for user with email <" +
+              authentication.getName() + "> and role " + authentication.getAuthorities());
 
-                })
-                .and()
-                .logout()
-                .logoutUrl("/api/logout")
-                .logoutSuccessHandler((request, response, authentication) -> {
-                    fillResponse(response, HttpStatus.OK, "Logout successful");
-                });
-        return httpSecurity.build();
+        })
+        .and()
+        .logout()
+        .logoutUrl("/api/logout")
+        .logoutSuccessHandler((request, response, authentication) -> {
+          fillResponse(response, HttpStatus.OK, "Logout successful");
+        });
+    return httpSecurity.build();
+  }
+
+  private void fillResponse(HttpServletResponse response, HttpStatus status, String message) {
+    try {
+      response.setStatus(status.value());
+      response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+
+      StandardResponseDto responseDto = StandardResponseDto.builder()
+          .message(message)
+          .build();
+
+      String body = objectMapper.writeValueAsString(responseDto);
+
+      response.getWriter().write(body);
+    } catch (Exception e) {
+      throw new IllegalStateException(e);
     }
+  }
 
-    private void fillResponse(HttpServletResponse response, HttpStatus status, String message) {
-        try {
-            response.setStatus(status.value());
-            response.setContentType(MediaType.APPLICATION_JSON_VALUE);
-
-            StandardResponseDto responseDto = StandardResponseDto.builder()
-                    .message(message)
-                    .build();
-
-            String body = objectMapper.writeValueAsString(responseDto);
-
-            response.getWriter().write(body);
-        } catch (Exception e) {
-            throw new IllegalStateException(e);
-        }
-    }
-
-    @Autowired
-    public void bindUserDetailsServiceAndPasswordEncoder(
-            PasswordEncoder passwordEncoder,
-            UserDetailsService userDetailsServiceImpl,
-            AuthenticationManagerBuilder authenticationManager) throws Exception {
-        authenticationManager.userDetailsService(userDetailsServiceImpl).passwordEncoder(passwordEncoder);
-    }
+  @Autowired
+  public void bindUserDetailsServiceAndPasswordEncoder(
+      PasswordEncoder passwordEncoder,
+      UserDetailsService userDetailsServiceImpl,
+      AuthenticationManagerBuilder authenticationManager) throws Exception {
+    authenticationManager.userDetailsService(userDetailsServiceImpl).passwordEncoder(passwordEncoder);
+  }
 
 }

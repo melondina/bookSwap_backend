@@ -1,13 +1,22 @@
 package de.ait.gr5.bs.security.details;
 
-import de.ait.gr5.bs.models.User;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 @Service
 public class SecurityService {
-  public boolean isUserAuthorized(Long userId) {
-    AuthenticatedUser authenticatedUser = (AuthenticatedUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-    return authenticatedUser.id().equals(userId);
+  public boolean isUserPermission(Long userId) {
+    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+    if (authentication.isAuthenticated()) {
+      Object principal = authentication.getPrincipal();
+
+      if (principal instanceof AuthenticatedUser) {
+        AuthenticatedUser authenticatedUser = (AuthenticatedUser) principal;
+        return authenticatedUser.id().equals(userId);
+      }
+    }
+    return false;
   }
 }
