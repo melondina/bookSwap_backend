@@ -20,20 +20,21 @@ public class WaitLinePlaceDto {
   private Long lineId;
 
   //todo add documentation
-  private BookDto bookDto;
+  private String bookId;
 
   //todo add documentation
-  private UserDto userDto;
+  private String userId;
 
   @Schema(description = "The place of user in line for that book", example = "2")
   private Integer numberUserInLine;
 
-  public static WaitLinePlaceDto from(List<WaitLine> checkTheNumbers, WaitLine waitLine) {
+  //todo - create more independent method, only for waitline
+  public static WaitLinePlaceDto from(WaitLine waitLine, Integer numberUserInLine) {
     return WaitLinePlaceDto.builder()
             .lineId(waitLine.getLineId())
-            .bookDto(BookDto.from(waitLine.getBook()))
-            .userDto(UserDto.from(waitLine.getUser()))
-            .numberUserInLine(checkTheNumbers.size())
+            .bookId(String.valueOf(waitLine.getBook().getBookId()))
+            .userId(String.valueOf(waitLine.getUser().getUserId()))
+            .numberUserInLine(numberUserInLine)
             .build();
   }
 }

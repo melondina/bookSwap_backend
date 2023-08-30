@@ -79,15 +79,11 @@ public interface BooksApi {
 
   @Operation(summary = "Get book from list to user books", description = "Available for authorised users")
   @ApiResponses(value = {
-          @ApiResponse(responseCode = "200", description = "Books have been added to the wait list",
+          @ApiResponse(responseCode = "200", description = "Books have been added to the wait list of user",
                     content = {
                             @Content(mediaType = "application/json", schema = @Schema(implementation = BookDto.class))
                     }),
-          @ApiResponse(responseCode = "403", description = "Not have permission",
-                    content = {
-                            @Content(mediaType = "application/json", schema = @Schema(implementation = RestException.class))
-                    }),
-          @ApiResponse(responseCode = "401", description = "This user already have this book",
+          @ApiResponse(responseCode = "401", description = "User unauthorized",
                   content = {
                           @Content(mediaType = "application/json", schema = @Schema(implementation = RestException.class))
                   })

@@ -150,8 +150,12 @@ public class BooksServiceImpl implements BooksService {
 
     waitLinesRepository.save(waitLine);
 
-    List<WaitLine> checkTheNumbers = waitLinesRepository.findAllByBook(book);
+    return WaitLinePlaceDto.from(waitLine, getTheNumberInLine(waitLine.getBook()));
+  }
 
-    return WaitLinePlaceDto.from(checkTheNumbers, waitLine);
+  public Integer getTheNumberInLine(Book book) {
+    //todo check, if we do not have book
+    List<WaitLine> checkTheNumbers = waitLinesRepository.findAllByBook(book);
+    return checkTheNumbers.size();
   }
 }
