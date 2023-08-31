@@ -15,37 +15,42 @@ import java.util.List;
 @Entity
 @Table(name = "users")
 public class User {
-    public enum Role {
-        ADMIN,
-        USER
-    }
+  public enum Role {
+    ADMIN,
+    USER
+  }
 
-    public enum State {
-        NOT_CONFIRMED,
-        CONFIRMED,
-        DELETED
-    }
+  public enum State {
+    NOT_CONFIRMED,
+    CONFIRMED,
+    DELETED
+  }
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long userId;
-    private String firstName;
-    private String lastName;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Long userId;
 
-    @Column(nullable = false, unique = true)
-    private String email;
+  private String firstName;
 
-    private String password;
+  private String lastName;
 
-    @ManyToOne
-    @JoinColumn(name = "country_id")
-    private Country country;
-    private Integer postalCode;
-    private boolean agreement;
-    @Enumerated(value = EnumType.STRING)
-    private Role role;
-    @Enumerated(value = EnumType.STRING)
-    private State state;
-    @OneToMany(mappedBy = "owner")
-    private List<Book> ownedBooks;
+  @Column(nullable = false, unique = true)
+  private String email;
+
+  private String password;
+
+  @ManyToOne
+  @JoinColumn(name = "city_id")
+  private City city;
+
+  private boolean agreement;
+
+  @Enumerated(value = EnumType.STRING)
+  private Role role;
+
+  @Enumerated(value = EnumType.STRING)
+  private State state;
+
+  @OneToMany(mappedBy = "owner")
+  private List<Book> ownedBooks;
 }

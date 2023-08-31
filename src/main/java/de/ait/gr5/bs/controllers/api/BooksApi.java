@@ -78,6 +78,7 @@ public interface BooksApi {
 
   @Operation(summary = "Get book from list to user books", description = "Available for authorised users")
   @ApiResponses(value = {
+    
           @ApiResponse(responseCode = "200", description = "Books have been added to the wait list of user",
                     content = {
                             @Content(mediaType = "application/json", schema = @Schema(implementation = WaitLinePlaceDto.class))
