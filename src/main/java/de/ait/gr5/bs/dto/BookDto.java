@@ -20,7 +20,7 @@ public class BookDto {
 
   @Schema(description = "Book ID", example = "1")
   private Long bookId;
-  // https://bookshop.org/p/books/braiding-sweetgrass-robin-wall-kimmerer/16712606?ean=9781571313560
+
   @Schema(description = "Book title", example = "Braiding Sweetgrass")
   private String title;
 
@@ -31,13 +31,13 @@ public class BookDto {
   private String description;
 
   @Schema(description = "Books categories", example = "Esse")
-  private CategoryDto category;
+  private String category;
 
   @Schema(description = "Book language", example = "English")
   private String language;
 
   @Schema(description = "Number of pages in the book", example = "408")
-  private Integer pages;
+  private String pages;
 
   @Schema(description = "Publisher date of the book, format YYYY-MM-DD", example = "2015-04-11")
   private String publisherDate;
@@ -46,13 +46,14 @@ public class BookDto {
   private String cover;
 
   @Schema(description = "Book owner", example = "User1")
-  private UserDto owner;
+  private String owner;
 
-  @Schema(description = "Date create of the book in the app, format YYYY-MM-DD", example = "2023-08-23")
-  private String dateCreate;
+  @Schema(description = "Location of the book", example = "13599 Berlin Germany")
+  private String location;
 
-  @Schema(description = "State of the book - AVAILABLE, DELETED", example = "AVAILABLE")
-  private String state;
+  @Schema(description = "Number of readers in the queue", example = "3")
+  private String queueSize;
+
 
   public static BookDto from(Book book) {
     BookDto result = BookDto.builder()
@@ -60,26 +61,14 @@ public class BookDto {
         .title(book.getTitle())
         .author(book.getAuthor())
         .description(book.getDescription())
-        .category(CategoryDto.from(book.getCategory()))
+        .category(book.getCategory().getTitle())
         .language(book.getLanguage())
-        .pages(book.getPages())
+        .pages(book.getPages().toString())
         .cover(book.getCover())
-        .owner(UserDto.from(book.getOwner()))
-        .state(book.getState().name())
+        .owner(book.getOwner().getUserId().toString())
+        .publisherDate(book.getPublisherDate().toString())
         .build();
-    if (book.getPublisherDate() != null) {
-      result.setPublisherDate(book.getPublisherDate().toString());
-    }
-    if (book.getDateCreate() != null) {
-      result.setDateCreate(book.getDateCreate().toString());
-    }
     return result;
-  }
-
-  public static List<BookDto> from(Collection<Book> books) {
-    return books.stream()
-        .map(BookDto::from)
-        .collect(Collectors.toList());
   }
 
 }

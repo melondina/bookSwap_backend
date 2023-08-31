@@ -73,7 +73,7 @@ public class BooksServiceImpl implements BooksService {
 
     Category category = getCategoryOrElseThrow(updateBook.getCategoryId());
 
-    Book book = getBookOrThrow(bookId);
+    Book book = getBookOrElseThrow(bookId);
     book.setTitle(updateBook.getTitle());
     book.setAuthor(updateBook.getAuthor());
     book.setDescription(updateBook.getDescription());
@@ -106,6 +106,15 @@ public class BooksServiceImpl implements BooksService {
     return BooksShortDto.from(BookShortDto.from(books));
   }
 
+  @Override
+  public BookDto getBookDetail(Long bookId) {
+    Book book = getBookOrElseThrow(bookId);
+    BookDto result = from(book);
+    result.setLocation(booksRepository.findLocationBook(bookId));
+    result.setQueueSize(waitLinesRepository.countByBook_BookId(bookId));
+    return result;
+  }
+
   public Category getCategoryOrElseThrow(Long categoryId) {
     Category category = categoriesRepository.findById(categoryId)
         .orElseThrow(() -> new RestException(HttpStatus.NOT_FOUND,
@@ -114,15 +123,9 @@ public class BooksServiceImpl implements BooksService {
   }
 
   public Book getBookOrElseThrow(Long bookId) {
-    Book book1 = booksRepository.findById(bookId)
+    return booksRepository.findById(bookId)
         .orElseThrow(() -> new RestException(HttpStatus.NOT_FOUND,
-            "Book with id <" + bookId + "> not found"));
-    return book1;
-  }
-
-  public Book getBookOrThrow(Long bookId) {
-    return booksRepository.findById(bookId).orElseThrow(
-        () -> new RestException(HttpStatus.NOT_FOUND, "Book not found"));
+            "Book with id < " + bookId + " > not found"));
   }
 
   public User getUserOrElseThrow(Long userId) {
@@ -141,15 +144,16 @@ public class BooksServiceImpl implements BooksService {
     //todo - if the user already have that book
 
     WaitLine waitLine = WaitLine.builder()
-            .book(book)
-            .user(user)
-            .dateCreate(LocalDate.from(LocalDateTime.now()))
-            .build();
+        .book(book)
+        .user(user)
+        .dateCreate(LocalDate.from(LocalDateTime.now()))
+        .build();
 
     waitLinesRepository.save(waitLine);
 
     return WaitLinePlaceDto.from(waitLine, getTheNumberInLine(waitLine.getBook()));
   }
+
 
   public Integer getTheNumberInLine(Book book) {
     //todo check, if we do not have book

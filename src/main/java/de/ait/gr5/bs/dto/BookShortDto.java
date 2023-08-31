@@ -22,6 +22,8 @@ public class BookShortDto {
   private String category;
   @Schema(description = "Book language", example = "English")
   private String language;
+  @Schema(description = "Author(s) of the book", example = "Robin Wall Kimmerer")
+  private String author;
 
   public static BookShortDto from(Book book) {
     return BookShortDto.builder()
@@ -30,6 +32,7 @@ public class BookShortDto {
         .title(book.getTitle())
         .category(book.getCategory().getTitle())
         .language(book.getLanguage())
+        .author(book.getAuthor())
         .build();
   }
 

@@ -9,4 +9,6 @@ import java.util.List;
 public interface WaitLinesRepository extends JpaRepository<WaitLine, Long> {
 
   List<WaitLine> findAllByBook(Book book);
+
+  String countByBook_BookId(Long bookId);
 }

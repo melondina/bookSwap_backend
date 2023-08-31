@@ -41,7 +41,7 @@ public class UsersServiceImpl implements UsersService {
         user.setFirstName(updateUser.getFirstName());
         user.setLastName(updateUser.getLastName());
       //  country city
-        user.setPostalCode(updateUser.getPostalCode());
+      // user.setPostalCode(updateUser.getPostalCode());//TODO
         user.setState(User.State.valueOf(updateUser.getNewState()));
         user.setRole(User.Role.valueOf(updateUser.getNewRole()));
 
