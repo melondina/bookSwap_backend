@@ -38,10 +38,10 @@ public class BooksController implements BooksApi {
   }
 
   @Override
-  public ResponseEntity<WaitLinePlaceDto> addBookToUserBooks(Long bookId, Long userId) {
+  public ResponseEntity<WaitLinePlaceDto> addBookToUserBooks(WaitLineRequestDto waitLineRequestDto) {
     return ResponseEntity
         .status(HttpStatus.OK)
-        .body(booksService.addBookToUserBooks(bookId, userId));
+        .body(booksService.addBookToUserBooks(waitLineRequestDto));
   }
 
   @Override

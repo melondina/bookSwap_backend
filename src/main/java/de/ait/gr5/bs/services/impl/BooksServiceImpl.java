@@ -17,6 +17,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import static de.ait.gr5.bs.dto.BookDto.from;
 
@@ -133,12 +134,20 @@ public class BooksServiceImpl implements BooksService {
   }
 
   @Override
-  public WaitLinePlaceDto addBookToUserBooks(Long bookId, Long userId) {
-    User user = getUserOrElseThrow(userId);
-    Book book = getBookOrElseThrow(bookId);
+  public WaitLinePlaceDto addBookToUserBooks(WaitLineRequestDto waitLineRequestDto) {
+    User user = getUserOrElseThrow(waitLineRequestDto.getUserId());
+    Book book = getBookOrElseThrow(waitLineRequestDto.getBookId());
 
-    //todo - if the user not have a permission
-    //todo - if the user already have that book
+    if (Objects.equals(book.getOwner().getUserId(), user.getUserId())) {
+      throw new RestException(HttpStatus.FORBIDDEN, "That user already have that book");
+    }
+
+    List<WaitLine> usersInLine = waitLinesRepository.findAllByBook(book);
+    for(WaitLine waitline : usersInLine) {
+      if (Objects.equals(waitline.getUser().getUserId(), user.getUserId())) {
+        throw new RestException(HttpStatus.FORBIDDEN, "User have already booked that book");
+      }
+    }
 
     WaitLine waitLine = WaitLine.builder()
         .book(book)
@@ -148,14 +157,7 @@ public class BooksServiceImpl implements BooksService {
 
     waitLinesRepository.save(waitLine);
 
-    return WaitLinePlaceDto.from(waitLine, getTheNumberInLine(waitLine.getBook()));
-  }
-
-
-  public Integer getTheNumberInLine(Book book) {
-    //todo check, if we do not have book
-    List<WaitLine> checkTheNumbers = waitLinesRepository.findAllByBook(book);
-    return checkTheNumbers.size();
+    return WaitLinePlaceDto.from(waitLine, usersInLine.size()+1);
   }
 
 

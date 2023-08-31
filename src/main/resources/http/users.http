@@ -8,6 +8,14 @@ Content-Type: application/json
   "password": "Qwerty007!"
 }
 
+POST http://localhost:8080/api/registration
+Content-Type: application/json
+
+{
+  "email": "Alex0@gmail.com",
+  "password": "Qwerty007!"
+}
+
 ### Login of user
 
 POST http://localhost:8080/api/login

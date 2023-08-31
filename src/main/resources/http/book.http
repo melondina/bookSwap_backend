@@ -37,7 +37,7 @@ GET localhost:8080/api/books/
 Content-Type: application/json
 
 ###
-GET localhost:8080/api/books/?user_id=12
+GET localhost:8080/api/books/?user_id=1
 Content-Type: application/json
 
 ###
@@ -46,12 +46,12 @@ Content-Type: application/json
 
 
 ### Add book to user
-POST localhost:8080/api/books/getting/1/11
+POST localhost:8080/api/books/getting
 Content-Type: application/json
 
 {
- "bookId": 1,
- "userId": 1
+ "bookId": 2,
+ "userId": 2
 }
 
 ### Get my history
