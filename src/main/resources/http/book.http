@@ -17,7 +17,7 @@ Content-Type: application/json
 
 ### Update information of the book
 
-PUT localhost:8080/api/books/2
+PUT localhost:8080/api/books/1
 Content-Type: application/json
 
 {
@@ -26,7 +26,7 @@ Content-Type: application/json
   "description": "Drawing on her life as an indigenous scientist, and as a woman, Kimmerer shows how other living beings...",
   "categoryId": 1,
   "language": "English",
-  "pages": 408,
+  "pages": 4008,
   "publisherDate": "2015-04-11",
   "cover": "f:/book_db/1.jpg",
   "owner": 1
@@ -53,4 +53,8 @@ Content-Type: application/json
  "bookId": 2,
  "userId": 2
 }
+
+### Get my history
+GET localhost:8080/api/books/history/4
+Content-Type: application/json
 

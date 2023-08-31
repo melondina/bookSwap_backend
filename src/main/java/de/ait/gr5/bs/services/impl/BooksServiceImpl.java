@@ -2,14 +2,8 @@ package de.ait.gr5.bs.services.impl;
 
 import de.ait.gr5.bs.dto.*;
 import de.ait.gr5.bs.handler.RestException;
-import de.ait.gr5.bs.models.Book;
-import de.ait.gr5.bs.models.Category;
-import de.ait.gr5.bs.models.User;
-import de.ait.gr5.bs.models.WaitLine;
-import de.ait.gr5.bs.repositories.BooksRepository;
-import de.ait.gr5.bs.repositories.CategoriesRepository;
-import de.ait.gr5.bs.repositories.UsersRepository;
-import de.ait.gr5.bs.repositories.WaitLinesRepository;
+import de.ait.gr5.bs.models.*;
+import de.ait.gr5.bs.repositories.*;
 import de.ait.gr5.bs.security.details.SecurityService;
 import de.ait.gr5.bs.services.BooksService;
 import lombok.AccessLevel;
@@ -21,6 +15,7 @@ import org.springframework.data.domain.Sort;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -35,9 +30,11 @@ public class BooksServiceImpl implements BooksService {
   UsersRepository usersRepository;
   CategoriesRepository categoriesRepository;
   WaitLinesRepository waitLinesRepository;
+  HistoryRepository historyRepository;
 
   private final SecurityService securityService;
   public static final Sort SORT_BY_DATA_CREATED_DESC = Sort.by(Sort.Direction.DESC, "dateCreate");
+  public static final Sort SORT_BY_ID_DESC = Sort.by(Sort.Direction.DESC, "id");
 
 
   @Override
@@ -161,5 +158,23 @@ public class BooksServiceImpl implements BooksService {
     waitLinesRepository.save(waitLine);
 
     return WaitLinePlaceDto.from(waitLine, usersInLine.size()+1);
+  }
+
+
+  @Override
+  public BooksShortDto getHistory(Long userId) {
+    User user = getUserOrElseThrow(userId);
+
+    List<Book> books = new ArrayList<>();
+
+    if (!securityService.isUserPermission(userId)) {
+      throw new RestException(HttpStatus.FORBIDDEN, "Not have permission");
+    }
+
+    List<History> histories = historyRepository.findAllBookByUser(user, SORT_BY_ID_DESC);
+    for (History history : histories) {
+      books.add(history.getBook());
+    }
+    return BooksShortDto.from(BookShortDto.from(books));
   }
 }

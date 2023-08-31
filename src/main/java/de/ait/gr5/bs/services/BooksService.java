@@ -12,4 +12,7 @@ public interface BooksService {
   WaitLinePlaceDto addBookToUserBooks(WaitLineRequestDto waitLineRequestDto);
 
   BookDto getBookDetail(Long bookId);
+
+  BooksShortDto getHistory(Long userId);
+
 }
