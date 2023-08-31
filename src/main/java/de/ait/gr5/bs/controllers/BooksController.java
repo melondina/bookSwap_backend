@@ -17,7 +17,6 @@ public class BooksController implements BooksApi {
 
   BooksService booksService;
 
-  //@PreAutorize("hasAuthority('USER','ADMIN'")
   @Override
   public ResponseEntity<BookDto> addBook(BookNewDto newBook) {
     return ResponseEntity
@@ -25,7 +24,6 @@ public class BooksController implements BooksApi {
         .body(booksService.addBook(newBook));
   }
 
-  //@PreAutorize("hasAuthority('USER','ADMIN'")
   @Override
   public ResponseEntity<BookDto> updateBook(Long bookId, BookUpdateDto updateBook) {
     return ResponseEntity
@@ -50,4 +48,12 @@ public class BooksController implements BooksApi {
   public ResponseEntity<BookDto> getBookDetail(Long bookId) {
     return ResponseEntity.ok().body(booksService.getBookDetail(bookId));
   }
+
+  @Override
+  public ResponseEntity<BooksShortDto> getHistory(Long userId){
+    return ResponseEntity
+        .status(HttpStatus.OK)
+        .body(booksService.getHistory(userId));
+  }
+
 }

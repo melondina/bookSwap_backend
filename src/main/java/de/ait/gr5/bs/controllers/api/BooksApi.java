@@ -107,4 +107,24 @@ public interface BooksApi {
   ResponseEntity<BookDto> getBookDetail(@Parameter(required = true, description = "Book id", example = "2")
                                         @PathVariable(name = "book_id", required = true) Long bookId);
 
+
+  @Operation(summary = "List of books read", description = "List of books read")
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "200", description = "List of books read",
+          content = {
+              @Content(mediaType = "application/json", schema = @Schema(implementation = BooksShortDto.class))
+          }),
+      @ApiResponse(responseCode = "403", description = "Not have permission",
+          content = {
+              @Content(mediaType = "application/json", schema = @Schema(implementation = RestException.class))
+          }),
+      @ApiResponse(responseCode = "404", description = "User not found",
+          content = {
+              @Content(mediaType = "application/json", schema = @Schema(implementation = RestException.class))
+          })
+  })
+  @GetMapping("/history/{user-id}")
+  ResponseEntity<BooksShortDto> getHistory(@Parameter(required = true, description = "User ID", example = "1")
+                                           @PathVariable("user-id") Long userId);
+
 }
