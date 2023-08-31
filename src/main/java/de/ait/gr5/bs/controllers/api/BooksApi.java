@@ -34,27 +34,25 @@ public interface BooksApi {
               @Content(mediaType = "application/json", schema = @Schema(implementation = ValidationErrorsDto.class))
           })
   })
-  //@PreAuthorize("hasAnyAuthority('USER','ADMIN')")
   @PostMapping
   @ResponseStatus(HttpStatus.CREATED)
   ResponseEntity<BookDto> addBook(@Parameter(required = true, description = "New book") @RequestBody @Valid BookNewDto newBook);
 
   @Operation(summary = "Book update", description = "Available to registered user and administrator")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "404", description = "Book not found",
+      @ApiResponse(responseCode = "200", description = "Book update",
           content = {
-              @Content(mediaType = "application/json", schema = @Schema(implementation = StandardResponseDto.class))
+              @Content(mediaType = "application/json", schema = @Schema(implementation = BookDto.class))
           }),
       @ApiResponse(responseCode = "400", description = "Validation error",
           content = {
               @Content(mediaType = "application/json", schema = @Schema(implementation = ValidationErrorsDto.class))
           }),
-      @ApiResponse(responseCode = "200", description = "Book update",
+      @ApiResponse(responseCode = "404", description = "Book not found",
           content = {
-              @Content(mediaType = "application/json", schema = @Schema(implementation = BookDto.class))
+              @Content(mediaType = "application/json", schema = @Schema(implementation = StandardResponseDto.class))
           })
   })
-  @PreAuthorize("hasAnyAuthority('USER','ADMIN')")
   @PutMapping("/{book-id}")
   ResponseEntity<BookDto> updateBook(@Parameter(required = true, description = "Book ID", example = "1")
                                      @PathVariable("book-id") Long bookId,

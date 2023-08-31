@@ -85,6 +85,18 @@ public class BookIntegrationTest {
       .owner(1L)
       .build();
 
+  private static final BookNewDto UPDATE_BOOK_NOT_VALID = BookNewDto.builder()
+      .title("Update - Braiding Sweetgrass")
+      .author("Update - Robin Wall Kimmerer")
+      .description("Update - Drawing on her life as an indigenous scientist, and as a woman, Kimmerer shows how other living beings...")
+      .categoryId(1L)
+      .language(" ")
+      .pages(408)
+      .publisherDate("2005-04-11")
+      .cover("f:/book_db1/1.jpg")
+      .owner(1L)
+      .build();
+
 
   @Autowired
   private MockMvc mockMvc;
@@ -162,21 +174,49 @@ public class BookIntegrationTest {
     @DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD)
     @WithMockUser(username = "test@gmail.com", password = "Qwerty007!")
     public void update_exist_book_positive() throws Exception {
-// НЕ РАБОТАЕТ  дает 405
+
       String body = objectMapper.writeValueAsString(UPDATE_BOOK);
 
-      mockMvc.perform(put("/api/books")
+      mockMvc.perform(put("/api/books/1")
               .header("Content-Type", "application/json")
               .content(body))
           .andExpect(status().isOk())
-          .andExpect(jsonPath("$.bookId", is(1L)))
+          .andExpect(jsonPath("$.bookId", is(1)))
           .andExpect(jsonPath("$.title", is("Update - Braiding Sweetgrass")))
           .andExpect(jsonPath("$.author", is("Update - Robin Wall Kimmerer")))
           .andExpect(jsonPath("$.description", is("Update - Drawing on her life as an indigenous scientist, and as a woman, Kimmerer shows how other living beings...")))
           .andExpect(jsonPath("$.language", is("Update - English")))
-          .andExpect(jsonPath("$.pages", is("4008")))
+          .andExpect(jsonPath("$.pages", is("408")))
           .andExpect(jsonPath("$.publisherDate", is("2005-04-11")))
           .andExpect(jsonPath("$.cover", is("f:/book_db1/1.jpg")));
+    }
+
+    @Test
+    @Sql(scripts = "/sql/data_for_update_book.sql")
+    @DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD)
+    @WithMockUser(username = "test@gmail.com", password = "Qwerty007!")
+    public void update_exist_book_not_valid_negative() throws Exception {
+
+      String body = objectMapper.writeValueAsString(UPDATE_BOOK_NOT_VALID);
+
+      mockMvc.perform(put("/api/books/1")
+              .header("Content-Type", "application/json")
+              .content(body))
+          .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    @Sql(scripts = "/sql/data_for_update_book.sql")
+    @DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD)
+    @WithMockUser(username = "test@gmail.com", password = "Qwerty007!")
+    public void update_not_exist_book_negative() throws Exception {
+
+      String body = objectMapper.writeValueAsString(UPDATE_BOOK);
+
+      mockMvc.perform(put("/api/books/10")
+              .header("Content-Type", "application/json")
+              .content(body))
+          .andExpect(status().isNotFound());
     }
   }
 

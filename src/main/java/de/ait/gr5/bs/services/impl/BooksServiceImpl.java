@@ -169,13 +169,10 @@ public class BooksServiceImpl implements BooksService {
       throw new RestException(HttpStatus.FORBIDDEN, "Not have permission");
     }
 
-    if (securityService.isUserPermission(userId)) {
-      List<History> histories = historyRepository.findAllBookByUser(user, SORT_BY_ID_DESC);
-      for (History history : histories) {
-        books.add(history.getBook());
-      }
+    List<History> histories = historyRepository.findAllBookByUser(user, SORT_BY_ID_DESC);
+    for (History history : histories) {
+      books.add(history.getBook());
     }
-
     return BooksShortDto.from(BookShortDto.from(books));
   }
 }

@@ -55,6 +55,6 @@ Content-Type: application/json
 }
 
 ### Get my history
-GET localhost:8080/api/books/history/2
+GET localhost:8080/api/books/history/4
 Content-Type: application/json
 
