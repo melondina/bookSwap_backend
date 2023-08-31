@@ -12,7 +12,7 @@ Content-Type: application/json
  "pages": 108,
  "publisherDate": "2015-04-11",
  "cover": "f:/book_db/1.jpg",
- "owner": 12
+ "owner": 1
 }
 
 ### Update information of the book
@@ -29,7 +29,7 @@ Content-Type: application/json
   "pages": 408,
   "publisherDate": "2015-04-11",
   "cover": "f:/book_db/1.jpg",
-  "owner": 12
+  "owner": 1
 }
 
 ###
@@ -37,7 +37,7 @@ GET localhost:8080/api/books/
 Content-Type: application/json
 
 ###
-GET localhost:8080/api/books/?user_id=12
+GET localhost:8080/api/books/?user_id=1
 Content-Type: application/json
 
 ###
@@ -46,12 +46,11 @@ Content-Type: application/json
 
 
 ### Add book to user
-POST localhost:8080/api/books/getting/4/4
-
+POST localhost:8080/api/books/getting
 Content-Type: application/json
 
 {
- "bookId": 1,
- "userId": 1
+ "bookId": 2,
+ "userId": 2
 }
 
