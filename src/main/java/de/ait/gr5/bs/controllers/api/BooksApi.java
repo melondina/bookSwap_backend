@@ -80,15 +80,23 @@ public interface BooksApi {
   @ApiResponses(value = {
           @ApiResponse(responseCode = "200", description = "Books have been added to the wait list of user",
                     content = {
-                            @Content(mediaType = "application/json", schema = @Schema(implementation = BookDto.class))
+                            @Content(mediaType = "application/json", schema = @Schema(implementation = WaitLinePlaceDto.class))
                     }),
           @ApiResponse(responseCode = "401", description = "User unauthorized",
                   content = {
                           @Content(mediaType = "application/json", schema = @Schema(implementation = RestException.class))
+                  }),
+          @ApiResponse(responseCode = "404", description = "Book or user not found",
+                  content = {
+                          @Content(mediaType = "application/json", schema = @Schema(implementation = RestException.class))
+                  }),
+          @ApiResponse(responseCode = "403", description = "User already get book or stay in line for that book",
+                  content = {
+                          @Content(mediaType = "application/json", schema = @Schema(implementation = RestException.class))
                   })
-          //todo add additional documentation
     })
   @PostMapping("/getting/{book-id}/{user-id}")
-  ResponseEntity<WaitLinePlaceDto> addBookToUserBooks(@Parameter(required = true, description = "Book ID, User ID", example = "1, 2")
-                                          @PathVariable("book-id") Long bookId, @PathVariable("user-id") Long userId);
+  ResponseEntity<WaitLinePlaceDto> addBookToUserBooks(
+          @PathVariable("book-id") @Parameter(required = true, description = "Book ID", example = "1") Long bookId,
+          @PathVariable("user-id") @Parameter(required = true, description = "Book ID", example = "1") Long userId);
 }
