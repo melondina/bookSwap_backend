@@ -96,10 +96,10 @@ public interface BooksApi {
                           @Content(mediaType = "application/json", schema = @Schema(implementation = RestException.class))
                   })
     })
-  @PostMapping("/getting/{book-id}/{user-id}")
+  @PostMapping("/getting")
   ResponseEntity<WaitLinePlaceDto> addBookToUserBooks(
-          @PathVariable("book-id") @Parameter(required = true, description = "Book ID", example = "1") Long bookId,
-          @PathVariable("user-id") @Parameter(required = true, description = "Book ID", example = "1") Long userId);
+          @Parameter(required = true, description = "Book ID", example = "1")
+          @RequestBody @Valid WaitLineRequestDto waitLineRequestDto);
 
   ResponseEntity<BookDto> getBookDetail(Long bookId);
 }

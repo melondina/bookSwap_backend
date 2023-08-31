@@ -12,7 +12,7 @@ Content-Type: application/json
  "pages": 108,
  "publisherDate": "2015-04-11",
  "cover": "f:/book_db/1.jpg",
- "owner": 12
+ "owner": 1
 }
 
 ### Update information of the book
@@ -46,12 +46,11 @@ Content-Type: application/json
 
 
 ### Add book to user
-POST localhost:8080/api/books/getting/4/4
-
+POST localhost:8080/api/books/getting
 Content-Type: application/json
 
 {
  "bookId": 1,
- "userId": 1
+ "userId": 2
 }
 

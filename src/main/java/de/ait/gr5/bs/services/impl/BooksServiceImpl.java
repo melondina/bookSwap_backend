@@ -137,9 +137,9 @@ public class BooksServiceImpl implements BooksService {
   }
 
   @Override
-  public WaitLinePlaceDto addBookToUserBooks(Long bookId, Long userId) {
-    User user = getUserOrElseThrow(userId);
-    Book book = getBookOrElseThrow(bookId);
+  public WaitLinePlaceDto addBookToUserBooks(WaitLineRequestDto waitLineRequestDto) {
+    User user = getUserOrElseThrow(waitLineRequestDto.getUserId());
+    Book book = getBookOrElseThrow(waitLineRequestDto.getBookId());
 
     if (Objects.equals(book.getOwner().getUserId(), user.getUserId())) {
       throw new RestException(HttpStatus.FORBIDDEN, "That user already have that book");
