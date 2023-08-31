@@ -100,4 +100,6 @@ public interface BooksApi {
   ResponseEntity<WaitLinePlaceDto> addBookToUserBooks(
           @PathVariable("book-id") @Parameter(required = true, description = "Book ID", example = "1") Long bookId,
           @PathVariable("user-id") @Parameter(required = true, description = "Book ID", example = "1") Long userId);
+
+  ResponseEntity<BookDto> getBookDetail(Long bookId);
 }
