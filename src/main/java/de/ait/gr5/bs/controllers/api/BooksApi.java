@@ -133,4 +133,8 @@ public interface BooksApi {
   ResponseEntity<BooksShortDto> getHistory(@Parameter(required = true, description = "User ID", example = "1")
                                            @PathVariable("user-id") Long userId);
 
+  //todo documentation to the code
+  @GetMapping("/waiting/{user-id}")
+  ResponseEntity<BooksShortDto> getWaitList(@Parameter(required = true, description = "User ID", example = "1")
+                                            @PathVariable("user-id") Long userId);
 }

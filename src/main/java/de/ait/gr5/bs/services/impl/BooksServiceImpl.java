@@ -177,4 +177,26 @@ public class BooksServiceImpl implements BooksService {
     }
     return BooksShortDto.from(BookShortDto.from(books));
   }
+
+  @Override
+  public BooksShortDto getWaitList(Long userId) {
+    User user = getUserOrElseThrow(userId);
+
+    List<Book> books = new ArrayList<>();
+
+    if (!securityService.isUserPermission(userId)) {
+      throw new RestException(HttpStatus.FORBIDDEN, "Not have permission");
+    }
+
+    List<WaitLine> waitLines  = waitLinesRepository.findAllByUser(user);
+    // List<History> histories = historyRepository.findAllBookByUser(user, SORT_BY_ID_DESC);
+
+    //for (History history : histories) {
+      for (WaitLine waitLine : waitLines) {
+        //  if (!waitLine.getBook().equals(history.getBook())) {
+          books.add(waitLine.getBook());
+        }
+
+    return BooksShortDto.from(BookShortDto.from(books));
+  }
 }

@@ -25,7 +25,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @DisplayName("BooksController is works: ")
 @DisplayNameGeneration(value = DisplayNameGenerator.ReplaceUnderscores.class)
 @ActiveProfiles("test")
-public class BookIntegrationTest {
+public class   BookIntegrationTest {
 
   private static final BookNewDto NEW_BOOK = BookNewDto.builder()
       .title("Braiding Sweetgrass")
