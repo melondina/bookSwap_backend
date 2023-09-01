@@ -271,4 +271,16 @@ public class BookIntegrationTest {
     }
   }
 
+  @Nested
+  @DisplayName("POST /api/books/getting is works: ")
+  class UserGetBookTest {
+
+    @Sql(scripts = "/sql/data_for_add_book.sql")
+    @DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD)
+    @WithMockUser(username = "test1@gmail.com", password = "Qwerty007!")
+    public void add_new_book_to_user_positive() {
+
+    }
+  }
+
 }
