@@ -9,5 +9,10 @@ public interface BooksService {
 
   BooksShortDto getBooks(Long userId);
 
-  WaitLinePlaceDto addBookToUserBooks(Long bookId, Long userId);
+  WaitLinePlaceDto addBookToUserBooks(WaitLineRequestDto waitLineRequestDto);
+
+  BookDto getBookDetail(Long bookId);
+
+  BooksShortDto getHistory(Long userId);
+
 }

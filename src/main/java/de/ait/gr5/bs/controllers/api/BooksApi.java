@@ -12,7 +12,6 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import io.swagger.v3.oas.annotations.tags.Tags;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -34,27 +33,25 @@ public interface BooksApi {
               @Content(mediaType = "application/json", schema = @Schema(implementation = ValidationErrorsDto.class))
           })
   })
-  //@PreAuthorize("hasAnyAuthority('USER','ADMIN')")
   @PostMapping
   @ResponseStatus(HttpStatus.CREATED)
   ResponseEntity<BookDto> addBook(@Parameter(required = true, description = "New book") @RequestBody @Valid BookNewDto newBook);
 
   @Operation(summary = "Book update", description = "Available to registered user and administrator")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "404", description = "Book not found",
+      @ApiResponse(responseCode = "200", description = "Book update",
           content = {
-              @Content(mediaType = "application/json", schema = @Schema(implementation = StandardResponseDto.class))
+              @Content(mediaType = "application/json", schema = @Schema(implementation = BookDto.class))
           }),
       @ApiResponse(responseCode = "400", description = "Validation error",
           content = {
               @Content(mediaType = "application/json", schema = @Schema(implementation = ValidationErrorsDto.class))
           }),
-      @ApiResponse(responseCode = "200", description = "Book update",
+      @ApiResponse(responseCode = "404", description = "Book not found",
           content = {
-              @Content(mediaType = "application/json", schema = @Schema(implementation = BookDto.class))
+              @Content(mediaType = "application/json", schema = @Schema(implementation = StandardResponseDto.class))
           })
   })
-  @PreAuthorize("hasAnyAuthority('USER','ADMIN')")
   @PutMapping("/{book-id}")
   ResponseEntity<BookDto> updateBook(@Parameter(required = true, description = "Book ID", example = "1")
                                      @PathVariable("book-id") Long bookId,
@@ -78,17 +75,62 @@ public interface BooksApi {
 
   @Operation(summary = "Get book from list to user books", description = "Available for authorised users")
   @ApiResponses(value = {
+    
           @ApiResponse(responseCode = "200", description = "Books have been added to the wait list of user",
                     content = {
-                            @Content(mediaType = "application/json", schema = @Schema(implementation = BookDto.class))
+                            @Content(mediaType = "application/json", schema = @Schema(implementation = WaitLinePlaceDto.class))
                     }),
           @ApiResponse(responseCode = "401", description = "User unauthorized",
                   content = {
                           @Content(mediaType = "application/json", schema = @Schema(implementation = RestException.class))
+                  }),
+          @ApiResponse(responseCode = "404", description = "Book or user not found",
+                  content = {
+                          @Content(mediaType = "application/json", schema = @Schema(implementation = RestException.class))
+                  }),
+          @ApiResponse(responseCode = "403", description = "User already get book or stay in line for that book",
+                  content = {
+                          @Content(mediaType = "application/json", schema = @Schema(implementation = RestException.class))
                   })
-          //todo add additional documentation
     })
-  @PostMapping("/getting/{book-id}/{user-id}")
-  ResponseEntity<WaitLinePlaceDto> addBookToUserBooks(@Parameter(required = true, description = "Book ID, User ID", example = "1, 2")
-                                          @PathVariable("book-id") Long bookId, @PathVariable("user-id") Long userId);
+  @PostMapping("/getting")
+  ResponseEntity<WaitLinePlaceDto> addBookToUserBooks(
+          @Parameter(required = true, description = "Book ID", example = "1")
+          @RequestBody @Valid WaitLineRequestDto waitLineRequestDto);
+
+  @Operation(summary = "Book detail", description = "Detailed information about the book")
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "404", description = "Book not found",
+          content = {
+              @Content(mediaType = "application/json", schema = @Schema(implementation = RestException.class))
+          }),
+      @ApiResponse(responseCode = "200", description = "Book detail",
+          content = {
+              @Content(mediaType = "application/json", schema = @Schema(implementation = BookDto.class))
+          })
+  })
+  @GetMapping("/{book_id}/detail")
+  ResponseEntity<BookDto> getBookDetail(@Parameter(required = true, description = "Book id", example = "2")
+                                        @PathVariable(name = "book_id", required = true) Long bookId);
+
+
+  @Operation(summary = "List of books read", description = "List of books read")
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "200", description = "List of books read",
+          content = {
+              @Content(mediaType = "application/json", schema = @Schema(implementation = BooksShortDto.class))
+          }),
+      @ApiResponse(responseCode = "403", description = "Not have permission",
+          content = {
+              @Content(mediaType = "application/json", schema = @Schema(implementation = RestException.class))
+          }),
+      @ApiResponse(responseCode = "404", description = "User not found",
+          content = {
+              @Content(mediaType = "application/json", schema = @Schema(implementation = RestException.class))
+          })
+  })
+  @GetMapping("/history/{user-id}")
+  ResponseEntity<BooksShortDto> getHistory(@Parameter(required = true, description = "User ID", example = "1")
+                                           @PathVariable("user-id") Long userId);
+
 }

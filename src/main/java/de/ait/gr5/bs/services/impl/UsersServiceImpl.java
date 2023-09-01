@@ -48,9 +48,9 @@ public class UsersServiceImpl implements UsersService {
 
             user.setFirstName(updateUser.getFirstName());
             user.setLastName(updateUser.getLastName());
-
-            //  country city
-            // user.setPostalCode(updateUser.getPostalCode());
+       
+      //  country city
+      // user.setPostalCode(updateUser.getPostalCode());//TODO
 
             if (user.getFirstName() !=null && user.getLastName() !=null
             // user.getPostalCode() !=null

@@ -29,7 +29,6 @@ public class BookUpdateDto {
 
   @Schema(description = "Books categories ID", example = "1")
   @NotNull
-  @NotBlank
   private Long categoryId;
 
   @Schema(description = "Book language", example = "English")
@@ -39,7 +38,6 @@ public class BookUpdateDto {
 
   @Schema(description = "Number of pages in the book", example = "408")
   @NotNull
-  @NotBlank
   private Integer pages;
 
   @Schema(description = "Publisher date of the book", example = "2015-04-11")
@@ -54,7 +52,6 @@ public class BookUpdateDto {
 
   @Schema(description = "Books owner ID", example = "1")
   @NotNull
-  @NotBlank
   private Long owner;
 
 }

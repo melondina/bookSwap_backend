@@ -20,7 +20,6 @@ username=test123@gmail.com&password=Qwerty007!
 POST http://localhost:8080/api/logout
 
 ### Update user
-
 PUT http://localhost:8080/api/users/9
 Content-Type: application/json
 

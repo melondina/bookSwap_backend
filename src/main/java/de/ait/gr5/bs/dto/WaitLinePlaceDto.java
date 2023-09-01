@@ -7,8 +7,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
-
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -19,16 +17,15 @@ public class WaitLinePlaceDto {
   @Schema(description = "Wait Line ID", example = "1")
   private Long lineId;
 
-  //todo add documentation
+  @Schema(description = "Book Id", example = "1")
   private String bookId;
 
-  //todo add documentation
+  @Schema(description = "User Id", example = "1")
   private String userId;
 
   @Schema(description = "The place of user in line for that book", example = "2")
   private Integer numberUserInLine;
 
-  //todo - create more independent method, only for waitline
   public static WaitLinePlaceDto from(WaitLine waitLine, Integer numberUserInLine) {
     return WaitLinePlaceDto.builder()
             .lineId(waitLine.getLineId())

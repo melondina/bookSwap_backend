@@ -26,7 +26,7 @@ Content-Type: application/json
   "description": "Drawing on her life as an indigenous scientist, and as a woman, Kimmerer shows how other living beings...",
   "categoryId": 1,
   "language": "English",
-  "pages": 408,
+  "pages": 4008,
   "publisherDate": "2015-04-11",
   "cover": "f:/book_db/1.jpg",
   "owner": 1
@@ -40,11 +40,21 @@ Content-Type: application/json
 GET localhost:8080/api/books/?user_id=1
 Content-Type: application/json
 
+###
+GET localhost:8080/api/books/4/detail
+Content-Type: application/json
+
+
 ### Add book to user
-POST localhost:8080/api/books/getting/1/1
+POST localhost:8080/api/books/getting
 Content-Type: application/json
 
 {
- "bookId": 1,
- "userId": 1
+ "bookId": 2,
+ "userId": 2
 }
+
+### Get my history
+GET localhost:8080/api/books/history/4
+Content-Type: application/json
+

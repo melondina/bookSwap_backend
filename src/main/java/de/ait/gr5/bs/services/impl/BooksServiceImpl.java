@@ -2,14 +2,8 @@ package de.ait.gr5.bs.services.impl;
 
 import de.ait.gr5.bs.dto.*;
 import de.ait.gr5.bs.handler.RestException;
-import de.ait.gr5.bs.models.Book;
-import de.ait.gr5.bs.models.Category;
-import de.ait.gr5.bs.models.User;
-import de.ait.gr5.bs.models.WaitLine;
-import de.ait.gr5.bs.repositories.BooksRepository;
-import de.ait.gr5.bs.repositories.CategoriesRepository;
-import de.ait.gr5.bs.repositories.UsersRepository;
-import de.ait.gr5.bs.repositories.WaitLinesRepository;
+import de.ait.gr5.bs.models.*;
+import de.ait.gr5.bs.repositories.*;
 import de.ait.gr5.bs.security.details.SecurityService;
 import de.ait.gr5.bs.services.BooksService;
 import lombok.AccessLevel;
@@ -21,7 +15,9 @@ import org.springframework.data.domain.Sort;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import static de.ait.gr5.bs.dto.BookDto.from;
 
@@ -34,9 +30,11 @@ public class BooksServiceImpl implements BooksService {
   UsersRepository usersRepository;
   CategoriesRepository categoriesRepository;
   WaitLinesRepository waitLinesRepository;
+  HistoryRepository historyRepository;
 
   private final SecurityService securityService;
   public static final Sort SORT_BY_DATA_CREATED_DESC = Sort.by(Sort.Direction.DESC, "dateCreate");
+  public static final Sort SORT_BY_ID_DESC = Sort.by(Sort.Direction.DESC, "id");
 
 
   @Override
@@ -73,7 +71,7 @@ public class BooksServiceImpl implements BooksService {
 
     Category category = getCategoryOrElseThrow(updateBook.getCategoryId());
 
-    Book book = getBookOrThrow(bookId);
+    Book book = getBookOrElseThrow(bookId);
     book.setTitle(updateBook.getTitle());
     book.setAuthor(updateBook.getAuthor());
     book.setDescription(updateBook.getDescription());
@@ -106,6 +104,15 @@ public class BooksServiceImpl implements BooksService {
     return BooksShortDto.from(BookShortDto.from(books));
   }
 
+  @Override
+  public BookDto getBookDetail(Long bookId) {
+    Book book = getBookOrElseThrow(bookId);
+    BookDto result = from(book);
+    result.setLocation(booksRepository.findLocationBook(bookId));
+    result.setQueueSize(waitLinesRepository.countByBook_BookId(bookId));
+    return result;
+  }
+
   public Category getCategoryOrElseThrow(Long categoryId) {
     Category category = categoriesRepository.findById(categoryId)
         .orElseThrow(() -> new RestException(HttpStatus.NOT_FOUND,
@@ -114,15 +121,9 @@ public class BooksServiceImpl implements BooksService {
   }
 
   public Book getBookOrElseThrow(Long bookId) {
-    Book book1 = booksRepository.findById(bookId)
+    return booksRepository.findById(bookId)
         .orElseThrow(() -> new RestException(HttpStatus.NOT_FOUND,
-            "Book with id <" + bookId + "> not found"));
-    return book1;
-  }
-
-  public Book getBookOrThrow(Long bookId) {
-    return booksRepository.findById(bookId).orElseThrow(
-        () -> new RestException(HttpStatus.NOT_FOUND, "Book not found"));
+            "Book with id < " + bookId + " > not found"));
   }
 
   public User getUserOrElseThrow(Long userId) {
@@ -133,27 +134,47 @@ public class BooksServiceImpl implements BooksService {
   }
 
   @Override
-  public WaitLinePlaceDto addBookToUserBooks(Long bookId, Long userId) {
-    User user = getUserOrElseThrow(userId);
-    Book book = getBookOrElseThrow(bookId);
+  public WaitLinePlaceDto addBookToUserBooks(WaitLineRequestDto waitLineRequestDto) {
+    User user = getUserOrElseThrow(waitLineRequestDto.getUserId());
+    Book book = getBookOrElseThrow(waitLineRequestDto.getBookId());
 
-    //todo - if the user not have a permission
-    //todo - if the user already have that book
+    if (Objects.equals(book.getOwner().getUserId(), user.getUserId())) {
+      throw new RestException(HttpStatus.FORBIDDEN, "That user already have that book");
+    }
+
+    List<WaitLine> usersInLine = waitLinesRepository.findAllByBook(book);
+    for(WaitLine waitline : usersInLine) {
+      if (Objects.equals(waitline.getUser().getUserId(), user.getUserId())) {
+        throw new RestException(HttpStatus.FORBIDDEN, "User have already booked that book");
+      }
+    }
 
     WaitLine waitLine = WaitLine.builder()
-            .book(book)
-            .user(user)
-            .dateCreate(LocalDate.from(LocalDateTime.now()))
-            .build();
+        .book(book)
+        .user(user)
+        .dateCreate(LocalDate.from(LocalDateTime.now()))
+        .build();
 
     waitLinesRepository.save(waitLine);
 
-    return WaitLinePlaceDto.from(waitLine, getTheNumberInLine(waitLine.getBook()));
+    return WaitLinePlaceDto.from(waitLine, usersInLine.size()+1);
   }
 
-  public Integer getTheNumberInLine(Book book) {
-    //todo check, if we do not have book
-    List<WaitLine> checkTheNumbers = waitLinesRepository.findAllByBook(book);
-    return checkTheNumbers.size();
+
+  @Override
+  public BooksShortDto getHistory(Long userId) {
+    User user = getUserOrElseThrow(userId);
+
+    List<Book> books = new ArrayList<>();
+
+    if (!securityService.isUserPermission(userId)) {
+      throw new RestException(HttpStatus.FORBIDDEN, "Not have permission");
+    }
+
+    List<History> histories = historyRepository.findAllBookByUser(user, SORT_BY_ID_DESC);
+    for (History history : histories) {
+      books.add(history.getBook());
+    }
+    return BooksShortDto.from(BookShortDto.from(books));
   }
 }
