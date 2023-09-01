@@ -4,7 +4,7 @@ POST http://localhost:8080/api/registration
 Content-Type: application/json
 
 {
-  "email": "alex23@gmail.com",
+  "email": "test12346@gmail.com",
   "password": "Qwerty007!"
 }
 
@@ -13,7 +13,7 @@ Content-Type: application/json
 POST http://localhost:8080/api/login
 Content-Type: application/x-www-form-urlencoded
 
-username=alex2@gmail.com&password=Qwerty007!
+username=test123@gmail.com&password=Qwerty007!
 
 ### Logout
 
@@ -21,13 +21,14 @@ POST http://localhost:8080/api/logout
 
 ### Update user
 
-PUT http://localhost:8080/api/users/54
+PUT http://localhost:8080/api/users/9
 Content-Type: application/json
 
 {
   "newRole" : "USER",
-  "newState" : "NOT_CONFIRMED",
   "firstName" : "Sam",
-  "lastName" : "Smith",
-  "postalCode" : "19394"
+  "lastName" : "Smith"
 }
+
+### Get my profile
+GET http://localhost:8080/api/users/me
