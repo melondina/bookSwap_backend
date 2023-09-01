@@ -1,9 +1,9 @@
 package de.ait.gr5.bs.controllers;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import de.ait.gr5.bs.dto.BookNewDto;
 import de.ait.gr5.bs.dto.WaitLineRequestDto;
+import de.ait.gr5.bs.models.User;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -15,6 +15,8 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.MockMvc;
 
+import static de.ait.gr5.bs.controllers.utils.userAuthorization.createdUser;
+import static de.ait.gr5.bs.controllers.utils.userAuthorization.userAuthorizationForTest;
 import static org.hamcrest.Matchers.is;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -100,14 +102,14 @@ public class BookIntegrationTest {
       .build();
 
   private static final WaitLineRequestDto NEW_BOOK_TO_USER_POSITIVE = WaitLineRequestDto.builder()
-          .bookId(1L)
-          .userId(2L)
-          .build();
+      .bookId(1L)
+      .userId(2L)
+      .build();
 
   private static final WaitLineRequestDto NEW_BOOK_TO_USER_NEGATIVE_SAME_USER = WaitLineRequestDto.builder()
-          .bookId(1L)
-          .userId(1L)
-          .build();
+      .bookId(1L)
+      .userId(1L)
+      .build();
 
   @Autowired
   private MockMvc mockMvc;
@@ -248,14 +250,19 @@ public class BookIntegrationTest {
   @DisplayName("GET /api/books/history is works: ")
   class MyHistoryTest {
 
-    @Test //не работает
+    @Test // работает !!!!
     @Sql(scripts = "/sql/data_for_my_history.sql")
     @DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD)
     @WithMockUser(username = "test@gmail.com", password = "Qwerty007!")
     public void get_my_history_not_empty_positive() throws Exception {
 
+      User userAuthForTest = createdUser(1l, "test@gmail.com",
+          "$2a$10$Vz4mecaJq32jIGzL8dlgW.Xk6suWG1lhHgawSqmcYEc1vDvcRUlMe",
+          User.State.NOT_CONFIRMED, User.Role.USER, false);
+      userAuthorizationForTest(userAuthForTest);
       mockMvc.perform(get("/api/books/history/1")
-              .header("Content-Type", "application/json"))
+              .header("Content-Type", "application/json")
+              .with(SecurityMockMvcRequestPostProcessors.csrf()))
           .andExpect(status().isOk())
           .andExpect(jsonPath("count", is(2)));
     }
@@ -308,14 +315,14 @@ public class BookIntegrationTest {
       String body = objectMapper.writeValueAsString(NEW_BOOK_TO_USER_POSITIVE);
 
       mockMvc.perform(post("/api/books/getting")
-                      .header("Content-Type", "application/json")
-                      .content(body)
-                      .with(SecurityMockMvcRequestPostProcessors.csrf()))
-              .andExpect(status().isOk())
-              .andExpect(jsonPath("$.lineId", is(1)))
-              .andExpect(jsonPath("$.bookId", is("1")))
-              .andExpect(jsonPath("$.userId", is("2")))
-              .andExpect(jsonPath("$.numberUserInLine", is(1)));
+              .header("Content-Type", "application/json")
+              .content(body)
+              .with(SecurityMockMvcRequestPostProcessors.csrf()))
+          .andExpect(status().isOk())
+          .andExpect(jsonPath("$.lineId", is(1)))
+          .andExpect(jsonPath("$.bookId", is("1")))
+          .andExpect(jsonPath("$.userId", is("2")))
+          .andExpect(jsonPath("$.numberUserInLine", is(1)));
     }
 
     @Test
@@ -327,10 +334,10 @@ public class BookIntegrationTest {
       String body = objectMapper.writeValueAsString(NEW_BOOK_TO_USER_NEGATIVE_SAME_USER);
 
       mockMvc.perform(post("/api/books/getting")
-                      .header("Content-Type", "application/json")
-                      .content(body)
-                      .with(SecurityMockMvcRequestPostProcessors.csrf()))
-              .andExpect(status().isForbidden());
+              .header("Content-Type", "application/json")
+              .content(body)
+              .with(SecurityMockMvcRequestPostProcessors.csrf()))
+          .andExpect(status().isForbidden());
     }
 
     @Test
@@ -342,15 +349,15 @@ public class BookIntegrationTest {
       String body = objectMapper.writeValueAsString(NEW_BOOK_TO_USER_POSITIVE);
 
       mockMvc.perform(post("/api/books/getting")
-                      .header("Content-Type", "application/json")
-                      .content(body)
-                      .with(SecurityMockMvcRequestPostProcessors.csrf()));
+          .header("Content-Type", "application/json")
+          .content(body)
+          .with(SecurityMockMvcRequestPostProcessors.csrf()));
 
       mockMvc.perform(post("/api/books/getting")
-                      .header("Content-Type", "application/json")
-                      .content(body)
-                      .with(SecurityMockMvcRequestPostProcessors.csrf()))
-              .andExpect(status().isForbidden());
+              .header("Content-Type", "application/json")
+              .content(body)
+              .with(SecurityMockMvcRequestPostProcessors.csrf()))
+          .andExpect(status().isForbidden());
     }
   }
 
