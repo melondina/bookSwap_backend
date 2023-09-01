@@ -1,0 +1,3 @@
+###
+GET localhost:8080/api/location/01109
+Content-Type: application/json

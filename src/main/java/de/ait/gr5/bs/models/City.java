@@ -20,7 +20,7 @@ public class City {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
-  private Integer postalCode;
+  private String postalCode;
 
   @Column(nullable = false)
   private String title;
