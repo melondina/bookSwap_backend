@@ -189,14 +189,16 @@ public class BooksServiceImpl implements BooksService {
     }
 
     List<WaitLine> waitLines  = waitLinesRepository.findAllByUser(user);
-    // List<History> histories = historyRepository.findAllBookByUser(user, SORT_BY_ID_DESC);
+    List<History> histories = historyRepository.findAllBookByUser(user, SORT_BY_ID_DESC);
 
-    //for (History history : histories) {
+    //todo cycle is not work, re-ride!
       for (WaitLine waitLine : waitLines) {
-        //  if (!waitLine.getBook().equals(history.getBook())) {
-          books.add(waitLine.getBook());
+        for (History history : histories) {
+          if (!(waitLine.getBook().equals(history.getBook()))) {
+            books.add(waitLine.getBook());
+          }
         }
-
+      }
     return BooksShortDto.from(BookShortDto.from(books));
   }
 }
