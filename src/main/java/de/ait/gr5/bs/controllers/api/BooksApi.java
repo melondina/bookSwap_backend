@@ -98,7 +98,20 @@ public interface BooksApi {
           @Parameter(required = true, description = "Book ID", example = "1")
           @RequestBody @Valid WaitLineRequestDto waitLineRequestDto);
 
-  ResponseEntity<BookDto> getBookDetail(Long bookId);
+  @Operation(summary = "Book detail", description = "Detailed information about the book")
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "404", description = "Book not found",
+          content = {
+              @Content(mediaType = "application/json", schema = @Schema(implementation = RestException.class))
+          }),
+      @ApiResponse(responseCode = "200", description = "Book detail",
+          content = {
+              @Content(mediaType = "application/json", schema = @Schema(implementation = BookDto.class))
+          })
+  })
+  @GetMapping("/{book_id}/detail")
+  ResponseEntity<BookDto> getBookDetail(@Parameter(required = true, description = "Book id", example = "2")
+                                        @PathVariable(name = "book_id", required = true) Long bookId);
 
 
   @Operation(summary = "List of books read", description = "List of books read")
