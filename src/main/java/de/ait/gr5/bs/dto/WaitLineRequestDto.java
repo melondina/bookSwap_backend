@@ -15,7 +15,7 @@ public class WaitLineRequestDto {
   @NotNull
   private Long bookId;
 
-  @Schema(description = "User ID", example = "1")
+  @Schema(description = "User ID, that what want to have book", example = "1")
   @NotNull
   private Long userId;
 }
