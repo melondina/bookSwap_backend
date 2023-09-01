@@ -40,7 +40,7 @@ public class BookUpdateDto {
   @NotNull
   private Integer pages;
 
-  @Schema(description = "Publisher date of the book", example = "2015-04-11")
+  @Schema(description = "Publisher date of the book", example = "2015")
   @NotNull
   @NotBlank
   private String publisherDate;
