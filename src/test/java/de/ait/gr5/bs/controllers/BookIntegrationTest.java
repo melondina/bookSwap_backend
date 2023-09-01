@@ -1,7 +1,9 @@
 package de.ait.gr5.bs.controllers;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import de.ait.gr5.bs.dto.BookNewDto;
+import de.ait.gr5.bs.dto.WaitLineRequestDto;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -97,6 +99,15 @@ public class BookIntegrationTest {
       .owner(1L)
       .build();
 
+  private static final WaitLineRequestDto NEW_BOOK_TO_USER_POSITIVE = WaitLineRequestDto.builder()
+          .bookId(1L)
+          .userId(2L)
+          .build();
+
+  private static final WaitLineRequestDto NEW_BOOK_TO_USER_NEGATIVE_SAME_USER = WaitLineRequestDto.builder()
+          .bookId(1L)
+          .userId(1L)
+          .build();
 
   @Autowired
   private MockMvc mockMvc;
@@ -275,11 +286,58 @@ public class BookIntegrationTest {
   @DisplayName("POST /api/books/getting is works: ")
   class UserGetBookTest {
 
-    @Sql(scripts = "/sql/data_for_add_book.sql")
+    @Test
+    @Sql(scripts = "/sql/data_for_add_book_to_the_user.sql")
     @DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD)
     @WithMockUser(username = "test1@gmail.com", password = "Qwerty007!")
-    public void add_new_book_to_user_positive() {
+    public void add_new_book_to_user_positive() throws Exception {
 
+      String body = objectMapper.writeValueAsString(NEW_BOOK_TO_USER_POSITIVE);
+
+      mockMvc.perform(post("/api/books/getting")
+                      .header("Content-Type", "application/json")
+                      .content(body)
+                      .with(SecurityMockMvcRequestPostProcessors.csrf()))
+              .andExpect(status().isOk())
+              .andExpect(jsonPath("$.lineId", is(1)))
+              .andExpect(jsonPath("$.bookId", is("1")))
+              .andExpect(jsonPath("$.userId", is("2")))
+              .andExpect(jsonPath("$.numberUserInLine", is(1)));
+    }
+
+    @Test
+    @Sql(scripts = "/sql/data_for_add_book_to_the_user.sql")
+    @DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD)
+    @WithMockUser(username = "test1@gmail.com", password = "Qwerty007!")
+    public void add_new_book_to_user_negative_same_user() throws Exception {
+
+      String body = objectMapper.writeValueAsString(NEW_BOOK_TO_USER_NEGATIVE_SAME_USER);
+
+      mockMvc.perform(post("/api/books/getting")
+                      .header("Content-Type", "application/json")
+                      .content(body)
+                      .with(SecurityMockMvcRequestPostProcessors.csrf()))
+              .andExpect(status().isForbidden());
+    }
+
+    @Test
+    @Sql(scripts = "/sql/data_for_add_book_to_the_user.sql")
+    @DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD)
+    @WithMockUser(username = "test1@gmail.com", password = "Qwerty007!")
+    public void add_new_book_to_user_negative_2_booking() throws Exception {
+
+      String body = objectMapper.writeValueAsString(NEW_BOOK_TO_USER_POSITIVE);
+
+      mockMvc.perform(post("/api/books/getting")
+                      .header("Content-Type", "application/json")
+                      .content(body)
+                      .with(SecurityMockMvcRequestPostProcessors.csrf()));
+
+      mockMvc.perform(post("/api/books/getting")
+                      .header("Content-Type", "application/json")
+                      .content(body)
+                      .with(SecurityMockMvcRequestPostProcessors.csrf()))
+              .andExpect(status().isForbidden());
     }
   }
 
