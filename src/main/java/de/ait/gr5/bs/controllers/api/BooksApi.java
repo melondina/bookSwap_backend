@@ -31,11 +31,20 @@ public interface BooksApi {
       @ApiResponse(responseCode = "400", description = "Validation error",
           content = {
               @Content(mediaType = "application/json", schema = @Schema(implementation = ValidationErrorsDto.class))
+          }),
+      @ApiResponse(responseCode = "403", description = "Fill in full details about yourself in your profile",
+          content = {
+              @Content(mediaType = "application/json", schema = @Schema(implementation = BookDto.class))
+          }),
+      @ApiResponse(responseCode = "403", description = "Not have permission",
+          content = {
+              @Content(mediaType = "application/json", schema = @Schema(implementation = BookDto.class))
           })
   })
   @PostMapping
   @ResponseStatus(HttpStatus.CREATED)
   ResponseEntity<BookDto> addBook(@Parameter(required = true, description = "New book") @RequestBody @Valid BookNewDto newBook);
+
 
   @Operation(summary = "Book update", description = "Available to registered user and administrator")
   @ApiResponses(value = {
@@ -46,6 +55,10 @@ public interface BooksApi {
       @ApiResponse(responseCode = "400", description = "Validation error",
           content = {
               @Content(mediaType = "application/json", schema = @Schema(implementation = ValidationErrorsDto.class))
+          }),
+      @ApiResponse(responseCode = "403", description = "Not have permission",
+          content = {
+              @Content(mediaType = "application/json", schema = @Schema(implementation = BookDto.class))
           }),
       @ApiResponse(responseCode = "404", description = "Book not found",
           content = {
@@ -75,28 +88,28 @@ public interface BooksApi {
 
   @Operation(summary = "Get book from list to user books", description = "Available for authorised users")
   @ApiResponses(value = {
-    
-          @ApiResponse(responseCode = "200", description = "Books have been added to the wait list of user",
-                    content = {
-                            @Content(mediaType = "application/json", schema = @Schema(implementation = WaitLinePlaceDto.class))
-                    }),
-          @ApiResponse(responseCode = "401", description = "User unauthorized",
-                  content = {
-                          @Content(mediaType = "application/json", schema = @Schema(implementation = RestException.class))
-                  }),
-          @ApiResponse(responseCode = "404", description = "Book or user not found",
-                  content = {
-                          @Content(mediaType = "application/json", schema = @Schema(implementation = RestException.class))
-                  }),
-          @ApiResponse(responseCode = "403", description = "User already get book or stay in line for that book",
-                  content = {
-                          @Content(mediaType = "application/json", schema = @Schema(implementation = RestException.class))
-                  })
-    })
+
+      @ApiResponse(responseCode = "200", description = "Books have been added to the wait list of user",
+          content = {
+              @Content(mediaType = "application/json", schema = @Schema(implementation = WaitLinePlaceDto.class))
+          }),
+      @ApiResponse(responseCode = "401", description = "User unauthorized",
+          content = {
+              @Content(mediaType = "application/json", schema = @Schema(implementation = RestException.class))
+          }),
+      @ApiResponse(responseCode = "404", description = "Book or user not found",
+          content = {
+              @Content(mediaType = "application/json", schema = @Schema(implementation = RestException.class))
+          }),
+      @ApiResponse(responseCode = "403", description = "User already get book or stay in line for that book",
+          content = {
+              @Content(mediaType = "application/json", schema = @Schema(implementation = RestException.class))
+          })
+  })
   @PostMapping("/getting")
   ResponseEntity<WaitLinePlaceDto> addBookToUserBooks(
-          @Parameter(required = true, description = "Book ID", example = "1")
-          @RequestBody @Valid WaitLineRequestDto waitLineRequestDto);
+      @Parameter(required = true, description = "Book ID", example = "1")
+      @RequestBody @Valid WaitLineRequestDto waitLineRequestDto);
 
   @Operation(summary = "Book detail", description = "Detailed information about the book")
   @ApiResponses(value = {

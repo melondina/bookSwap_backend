@@ -45,7 +45,7 @@ public class Book {
     private Integer pages;
 
     @Column(nullable = false)
-    private LocalDate publisherDate;
+    private String publisherDate;
 
     @Column(nullable = false)
     private String cover;

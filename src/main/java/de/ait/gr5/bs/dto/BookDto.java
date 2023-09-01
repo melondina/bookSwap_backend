@@ -39,7 +39,7 @@ public class BookDto {
   @Schema(description = "Number of pages in the book", example = "408")
   private String pages;
 
-  @Schema(description = "Publisher date of the book, format YYYY-MM-DD", example = "2015-04-11")
+  @Schema(description = "Publisher date of the book, format YYYY-MM-DD", example = "2015")
   private String publisherDate;
 
   @Schema(description = "Book cover photo", example = "f:/db/1.jpg")

@@ -2,6 +2,7 @@ package de.ait.gr5.bs.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import de.ait.gr5.bs.dto.BookNewDto;
+import de.ait.gr5.bs.dto.BookUpdateDto;
 import de.ait.gr5.bs.dto.WaitLineRequestDto;
 import de.ait.gr5.bs.models.User;
 import org.junit.jupiter.api.*;
@@ -36,7 +37,7 @@ public class BookIntegrationTest {
       .categoryId(1L)
       .language("English")
       .pages(408)
-      .publisherDate("2015-04-11")
+      .publisherDate("2015")
       .cover("f:/book_db/1.jpg")
       .owner(1L)
       .build();
@@ -48,7 +49,7 @@ public class BookIntegrationTest {
       .categoryId(1L)
       .language("English")
       .pages(408)
-      .publisherDate("2015-04-11")
+      .publisherDate("2015")
       .cover("f:/book_db/1.jpg")
       .owner(1L)
       .build();
@@ -60,7 +61,7 @@ public class BookIntegrationTest {
       .categoryId(19L)
       .language("English")
       .pages(408)
-      .publisherDate("2015-04-11")
+      .publisherDate("2015")
       .cover("f:/book_db/1.jpg")
       .owner(1L)
       .build();
@@ -72,33 +73,45 @@ public class BookIntegrationTest {
       .categoryId(1L)
       .language("English")
       .pages(408)
-      .publisherDate("2015-04-11")
+      .publisherDate("2015")
       .cover("f:/book_db/1.jpg")
       .owner(2L)
       .build();
 
-  private static final BookNewDto UPDATE_BOOK = BookNewDto.builder()
+  private static final BookUpdateDto UPDATE_BOOK = BookUpdateDto.builder()
       .title("Update - Braiding Sweetgrass")
       .author("Update - Robin Wall Kimmerer")
       .description("Update - Drawing on her life as an indigenous scientist, and as a woman, Kimmerer shows how other living beings...")
       .categoryId(1L)
       .language("Update - English")
       .pages(408)
-      .publisherDate("2005-04-11")
+      .publisherDate("2005")
       .cover("f:/book_db1/1.jpg")
       .owner(1L)
       .build();
 
-  private static final BookNewDto UPDATE_BOOK_NOT_VALID = BookNewDto.builder()
+  private static final BookUpdateDto UPDATE_BOOK_NOT_VALID = BookUpdateDto.builder()
       .title("Update - Braiding Sweetgrass")
       .author("Update - Robin Wall Kimmerer")
       .description("Update - Drawing on her life as an indigenous scientist, and as a woman, Kimmerer shows how other living beings...")
       .categoryId(1L)
       .language(" ")
       .pages(408)
-      .publisherDate("2005-04-11")
+      .publisherDate("2005")
       .cover("f:/book_db1/1.jpg")
       .owner(1L)
+      .build();
+
+  private static final BookUpdateDto UPDATE_BOOK_ANOTHER_USER = BookUpdateDto.builder()
+      .title("Update - Braiding Sweetgrass")
+      .author("Update - Robin Wall Kimmerer")
+      .description("Update - Drawing on her life as an indigenous scientist, and as a woman, Kimmerer shows how other living beings...")
+      .categoryId(1L)
+      .language("English")
+      .pages(408)
+      .publisherDate("2005")
+      .cover("f:/book_db1/1.jpg")
+      .owner(2L)
       .build();
 
   private static final WaitLineRequestDto NEW_BOOK_TO_USER_POSITIVE = WaitLineRequestDto.builder()
@@ -121,7 +134,7 @@ public class BookIntegrationTest {
   @DisplayName("POST /api/books is works: ")
   class AddBookTest {
 
-    @Test
+    @Test // не работает
     @Sql(scripts = "/sql/data_for_add_book.sql")
     @DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD)
     @WithMockUser(username = "test1@gmail.com", password = "Qwerty007!")
@@ -195,7 +208,7 @@ public class BookIntegrationTest {
   @DisplayName("PUT /api/books is works: ")
   class UpdateBookTest {
 
-    @Test
+    @Test  // работает
     @Sql(scripts = "/sql/data_for_update_book.sql")
     @DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD)
     @WithMockUser(username = "test@gmail.com", password = "Qwerty007!")
@@ -213,7 +226,7 @@ public class BookIntegrationTest {
           .andExpect(jsonPath("$.description", is("Update - Drawing on her life as an indigenous scientist, and as a woman, Kimmerer shows how other living beings...")))
           .andExpect(jsonPath("$.language", is("Update - English")))
           .andExpect(jsonPath("$.pages", is("408")))
-          .andExpect(jsonPath("$.publisherDate", is("2005-04-11")))
+          .andExpect(jsonPath("$.publisherDate", is("2005")))
           .andExpect(jsonPath("$.cover", is("f:/book_db1/1.jpg")));
     }
 
@@ -244,6 +257,33 @@ public class BookIntegrationTest {
               .content(body))
           .andExpect(status().isNotFound());
     }
+
+    @Test
+    @Sql(scripts = "/sql/data_for_update_book_user.sql")
+    @DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD)
+    @WithMockUser(username = "test1@gmail.com", password = "Qwerty007!")
+    public void update_book_another_user_negative() throws Exception {
+      String body = objectMapper.writeValueAsString(UPDATE_BOOK_ANOTHER_USER);
+
+      mockMvc.perform(put("/api/books/2")
+              .header("Content-Type", "application/json")
+              .content(body))
+          .andExpect(status().isForbidden());
+    }
+
+    @Test
+    @Sql(scripts = "/sql/data_for_update_book_user.sql")
+    @DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD)
+    @WithMockUser(username = "test1@gmail.com", password = "Qwerty007!")
+    public void update_book_not_confirmed_user_negative() throws Exception {
+      String body = objectMapper.writeValueAsString(UPDATE_BOOK);
+
+      mockMvc.perform(put("/api/books/1")
+              .header("Content-Type", "application/json")
+              .content(body))
+          .andExpect(status().isForbidden());
+    }
+
   }
 
   @Nested
@@ -256,7 +296,7 @@ public class BookIntegrationTest {
     @WithMockUser(username = "test@gmail.com", password = "Qwerty007!")
     public void get_my_history_not_empty_positive() throws Exception {
 
-      User userAuthForTest = createdUser(1l, "test@gmail.com",
+      User userAuthForTest = createdUser(1L, "test@gmail.com",
           "$2a$10$Vz4mecaJq32jIGzL8dlgW.Xk6suWG1lhHgawSqmcYEc1vDvcRUlMe",
           User.State.NOT_CONFIRMED, User.Role.USER, false);
       userAuthorizationForTest(userAuthForTest);
