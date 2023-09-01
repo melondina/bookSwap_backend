@@ -31,6 +31,7 @@ public class BooksServiceImpl implements BooksService {
   CategoriesRepository categoriesRepository;
   WaitLinesRepository waitLinesRepository;
   HistoryRepository historyRepository;
+  LocationRepository locationRepository;
 
   private final SecurityService securityService;
   public static final Sort SORT_BY_DATA_CREATED_DESC = Sort.by(Sort.Direction.DESC, "dateCreate");
@@ -143,7 +144,7 @@ public class BooksServiceImpl implements BooksService {
     }
 
     List<WaitLine> usersInLine = waitLinesRepository.findAllByBook(book);
-    for(WaitLine waitline : usersInLine) {
+    for (WaitLine waitline : usersInLine) {
       if (Objects.equals(waitline.getUser().getUserId(), user.getUserId())) {
         throw new RestException(HttpStatus.FORBIDDEN, "User have already booked that book");
       }
@@ -157,7 +158,7 @@ public class BooksServiceImpl implements BooksService {
 
     waitLinesRepository.save(waitLine);
 
-    return WaitLinePlaceDto.from(waitLine, usersInLine.size()+1);
+    return WaitLinePlaceDto.from(waitLine, usersInLine.size() + 1);
   }
 
 
@@ -176,5 +177,15 @@ public class BooksServiceImpl implements BooksService {
       books.add(history.getBook());
     }
     return BooksShortDto.from(BookShortDto.from(books));
+  }
+
+  @Override
+  public FilterDTO getFilter() {
+    return FilterDTO.builder()
+        .language(booksRepository.findLanguageForFilter())
+        .category(booksRepository.findCategoryForFilter())
+        .location(locationRepository.findCityPostalCodeForFilter())
+        .build();
+
   }
 }
