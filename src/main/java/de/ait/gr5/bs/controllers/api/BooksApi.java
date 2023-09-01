@@ -133,4 +133,16 @@ public interface BooksApi {
   ResponseEntity<BooksShortDto> getHistory(@Parameter(required = true, description = "User ID", example = "1")
                                            @PathVariable("user-id") Long userId);
 
+  @Operation(summary = "List for filter")
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "200", description = "List for filter",
+          content = {
+              @Content(mediaType = "application/json", schema = @Schema(implementation = FilterDTO.class))
+          })
+  })
+  @GetMapping("/filter")
+  ResponseEntity<FilterDTO> getFilter ();
+
+
+
 }

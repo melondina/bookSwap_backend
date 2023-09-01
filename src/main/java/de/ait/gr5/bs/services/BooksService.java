@@ -15,4 +15,5 @@ public interface BooksService {
 
   BooksShortDto getHistory(Long userId);
 
+  FilterDTO getFilter();
 }

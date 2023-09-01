@@ -56,4 +56,9 @@ public class BooksController implements BooksApi {
         .body(booksService.getHistory(userId));
   }
 
+  @Override
+  public ResponseEntity<FilterDTO> getFilter() {
+    return ResponseEntity.ok().body(booksService.getFilter());
+  }
+
 }
