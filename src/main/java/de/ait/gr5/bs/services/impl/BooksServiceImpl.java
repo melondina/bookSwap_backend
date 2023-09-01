@@ -43,22 +43,29 @@ public class BooksServiceImpl implements BooksService {
 
     Category category = getCategoryOrElseThrow(newBook.getCategoryId());
 
-    Book book = Book.builder()
-        .title(newBook.getTitle())
-        .author(newBook.getAuthor())
-        .description(newBook.getDescription())
-        .category(category)
-        .language(newBook.getLanguage())
-        .pages(newBook.getPages())
-        .publisherDate(LocalDate.parse(newBook.getPublisherDate()))
-        .cover(newBook.getCover())
-        .dateCreate(java.time.LocalDate.now())
-        .owner(user)
-        .state(Book.State.AVAILABLE)
-        .build();
+    Book book = new Book();
+    if (user.getState().equals(User.State.NOT_CONFIRMED)) {
+      throw new RestException(HttpStatus.FORBIDDEN, "Fill in full details about yourself in your profile");
+    } else if (!securityService.isUserPermission(user.getUserId())) {
+      throw new RestException(HttpStatus.FORBIDDEN, "Not have permission");
+    } else {
+      book = Book.builder()
+          .title(newBook.getTitle())
+          .author(newBook.getAuthor())
+          .description(newBook.getDescription())
+          .category(category)
+          .language(newBook.getLanguage())
+          .pages(newBook.getPages())
+          .publisherDate(LocalDate.parse(newBook.getPublisherDate()))
+          .cover(newBook.getCover())
+          .dateCreate(java.time.LocalDate.now())
+          .owner(user)
+          .state(Book.State.AVAILABLE)
+          .build();
 
-    booksRepository.save(book);
+      booksRepository.save(book);
 
+    }
     return from(book);
   }
 
@@ -143,7 +150,7 @@ public class BooksServiceImpl implements BooksService {
     }
 
     List<WaitLine> usersInLine = waitLinesRepository.findAllByBook(book);
-    for(WaitLine waitline : usersInLine) {
+    for (WaitLine waitline : usersInLine) {
       if (Objects.equals(waitline.getUser().getUserId(), user.getUserId())) {
         throw new RestException(HttpStatus.FORBIDDEN, "User have already booked that book");
       }
@@ -157,7 +164,7 @@ public class BooksServiceImpl implements BooksService {
 
     waitLinesRepository.save(waitLine);
 
-    return WaitLinePlaceDto.from(waitLine, usersInLine.size()+1);
+    return WaitLinePlaceDto.from(waitLine, usersInLine.size() + 1);
   }
 
 

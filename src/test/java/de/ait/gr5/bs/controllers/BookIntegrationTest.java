@@ -63,7 +63,7 @@ public class BookIntegrationTest {
       .owner(1L)
       .build();
 
-  private static final BookNewDto NEW_BOOK_404_USER = BookNewDto.builder()
+  private static final BookNewDto NEW_BOOK_ANOTHER_USER = BookNewDto.builder()
       .title("Braiding Sweetgrass")
       .author("Robin Wall Kimmerer")
       .description("Drawing on her life as an indigenous scientist, and as a woman, Kimmerer shows how other living beings...")
@@ -72,7 +72,7 @@ public class BookIntegrationTest {
       .pages(408)
       .publisherDate("2015-04-11")
       .cover("f:/book_db/1.jpg")
-      .owner(19L)
+      .owner(2L)
       .build();
 
   private static final BookNewDto UPDATE_BOOK = BookNewDto.builder()
@@ -140,7 +140,7 @@ public class BookIntegrationTest {
     @Sql(scripts = "/sql/data_for_add_book.sql")
     @DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD)
     @WithMockUser(username = "test1@gmail.com", password = "Qwerty007!")
-    public void add_new_book_negative() throws Exception {
+    public void add_new_book_not_valid_negative() throws Exception {
       String body = objectMapper.writeValueAsString(NEW_BOOK_NOT_VALID);
 
       mockMvc.perform(post("/api/books")
@@ -163,16 +163,29 @@ public class BookIntegrationTest {
     }
 
     @Test
-    @Sql(scripts = "/sql/data_for_add_book.sql")
+    @Sql(scripts = "/sql/data_for_add_book_user.sql")
     @DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD)
     @WithMockUser(username = "test1@gmail.com", password = "Qwerty007!")
-    public void add_new_book_not_exit_user_negative() throws Exception {
-      String body = objectMapper.writeValueAsString(NEW_BOOK_404_USER);
+    public void add_new_book_another_user_negative() throws Exception {
+      String body = objectMapper.writeValueAsString(NEW_BOOK_ANOTHER_USER);
 
       mockMvc.perform(post("/api/books")
               .header("Content-Type", "application/json")
               .content(body))
-          .andExpect(status().isNotFound());
+          .andExpect(status().isForbidden());
+    }
+
+    @Test
+    @Sql(scripts = "/sql/data_for_add_book_user.sql")
+    @DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD)
+    @WithMockUser(username = "test1@gmail.com", password = "Qwerty007!")
+    public void add_new_book_not_confirmed_user_negative() throws Exception {
+      String body = objectMapper.writeValueAsString(NEW_BOOK);
+
+      mockMvc.perform(post("/api/books")
+              .header("Content-Type", "application/json")
+              .content(body))
+          .andExpect(status().isForbidden());
     }
   }
 
