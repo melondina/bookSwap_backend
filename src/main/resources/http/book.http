@@ -50,7 +50,7 @@ POST localhost:8080/api/books/getting
 Content-Type: application/json
 
 {
- "bookId": 1,
+ "bookId": 2,
  "userId": 2
 }
 
