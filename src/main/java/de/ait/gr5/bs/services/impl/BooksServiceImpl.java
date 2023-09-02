@@ -18,6 +18,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 import static de.ait.gr5.bs.dto.BookDto.from;
 
@@ -192,12 +193,38 @@ public class BooksServiceImpl implements BooksService {
   }
 
   @Override
+  public BooksShortDto getWaitList(Long userId) {
+    User user = getUserOrElseThrow(userId);
+
+    if (!securityService.isUserPermission(userId)) {
+      throw new RestException(HttpStatus.FORBIDDEN, "Not have permission");
+    }
+
+    List<Book> booksFromWaitLine = new ArrayList<>();
+    List<WaitLine> waitLines  = waitLinesRepository.findAllByUser(user);
+    for (WaitLine waitLine : waitLines) {
+      booksFromWaitLine.add(waitLine.getBook());
+    }
+
+    //this part will be useless, after finished task 'send book to another user'
+    List<Book> booksFromHistory = new ArrayList<>();
+    List<History> histories = historyRepository.findAllBookByUser(user, SORT_BY_ID_DESC);
+    for (History history : histories) {
+      booksFromHistory.add(history.getBook());
+    }
+
+    List<Book> books = booksFromWaitLine.stream()
+            .filter(book -> !booksFromHistory.contains(book))
+            .collect(Collectors.toList());
+
+    return BooksShortDto.from(BookShortDto.from(books));
+
+  @Override
   public FilterDTO getFilter() {
     return FilterDTO.builder()
         .language(booksRepository.findLanguageForFilter())
         .category(booksRepository.findCategoryForFilter())
         .location(locationRepository.findCityPostalCodeForFilter())
         .build();
-
   }
 }

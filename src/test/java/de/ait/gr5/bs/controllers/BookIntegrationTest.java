@@ -28,7 +28,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @DisplayName("BooksController is works: ")
 @DisplayNameGeneration(value = DisplayNameGenerator.ReplaceUnderscores.class)
 @ActiveProfiles("test")
-public class BookIntegrationTest {
+public class   BookIntegrationTest {
 
   private static final BookNewDto NEW_BOOK = BookNewDto.builder()
       .title("Braiding Sweetgrass")
@@ -398,6 +398,23 @@ public class BookIntegrationTest {
               .content(body)
               .with(SecurityMockMvcRequestPostProcessors.csrf()))
           .andExpect(status().isForbidden());
+    }
+  }
+
+  @Nested
+  @DisplayName("GET /api/books/waiting/{userId} is works: ")
+  class UserGetListOfWaitingBook {
+
+    @Test //fail, problems with permissions
+    @Sql(scripts = "/sql/data_for_get_wait_line.sql")
+    @DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD)
+    @WithMockUser(username = "test2@gmail.com", password = "Qwerty007!")
+    public void get_book_from_wait_line_positive() throws Exception {
+
+      mockMvc.perform(get("/api/books/waiting/2")
+                      .header("Content-Type", "application/json")
+                      .with(SecurityMockMvcRequestPostProcessors.csrf()))
+              .andExpect(status().isOk());
     }
   }
 
