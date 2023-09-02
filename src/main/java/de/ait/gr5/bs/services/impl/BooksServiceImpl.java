@@ -32,6 +32,7 @@ public class BooksServiceImpl implements BooksService {
   CategoriesRepository categoriesRepository;
   WaitLinesRepository waitLinesRepository;
   HistoryRepository historyRepository;
+  LocationRepository locationRepository;
 
   private final SecurityService securityService;
   public static final Sort SORT_BY_DATA_CREATED_DESC = Sort.by(Sort.Direction.DESC, "dateCreate");
@@ -44,22 +45,28 @@ public class BooksServiceImpl implements BooksService {
 
     Category category = getCategoryOrElseThrow(newBook.getCategoryId());
 
-    Book book = Book.builder()
-        .title(newBook.getTitle())
-        .author(newBook.getAuthor())
-        .description(newBook.getDescription())
-        .category(category)
-        .language(newBook.getLanguage())
-        .pages(newBook.getPages())
-        .publisherDate(LocalDate.parse(newBook.getPublisherDate()))
-        .cover(newBook.getCover())
-        .dateCreate(java.time.LocalDate.now())
-        .owner(user)
-        .state(Book.State.AVAILABLE)
-        .build();
+    Book book;
+    if (user.getState().equals(User.State.NOT_CONFIRMED)) {
+      throw new RestException(HttpStatus.FORBIDDEN, "Fill in full details about yourself in your profile");
+    } else if (!securityService.isUserPermission(user.getUserId())) {
+      throw new RestException(HttpStatus.FORBIDDEN, "Not have permission");
+    } else {
+      book = Book.builder()
+          .title(newBook.getTitle())
+          .author(newBook.getAuthor())
+          .description(newBook.getDescription())
+          .category(category)
+          .language(newBook.getLanguage())
+          .pages(newBook.getPages())
+          .publisherDate(newBook.getPublisherDate())
+          .cover(newBook.getCover())
+          .dateCreate(java.time.LocalDate.now())
+          .owner(user)
+          .state(Book.State.AVAILABLE)
+          .build();
 
-    booksRepository.save(book);
-
+      booksRepository.save(book);
+    }
     return from(book);
   }
 
@@ -72,19 +79,25 @@ public class BooksServiceImpl implements BooksService {
 
     Category category = getCategoryOrElseThrow(updateBook.getCategoryId());
 
-    Book book = getBookOrElseThrow(bookId);
-    book.setTitle(updateBook.getTitle());
-    book.setAuthor(updateBook.getAuthor());
-    book.setDescription(updateBook.getDescription());
-    book.setCategory(category);
-    book.setLanguage(updateBook.getLanguage());
-    book.setPages(updateBook.getPages());
-    book.setPublisherDate(LocalDate.parse(updateBook.getPublisherDate()));
-    book.setCover(updateBook.getCover());
-    book.setOwner(user);
-    book.setDateCreate(book1.getDateCreate());
-    book.setState(book1.getState());
-    booksRepository.save(book);
+    Book book;
+    if (!securityService.isUserPermission(user.getUserId())) {
+      throw new RestException(HttpStatus.FORBIDDEN, "Not have permission");
+    } else {
+      book = getBookOrElseThrow(bookId);
+      book.setTitle(updateBook.getTitle());
+      book.setAuthor(updateBook.getAuthor());
+      book.setDescription(updateBook.getDescription());
+      book.setCategory(category);
+      book.setLanguage(updateBook.getLanguage());
+      book.setPages(updateBook.getPages());
+      book.setPublisherDate(updateBook.getPublisherDate());
+      book.setCover(updateBook.getCover());
+      book.setOwner(user);
+      book.setDateCreate(book1.getDateCreate());
+      book.setState(book1.getState());
+
+      booksRepository.save(book);
+    }
     return from(book);
   }
 
@@ -144,7 +157,7 @@ public class BooksServiceImpl implements BooksService {
     }
 
     List<WaitLine> usersInLine = waitLinesRepository.findAllByBook(book);
-    for(WaitLine waitline : usersInLine) {
+    for (WaitLine waitline : usersInLine) {
       if (Objects.equals(waitline.getUser().getUserId(), user.getUserId())) {
         throw new RestException(HttpStatus.FORBIDDEN, "User have already booked that book");
       }
@@ -158,7 +171,7 @@ public class BooksServiceImpl implements BooksService {
 
     waitLinesRepository.save(waitLine);
 
-    return WaitLinePlaceDto.from(waitLine, usersInLine.size()+1);
+    return WaitLinePlaceDto.from(waitLine, usersInLine.size() + 1);
   }
 
 
@@ -205,5 +218,13 @@ public class BooksServiceImpl implements BooksService {
             .collect(Collectors.toList());
 
     return BooksShortDto.from(BookShortDto.from(books));
+
+  @Override
+  public FilterDTO getFilter() {
+    return FilterDTO.builder()
+        .language(booksRepository.findLanguageForFilter())
+        .category(booksRepository.findCategoryForFilter())
+        .location(locationRepository.findCityPostalCodeForFilter())
+        .build();
   }
 }

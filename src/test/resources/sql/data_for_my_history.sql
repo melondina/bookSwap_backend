@@ -9,11 +9,11 @@ VALUES (true, 'test2@gmail.com', 'Ivan', 'Ivanov',  'USER', 'CONFIRMED');
 
 insert into books (title, author, description, category_id, language, pages, publisher_date, cover, user_id, date_create, state)
 values ('Braiding Sweetgrass', 'Robin Wall Kimmerer', 'Drawing on her life as an indigenous scientist, and as a woman, Kimmerer shows how other living beings...',
-        1, 'English', 408, '2015-04-11', 'f:/book_db/1.jpg', 1, '2023-08-30', 'AVAILABLE');
+        1, 'English', 408, '2015', 'f:/book_db/1.jpg', 1, '2023-08-30', 'AVAILABLE');
 
 insert into books (title, author, description, category_id, language, pages, publisher_date, cover, user_id, date_create, state)
 values ('Braiding Sweetgrass', 'Robin Wall Kimmerer', 'Drawing on her life as an indigenous scientist, and as a woman, Kimmerer shows how other living beings...',
-        1, 'English', 408, '2015-04-11', 'f:/book_db/1.jpg', 1, '2023-08-30', 'AVAILABLE');
+        1, 'English', 408, '2015', 'f:/book_db/1.jpg', 1, '2023-08-30', 'AVAILABLE');
 
 insert into history (book_id, user_id) values (1, 1);
 

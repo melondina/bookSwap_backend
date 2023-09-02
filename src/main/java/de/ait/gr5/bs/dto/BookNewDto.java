@@ -41,7 +41,7 @@ public class BookNewDto {
   @NotNull
   private Integer pages;
 
-  @Schema(description = "Publisher date of the book, format YYYY-MM-DD", example = "2015-04-11")
+  @Schema(description = "Publisher date of the book, format YYYY-MM-DD", example = "2015")
   @NotNull
   @NotBlank
   private String publisherDate;

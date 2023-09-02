@@ -61,6 +61,10 @@ public class BooksController implements BooksApi {
     return ResponseEntity
             .status(HttpStatus.OK)
             .body(booksService.getWaitList(userId));
+  
+  @Override
+  public ResponseEntity<FilterDTO> getFilter() {
+    return ResponseEntity.ok().body(booksService.getFilter());
   }
 
 }
