@@ -50,8 +50,8 @@ POST localhost:8080/api/books/getting
 Content-Type: application/json
 
 {
- "bookId": 2,
- "userId": 2
+ "bookId": 1,
+ "userId": 4
 }
 
 ### Get my history
@@ -59,7 +59,7 @@ GET localhost:8080/api/books/history/2
 Content-Type: application/json
 
 ### Get my waiting list
-GET localhost:8080/api/books/waiting/2
+GET localhost:8080/api/books/waiting/4
 Content-Type: application/json
 
 ### Get filter

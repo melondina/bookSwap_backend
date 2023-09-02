@@ -201,7 +201,7 @@ public class BooksServiceImpl implements BooksService {
     }
 
     List<Book> booksFromWaitLine = new ArrayList<>();
-    List<WaitLine> waitLines  = waitLinesRepository.findAllByUser(user);
+    List<WaitLine> waitLines = waitLinesRepository.findAllByUser(user);
     for (WaitLine waitLine : waitLines) {
       booksFromWaitLine.add(waitLine.getBook());
     }
@@ -218,6 +218,7 @@ public class BooksServiceImpl implements BooksService {
             .collect(Collectors.toList());
 
     return BooksShortDto.from(BookShortDto.from(books));
+  }
 
   @Override
   public FilterDTO getFilter() {
