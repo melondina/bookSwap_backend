@@ -193,6 +193,7 @@ public class BooksServiceImpl implements BooksService {
       booksFromWaitLine.add(waitLine.getBook());
     }
 
+    //this part will be useless, after finished task 'send book to another user'
     List<Book> booksFromHistory = new ArrayList<>();
     List<History> histories = historyRepository.findAllBookByUser(user, SORT_BY_ID_DESC);
     for (History history : histories) {

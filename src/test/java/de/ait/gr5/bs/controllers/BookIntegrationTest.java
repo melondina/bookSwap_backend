@@ -341,4 +341,21 @@ public class   BookIntegrationTest {
     }
   }
 
+  @Nested
+  @DisplayName("GET /api/books/waiting/{userId} is works: ")
+  class UserGetListOfWaitingBook {
+
+    @Test //fail, problems with permissions
+    @Sql(scripts = "/sql/data_for_get_wait_line.sql")
+    @DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD)
+    @WithMockUser(username = "test2@gmail.com", password = "Qwerty007!")
+    public void get_book_from_wait_line_positive() throws Exception {
+
+      mockMvc.perform(get("/api/books/waiting/2")
+                      .header("Content-Type", "application/json")
+                      .with(SecurityMockMvcRequestPostProcessors.csrf()))
+              .andExpect(status().isOk());
+    }
+  }
+
 }
