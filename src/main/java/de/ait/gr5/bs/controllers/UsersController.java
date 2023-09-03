@@ -16,7 +16,6 @@ public class UsersController implements UsersApi {
 
     private final UsersService usersService;
 
-
     @Override
     public ResponseEntity<UserDto> updateUser(Long userId, UpdateUserDto updateUser) {
         return ResponseEntity
@@ -30,4 +29,3 @@ public class UsersController implements UsersApi {
     }
 
 }
-

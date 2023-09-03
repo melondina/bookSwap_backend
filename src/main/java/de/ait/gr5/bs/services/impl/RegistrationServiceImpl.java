@@ -41,6 +41,7 @@ public class RegistrationServiceImpl implements RegistrationService {
                 .password(passwordEncoder.encode(registerData.getPassword()))
                 .role(User.Role.USER)
                 .state(User.State.NOT_CONFIRMED)
+                .agreement(true)
                 .build();
 
         usersRepository.save(user);
