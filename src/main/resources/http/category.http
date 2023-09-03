@@ -1,0 +1,5 @@
+### Get list of categories
+
+GET localhost:8080/api/categories
+Content-Type: application/json
+

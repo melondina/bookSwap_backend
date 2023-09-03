@@ -1,11 +1,15 @@
 package de.ait.gr5.bs.dto;
 
+import de.ait.gr5.bs.models.Book;
 import de.ait.gr5.bs.models.Category;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Data
 @NoArgsConstructor
@@ -25,6 +29,12 @@ public class CategoryDto {
         .categoryId(category.getCategoryId())
         .title(category.getTitle())
         .build();
+  }
+
+  public static List<CategoryDto> from(List<Category> categories) {
+    return categories.stream()
+        .map(CategoryDto::from)
+        .collect(Collectors.toList());
   }
 
 }
