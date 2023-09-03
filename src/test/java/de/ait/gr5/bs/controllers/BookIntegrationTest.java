@@ -142,6 +142,11 @@ public class   BookIntegrationTest {
 
       String body = objectMapper.writeValueAsString(NEW_BOOK);
 
+      User userAuthForTest = createdUser(1L, "test@gmail.com",
+              "$2a$10$Vz4mecaJq32jIGzL8dlgW.Xk6suWG1lhHgawSqmcYEc1vDvcRUlMe",
+              User.State.NOT_CONFIRMED, User.Role.USER, false);
+      userAuthorizationForTest(userAuthForTest);
+
       mockMvc.perform(post("/api/books")
               .header("Content-Type", "application/json")
               .content(body)
@@ -215,6 +220,11 @@ public class   BookIntegrationTest {
     public void update_exist_book_positive() throws Exception {
 
       String body = objectMapper.writeValueAsString(UPDATE_BOOK);
+
+      User userAuthForTest = createdUser(1L, "test@gmail.com",
+              "$2a$10$Vz4mecaJq32jIGzL8dlgW.Xk6suWG1lhHgawSqmcYEc1vDvcRUlMe",
+              User.State.NOT_CONFIRMED, User.Role.USER, false);
+      userAuthorizationForTest(userAuthForTest);
 
       mockMvc.perform(put("/api/books/1")
               .header("Content-Type", "application/json")
@@ -311,7 +321,12 @@ public class   BookIntegrationTest {
     @Sql(scripts = "/sql/data_for_my_history_empty.sql")
     @DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD)
     @WithMockUser(username = "test@gmail.com", password = "Qwerty007!")
+
     public void get_my_history_empty_positive() throws Exception {
+      User userAuthForTest = createdUser(1L, "test@gmail.com",
+              "$2a$10$Vz4mecaJq32jIGzL8dlgW.Xk6suWG1lhHgawSqmcYEc1vDvcRUlMe",
+              User.State.NOT_CONFIRMED, User.Role.USER, false);
+      userAuthorizationForTest(userAuthForTest);
 
       mockMvc.perform(get("/api/books/history/1")
               .header("Content-Type", "application/json"))
@@ -405,17 +420,22 @@ public class   BookIntegrationTest {
   @DisplayName("GET /api/books/waiting/{userId} is works: ")
   class UserGetListOfWaitingBook {
 
-    @Test //fail, problems with permissions
+    @Test
     @Sql(scripts = "/sql/data_for_get_wait_line.sql")
     @DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD)
     @WithMockUser(username = "test2@gmail.com", password = "Qwerty007!")
     public void get_book_from_wait_line_positive() throws Exception {
 
+      User userAuthForTest = createdUser(2L, "test2@gmail.com",
+              "$2a$10$Vz4mecaJq32jIGzL8dlgW.Xk6suWG1lhHgawSqmcYEc1vDvcRUlMe",
+              User.State.NOT_CONFIRMED, User.Role.USER, false);
+      userAuthorizationForTest(userAuthForTest);
+
       mockMvc.perform(get("/api/books/waiting/2")
                       .header("Content-Type", "application/json")
                       .with(SecurityMockMvcRequestPostProcessors.csrf()))
-              .andExpect(status().isOk());
+              .andExpect(status().isOk())
+              .andExpect(jsonPath("count", is(1)));;
     }
   }
-
 }
