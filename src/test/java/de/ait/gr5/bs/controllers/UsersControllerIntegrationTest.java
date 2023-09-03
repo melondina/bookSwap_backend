@@ -42,6 +42,7 @@ public class UsersControllerIntegrationTest {
 
         String body = objectMapper.writeValueAsString(UpdateUserDto.builder()
                 .newRole("USER")
+                .postalCode(78224)
                 .build());
 
         mockMvc.perform(put("/api/users/1")
@@ -50,6 +51,7 @@ public class UsersControllerIntegrationTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id", is(1)))
                 .andExpect(jsonPath("$.state", is("NOT_CONFIRMED")))
+                .andExpect(jsonPath("$.postalCode", is("78224")))
                 .andExpect(jsonPath("$.role", is("USER")));
     }
 
@@ -62,6 +64,7 @@ public class UsersControllerIntegrationTest {
         String body = objectMapper.writeValueAsString(UpdateUserDto.builder()
                 .newRole("USER")
                 .firstName("Andy")
+                .postalCode(78224)
                 .build());
 
         mockMvc.perform(put("/api/users/2")

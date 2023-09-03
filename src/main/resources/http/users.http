@@ -20,13 +20,15 @@ username=notcon@gmail.com&password=Qwerty007!
 POST http://localhost:8080/api/logout
 
 ### Update user
+
 PUT http://localhost:8080/api/users/2
 Content-Type: application/json
 
 {
   "newRole" : "USER",
-  "firstName" : "Sam",
-  "lastName" : "Smith"
+  "firstName" : "Roland",
+  "lastName" : "Smith",
+  "postalCode" : "78224"
 }
 
 ### Get my profile
