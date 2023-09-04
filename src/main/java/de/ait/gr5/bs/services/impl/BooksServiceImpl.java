@@ -15,9 +15,7 @@ import org.springframework.data.domain.Sort;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static de.ait.gr5.bs.dto.BookDto.from;
@@ -227,5 +225,36 @@ public class BooksServiceImpl implements BooksService {
         .category(booksRepository.findCategoryForFilter())
         .location(locationRepository.findCityPostalCodeForFilter())
         .build();
+  }
+
+  @Override
+  public BooksShortDto getSendList(Long userId) {
+    User user = getUserOrElseThrow(userId);
+
+    if (!securityService.isUserPermission(userId)) {
+      throw new RestException(HttpStatus.FORBIDDEN, "Not have permission");
+    }
+
+    //get all books from owner
+    List<Book> booksFromOwner = booksRepository.findAllByOwner(user, SORT_BY_DATA_CREATED_DESC);
+
+    List<WaitLine> waitLines = waitLinesRepository.findAll();
+    List<Book> booksFromWaitLine = new ArrayList<>();
+
+    //get all books from wait list
+    for (WaitLine waitLine : waitLines) {
+      booksFromWaitLine.add(waitLine.getBook());
+    }
+
+    //in result list, will be only same books from owner and wait list
+    List<Book> resultBooks = new ArrayList<>(booksFromWaitLine);
+    resultBooks.retainAll(booksFromOwner);
+
+    //here we clear from doubles list of books
+    Set<Book> uniqueBooks = new HashSet<>(resultBooks);
+    resultBooks.clear();
+    resultBooks.addAll(uniqueBooks);
+
+    return BooksShortDto.from(BookShortDto.from(resultBooks));
   }
 }

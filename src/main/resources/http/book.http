@@ -7,12 +7,12 @@ Content-Type: application/json
  "title": "Braiding Sweetgrass",
  "author": "Robin Wall Kimmerer",
  "description": "Drawing on her life as an indigenous scientist, and as a woman, Kimmerer shows how other living beings...",
- "categoryId": 3,
+ "categoryId": 1,
  "language": "English",
  "pages": 108,
  "publisherDate": "2015-04-11",
  "cover": "f:/book_db/1.jpg",
- "owner": 1
+ "owner": 2
 }
 
 ### Update information of the book
@@ -59,10 +59,13 @@ GET localhost:8080/api/books/history/2
 Content-Type: application/json
 
 ### Get my waiting list
-GET localhost:8080/api/books/waiting/4
+GET localhost:8080/api/books/waiting/1
 Content-Type: application/json
 
 ### Get filter
 GET localhost:8080/api/books/filter
 Content-Type: application/json
 
+### Get my list to send
+GET localhost:8080/api/books/send/1
+Content-Type: application/json
