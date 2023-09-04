@@ -31,7 +31,7 @@ public class BookShortDto {
         .cover(book.getCover())
         .title(book.getTitle())
         .category(book.getCategory().getTitle())
-        .language(book.getLanguage())
+        .language(book.getLanguage().getTitle())
         .author(book.getAuthor())
         .build();
   }

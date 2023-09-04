@@ -35,7 +35,7 @@ public class   BookIntegrationTest {
       .author("Robin Wall Kimmerer")
       .description("Drawing on her life as an indigenous scientist, and as a woman, Kimmerer shows how other living beings...")
       .categoryId(1L)
-      .language("English")
+      .languageId(1L)
       .pages(408)
       .publisherDate("2015")
       .cover("f:/book_db/1.jpg")
@@ -47,7 +47,7 @@ public class   BookIntegrationTest {
       .author("Robin Wall Kimmerer")
       .description("Drawing on her life as an indigenous scientist, and as a woman, Kimmerer shows how other living beings...")
       .categoryId(1L)
-      .language("English")
+      .languageId(1L)
       .pages(408)
       .publisherDate("2015")
       .cover("f:/book_db/1.jpg")
@@ -59,7 +59,7 @@ public class   BookIntegrationTest {
       .author("Robin Wall Kimmerer")
       .description("Drawing on her life as an indigenous scientist, and as a woman, Kimmerer shows how other living beings...")
       .categoryId(19L)
-      .language("English")
+      .languageId(1L)
       .pages(408)
       .publisherDate("2015")
       .cover("f:/book_db/1.jpg")
@@ -71,7 +71,7 @@ public class   BookIntegrationTest {
       .author("Robin Wall Kimmerer")
       .description("Drawing on her life as an indigenous scientist, and as a woman, Kimmerer shows how other living beings...")
       .categoryId(1L)
-      .language("English")
+      .languageId(1L)
       .pages(408)
       .publisherDate("2015")
       .cover("f:/book_db/1.jpg")
@@ -83,7 +83,7 @@ public class   BookIntegrationTest {
       .author("Update - Robin Wall Kimmerer")
       .description("Update - Drawing on her life as an indigenous scientist, and as a woman, Kimmerer shows how other living beings...")
       .categoryId(1L)
-      .language("Update - English")
+      .languageId(1L)
       .pages(408)
       .publisherDate("2005")
       .cover("f:/book_db1/1.jpg")
@@ -95,7 +95,7 @@ public class   BookIntegrationTest {
       .author("Update - Robin Wall Kimmerer")
       .description("Update - Drawing on her life as an indigenous scientist, and as a woman, Kimmerer shows how other living beings...")
       .categoryId(1L)
-      .language(" ")
+      .languageId(1L)//тут я не уверена , какое нао значение
       .pages(408)
       .publisherDate("2005")
       .cover("f:/book_db1/1.jpg")
@@ -107,7 +107,7 @@ public class   BookIntegrationTest {
       .author("Update - Robin Wall Kimmerer")
       .description("Update - Drawing on her life as an indigenous scientist, and as a woman, Kimmerer shows how other living beings...")
       .categoryId(1L)
-      .language("English")
+      .languageId(1L)
       .pages(408)
       .publisherDate("2005")
       .cover("f:/book_db1/1.jpg")
@@ -435,7 +435,7 @@ public class   BookIntegrationTest {
                       .header("Content-Type", "application/json")
                       .with(SecurityMockMvcRequestPostProcessors.csrf()))
               .andExpect(status().isOk())
-              .andExpect(jsonPath("count", is(1)));;
+              .andExpect(jsonPath("count", is(1)));
     }
   }
 

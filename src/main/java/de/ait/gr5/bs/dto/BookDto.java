@@ -58,7 +58,7 @@ public class BookDto {
         .author(book.getAuthor())
         .description(book.getDescription())
         .category(book.getCategory().getTitle())
-        .language(book.getLanguage())
+        .language(book.getLanguage().getTitle())
         .pages(book.getPages().toString())
         .cover(book.getCover())
         .owner(book.getOwner().getUserId().toString())

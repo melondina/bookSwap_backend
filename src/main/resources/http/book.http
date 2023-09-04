@@ -4,32 +4,32 @@ POST localhost:8080/api/books
 Content-Type: application/json
 
 {
- "title": "Braiding Sweetgrass",
+ "title": "title2",
  "author": "Robin Wall Kimmerer",
  "description": "Drawing on her life as an indigenous scientist, and as a woman, Kimmerer shows how other living beings...",
  "categoryId": 1,
- "language": "English",
+ "languageId": 1,
  "pages": 108,
  "publisherDate": "2015-04-11",
  "cover": "f:/book_db/1.jpg",
- "owner": 2
+ "owner": 3
 }
 
 ### Update information of the book
 
-PUT localhost:8080/api/books/1
+PUT localhost:8080/api/books/5
 Content-Type: application/json
 
 {
-  "title": "Braiding Sweetgrass",
-  "author": "Robin Wall Kimmerer",
-  "description": "Drawing on her life as an indigenous scientist, and as a woman, Kimmerer shows how other living beings...",
+  "title": "REFACTOR Braiding Sweetgrass",
+  "author": "REFACTOR Wall Kimmerer",
+  "description": "REFACTOR Drawing on her life as an indigenous scientist, and as a woman, Kimmerer shows how other living beings...",
   "categoryId": 1,
-  "language": "English",
+  "languageId": 1,
   "pages": 4008,
   "publisherDate": "2015-04-11",
   "cover": "f:/book_db/1.jpg",
-  "owner": 1
+  "owner": 3
 }
 
 ###
@@ -37,11 +37,11 @@ GET localhost:8080/api/books/
 Content-Type: application/json
 
 ### Found all books
-GET localhost:8080/api/books/?user_id=1
+GET localhost:8080/api/books/?user_id=3
 Content-Type: application/json
 
 ### Get delail of book
-GET localhost:8080/api/books/1/detail
+GET localhost:8080/api/books/5/detail
 Content-Type: application/json
 
 
@@ -50,16 +50,16 @@ POST localhost:8080/api/books/getting
 Content-Type: application/json
 
 {
- "bookId": 1,
- "userId": 4
+ "bookId": 5,
+ "userId": 2
 }
 
 ### Get my history
-GET localhost:8080/api/books/history/2
+GET localhost:8080/api/books/history/3
 Content-Type: application/json
 
 ### Get my waiting list
-GET localhost:8080/api/books/waiting/1
+GET localhost:8080/api/books/waiting/3
 Content-Type: application/json
 
 ### Get filter
@@ -67,5 +67,5 @@ GET localhost:8080/api/books/filter
 Content-Type: application/json
 
 ### Get my list to send
-GET localhost:8080/api/books/send/1
+GET localhost:8080/api/books/send/3
 Content-Type: application/json
