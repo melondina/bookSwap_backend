@@ -438,4 +438,72 @@ public class   BookIntegrationTest {
               .andExpect(jsonPath("count", is(1)));;
     }
   }
+
+  @Nested
+  @DisplayName("GET /api/books/send/{userId} is works: ")
+  class UserGetListOfBooksToSend {
+
+    @Test
+    @Sql(scripts = "/sql/data_for_get_wait_line.sql")
+    @DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD)
+    @WithMockUser(username = "test@gmail.com", password = "Qwerty007!")
+    public void get_book_to_send_positive() throws Exception {
+
+      User userAuthForTest = createdUser(1L, "test@gmail.com",
+              "$2a$10$Vz4mecaJq32jIGzL8dlgW.Xk6suWG1lhHgawSqmcYEc1vDvcRUlMe",
+              User.State.NOT_CONFIRMED, User.Role.USER, false);
+      userAuthorizationForTest(userAuthForTest);
+
+      mockMvc.perform(get("/api/books/send/1")
+                      .header("Content-Type", "application/json")
+                      .with(SecurityMockMvcRequestPostProcessors.csrf()))
+              .andExpect(status().isOk())
+              .andExpect(jsonPath("count", is(1)));
+    }
+
+    @Test
+    @Sql(scripts = "/sql/data_for_get_wait_line.sql")
+    @DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD)
+    @WithMockUser(username = "test2@gmail.com", password = "Qwerty007!")
+    public void get_book_to_send_negative_not_permission() throws Exception {
+
+      User userAuthForTest = createdUser(2L, "test@gmail.com",
+              "$2a$10$Vz4mecaJq32jIGzL8dlgW.Xk6suWG1lhHgawSqmcYEc1vDvcRUlMe",
+              User.State.NOT_CONFIRMED, User.Role.USER, false);
+      userAuthorizationForTest(userAuthForTest);
+
+      mockMvc.perform(get("/api/books/send/1")
+                      .header("Content-Type", "application/json")
+                      .with(SecurityMockMvcRequestPostProcessors.csrf()))
+              .andExpect(status().isForbidden());
+    }
+
+    @Test
+    @Sql(scripts = "/sql/data_for_get_wait_line.sql")
+    @DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD)
+    public void get_book_to_send_negative_unauthorized() throws Exception {
+
+      mockMvc.perform(get("/api/books/send/1")
+                      .header("Content-Type", "application/json")
+                      .with(SecurityMockMvcRequestPostProcessors.csrf()))
+              .andExpect(status().isForbidden());
+    }
+
+    @Test
+    @Sql(scripts = "/sql/data_for_get_wait_line.sql")
+    @DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD)
+    @WithMockUser(username = "test@gmail.com", password = "Qwerty007!")
+    public void get_book_to_send_negative_user_not_found() throws Exception {
+
+      User userAuthForTest = createdUser(1L, "test@gmail.com",
+              "$2a$10$Vz4mecaJq32jIGzL8dlgW.Xk6suWG1lhHgawSqmcYEc1vDvcRUlMe",
+              User.State.NOT_CONFIRMED, User.Role.USER, false);
+      userAuthorizationForTest(userAuthForTest);
+
+      mockMvc.perform(get("/api/books/send/10")
+                      .header("Content-Type", "application/json")
+                      .with(SecurityMockMvcRequestPostProcessors.csrf()))
+              .andExpect(status().isNotFound());
+    }
+  }
 }

@@ -20,28 +20,28 @@ public class BooksController implements BooksApi {
   @Override
   public ResponseEntity<BookDto> addBook(BookNewDto newBook) {
     return ResponseEntity
-        .status(HttpStatus.CREATED)
-        .body(booksService.addBook(newBook));
+            .status(HttpStatus.CREATED)
+            .body(booksService.addBook(newBook));
   }
 
   @Override
   public ResponseEntity<BookDto> updateBook(Long bookId, BookUpdateDto updateBook) {
     return ResponseEntity
-        .status(HttpStatus.OK)
-        .body(booksService.updateBook(bookId, updateBook));
+            .status(HttpStatus.OK)
+            .body(booksService.updateBook(bookId, updateBook));
   }
 
   @Override
   public ResponseEntity<BooksShortDto> getBooks(Long userId) {
     return ResponseEntity.ok()
-        .body(booksService.getBooks(userId));
+            .body(booksService.getBooks(userId));
   }
 
   @Override
   public ResponseEntity<WaitLinePlaceDto> addBookToUserBooks(WaitLineRequestDto waitLineRequestDto) {
     return ResponseEntity
-        .status(HttpStatus.OK)
-        .body(booksService.addBookToUserBooks(waitLineRequestDto));
+            .status(HttpStatus.OK)
+            .body(booksService.addBookToUserBooks(waitLineRequestDto));
   }
 
   @Override
@@ -50,10 +50,10 @@ public class BooksController implements BooksApi {
   }
 
   @Override
-  public ResponseEntity<BooksShortDto> getHistory(Long userId){
+  public ResponseEntity<BooksShortDto> getHistory(Long userId) {
     return ResponseEntity
-        .status(HttpStatus.OK)
-        .body(booksService.getHistory(userId));
+            .status(HttpStatus.OK)
+            .body(booksService.getHistory(userId));
   }
 
   @Override
@@ -63,8 +63,15 @@ public class BooksController implements BooksApi {
             .body(booksService.getWaitList(userId));
   }
 
-    @Override
-    public ResponseEntity<FilterDTO> getFilter () {
-      return ResponseEntity.ok().body(booksService.getFilter());
-    }
+  @Override
+  public ResponseEntity<FilterDTO> getFilter() {
+    return ResponseEntity.ok().body(booksService.getFilter());
   }
+
+  @Override
+  public ResponseEntity<BooksShortDto> getSendList(Long userId) {
+    return ResponseEntity
+            .status(HttpStatus.OK)
+            .body(booksService.getSendList(userId));
+  }
+}

@@ -180,4 +180,27 @@ public interface BooksApi {
   })
   @GetMapping("/filter")
   ResponseEntity<FilterDTO> getFilter ();
+
+  @Operation(summary = "List books to send", description = "List books to send")
+  @ApiResponses(value = {
+          @ApiResponse(responseCode = "200", description = "List books to send",
+                  content = {
+                          @Content(mediaType = "application/json", schema = @Schema(implementation = BooksShortDto.class))
+                  }),
+          @ApiResponse(responseCode = "403", description = "Not have permission",
+                  content = {
+                          @Content(mediaType = "application/json", schema = @Schema(implementation = RestException.class))
+                  }),
+          @ApiResponse(responseCode = "401", description = "User unauthorized",
+                  content = {
+                          @Content(mediaType = "application/json", schema = @Schema(implementation = RestException.class))
+                  }),
+          @ApiResponse(responseCode = "404", description = "User not found",
+                  content = {
+                          @Content(mediaType = "application/json", schema = @Schema(implementation = RestException.class))
+                  })
+  })
+  @GetMapping("/send/{user-id}")
+  ResponseEntity<BooksShortDto> getSendList(@Parameter(required = true, description = "User ID", example = "1")
+                                            @PathVariable("user-id") Long userId);
 }
