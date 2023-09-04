@@ -12,10 +12,11 @@ import javax.persistence.*;
 @AllArgsConstructor
 @Builder
 @Entity
+@Table(name = "languages")
 public class Language {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Long language;
+  private Long languageId;
 
   @Column(nullable = false)
   private String title;
