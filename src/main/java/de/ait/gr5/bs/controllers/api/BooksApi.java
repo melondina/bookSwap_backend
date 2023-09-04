@@ -203,4 +203,11 @@ public interface BooksApi {
   @GetMapping("/send/{user-id}")
   ResponseEntity<BooksShortDto> getSendList(@Parameter(required = true, description = "User ID", example = "1")
                                             @PathVariable("user-id") Long userId);
+
+  //todo documentation
+  @GetMapping("/send/to")
+  ResponseEntity<WaitLineNextUserDto> getInfoAboutNextReaderInLine(
+          @Parameter(required = true, description = "User ID", example = "1")
+          @RequestBody @Valid WaitLineRequestDto waitLineRequestDto);
+
 }

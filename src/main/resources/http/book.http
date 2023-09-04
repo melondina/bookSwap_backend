@@ -69,3 +69,12 @@ Content-Type: application/json
 ### Get my list to send
 GET localhost:8080/api/books/send/1
 Content-Type: application/json
+
+### Get info about next reader
+GET localhost:8080/api/books/send/to
+Content-Type: application/json
+
+{
+  "bookId": 1,
+  "userId": 1
+}

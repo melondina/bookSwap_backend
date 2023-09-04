@@ -20,4 +20,6 @@ public interface BooksService {
   FilterDTO getFilter();
 
   BooksShortDto getSendList(Long userId);
+
+  WaitLineNextUserDto getInfoAboutNextReaderInLine(WaitLineRequestDto waitLineRequestDto);
 }
