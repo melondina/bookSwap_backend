@@ -124,6 +124,16 @@ public class   BookIntegrationTest {
       .userId(1L)
       .build();
 
+  private static final WaitLineRequestDto CHECK_DATA_FOR_NEXT_USER_POSITIVE = WaitLineRequestDto.builder()
+          .bookId(1L)
+          .userId(1L)
+          .build();
+
+  private static final WaitLineRequestDto CHECK_DATA_FOR_NEXT_USER_NEGATIVE = WaitLineRequestDto.builder()
+          .bookId(10L)
+          .userId(1L)
+          .build();
+
   @Autowired
   private MockMvc mockMvc;
 
@@ -509,6 +519,74 @@ public class   BookIntegrationTest {
       mockMvc.perform(get("/api/books/send/10")
                       .header("Content-Type", "application/json")
                       .with(SecurityMockMvcRequestPostProcessors.csrf()))
+              .andExpect(status().isNotFound());
+    }
+  }
+
+  @Nested
+  @DisplayName("GET /api/books/send/to is works: ")
+  class UserGetInfoAboutNextUserInLine {
+
+    @Test
+    @Sql(scripts = "/sql/data_for_get_wait_line.sql")
+    @DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD)
+    @WithMockUser(username = "test@gmail.com", password = "Qwerty007!")
+    public void get_info_about_next_user_positive() throws Exception {
+
+      String body = objectMapper.writeValueAsString(CHECK_DATA_FOR_NEXT_USER_POSITIVE);
+
+      User userAuthForTest = createdUser(1L, "test@gmail.com",
+              "$2a$10$Vz4mecaJq32jIGzL8dlgW.Xk6suWG1lhHgawSqmcYEc1vDvcRUlMe",
+              User.State.NOT_CONFIRMED, User.Role.USER, false);
+      userAuthorizationForTest(userAuthForTest);
+
+      mockMvc.perform(get("/api/books/send/to")
+                      .header("Content-Type", "application/json")
+                      .content(body))
+              .andExpect(status().isOk())
+              .andExpect(jsonPath("$.userId", is(2)))
+              .andExpect(jsonPath("$.firstName", is("Ivan")))
+              .andExpect(jsonPath("$.lastName", is("Ivanov")))
+              .andExpect(jsonPath("$.email", is("test2@gmail.com")));
+    }
+
+    @Test
+    @Sql(scripts = "/sql/data_for_get_wait_line.sql")
+    @DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD)
+    @WithMockUser(username = "test2@gmail.com", password = "Qwerty007!")
+    public void get_info_about_next_user_negative_unauthorise() throws Exception {
+
+      String body = objectMapper.writeValueAsString(CHECK_DATA_FOR_NEXT_USER_POSITIVE);
+
+      User userAuthForTest = createdUser(2L, "test@gmail.com",
+              "$2a$10$Vz4mecaJq32jIGzL8dlgW.Xk6suWG1lhHgawSqmcYEc1vDvcRUlMe",
+              User.State.NOT_CONFIRMED, User.Role.USER, false);
+      userAuthorizationForTest(userAuthForTest);
+
+      mockMvc.perform(get("/api/books/send/to")
+                      .header("Content-Type", "application/json")
+                      .content(body)
+                      .with(SecurityMockMvcRequestPostProcessors.csrf()))
+
+              .andExpect(status().isForbidden());
+    }
+
+    @Test
+    @Sql(scripts = "/sql/data_for_get_wait_line.sql")
+    @DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD)
+    @WithMockUser(username = "test@gmail.com", password = "Qwerty007!")
+    public void get_info_about_next_user_with_book_not_exist_negative() throws Exception {
+
+      String body = objectMapper.writeValueAsString(CHECK_DATA_FOR_NEXT_USER_NEGATIVE);
+
+      User userAuthForTest = createdUser(1L, "test@gmail.com",
+              "$2a$10$Vz4mecaJq32jIGzL8dlgW.Xk6suWG1lhHgawSqmcYEc1vDvcRUlMe",
+              User.State.NOT_CONFIRMED, User.Role.USER, false);
+      userAuthorizationForTest(userAuthForTest);
+
+      mockMvc.perform(get("/api/books/send/to")
+                      .header("Content-Type", "application/json")
+                      .content(body))
               .andExpect(status().isNotFound());
     }
   }
