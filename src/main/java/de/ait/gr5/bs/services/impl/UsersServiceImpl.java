@@ -45,10 +45,6 @@ public class UsersServiceImpl implements UsersService {
             throw new RestException(HttpStatus.BAD_REQUEST, "City with postal code " + postalCode + " not found");
         }
 
-        if (updateUser.getNewRole().equals("ADMIN")) {
-            throw new ForbiddenUpdateUserOperationException("role", "ADMIN");
-        }
-
         if (!securityService.isUserPermission(userId)) {
             throw new RestException(HttpStatus.FORBIDDEN, "Not have permission");
         } else {
@@ -57,7 +53,6 @@ public class UsersServiceImpl implements UsersService {
             user.setFirstName(updateUser.getFirstName());
             user.setLastName(updateUser.getLastName());
             user.setCity(city);
-            user.setRole(User.Role.valueOf(updateUser.getNewRole()));
 
             if (user.getFirstName() != null && user.getLastName() != null && user.getCity() != null
             ) {
