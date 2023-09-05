@@ -12,7 +12,7 @@ import lombok.Data;
 @Builder
 public class WaitLineNextUserDto {
 
-  @Schema(description = "User ID", example = "1")
+  @Schema(description = "ID of next user", example = "1")
   private Long userId;
 
   @Schema(description = "Users firstname", example = "Peter")

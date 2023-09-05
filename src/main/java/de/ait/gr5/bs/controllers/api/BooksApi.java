@@ -204,10 +204,27 @@ public interface BooksApi {
   ResponseEntity<BooksShortDto> getSendList(@Parameter(required = true, description = "User ID", example = "1")
                                             @PathVariable("user-id") Long userId);
 
-  //todo documentation
+  @Operation(summary = "Data of next reader of particular book", description = "next reader of particular book")
+  @ApiResponses(value = {
+          @ApiResponse(responseCode = "200", description = "Book info",
+                  content = {
+                          @Content(mediaType = "application/json", schema = @Schema(implementation = BooksShortDto.class))
+                  }),
+          @ApiResponse(responseCode = "403", description = "Not have permission",
+                  content = {
+                          @Content(mediaType = "application/json", schema = @Schema(implementation = RestException.class))
+                  }),
+          @ApiResponse(responseCode = "401", description = "User unauthorized",
+                  content = {
+                          @Content(mediaType = "application/json", schema = @Schema(implementation = RestException.class))
+                  }),
+          @ApiResponse(responseCode = "404", description = "User not found, Book not found, Book not in wait list",
+                  content = {
+                          @Content(mediaType = "application/json", schema = @Schema(implementation = RestException.class))
+                  })
+  })
   @GetMapping("/send/to")
   ResponseEntity<WaitLineNextUserDto> getInfoAboutNextReaderInLine(
-          @Parameter(required = true, description = "User ID", example = "1")
           @RequestBody @Valid WaitLineRequestDto waitLineRequestDto);
 
 }

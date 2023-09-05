@@ -269,12 +269,12 @@ public class BooksServiceImpl implements BooksService {
       throw new RestException(HttpStatus.FORBIDDEN, "Not have permission");
     }
 
-    //method used id, as a comparative parameter, for update more precisely needs to use LocalDateTime
-    User nextUser = waitLinesRepository.findTopByUser(book);
+    WaitLine waitline = waitLinesRepository.findTopByBook(book, SORT_BY_ID);
+    if (waitline == null) {
+      throw new RestException(HttpStatus.NOT_FOUND, "Book is not in the wait list");
+    }
 
-//    WaitLine firstSignInList = Collections.min(books, Comparator.comparing(WaitLine::getLineId)); //здесь ошибка!
-
-    return WaitLineNextUserDto.from(nextUser);
+    return WaitLineNextUserDto.from(waitline.getUser());
   }
 }
 
