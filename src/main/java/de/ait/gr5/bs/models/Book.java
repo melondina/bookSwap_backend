@@ -38,8 +38,9 @@ public class Book {
     @JoinColumn(name = "category_id")
     private Category category;
 
-    @Column(nullable = false)
-    private String language;
+    @ManyToOne
+    @JoinColumn(name = "language_id")
+    private Language language;
 
     @Column(nullable = false)
     private Integer pages;

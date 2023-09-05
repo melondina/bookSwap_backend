@@ -31,6 +31,7 @@ public class BooksServiceImpl implements BooksService {
   WaitLinesRepository waitLinesRepository;
   HistoryRepository historyRepository;
   LocationRepository locationRepository;
+  LanguageRepository languageRepository;
 
   private final SecurityService securityService;
   public static final Sort SORT_BY_DATA_CREATED_DESC = Sort.by(Sort.Direction.DESC, "dateCreate");
@@ -44,6 +45,8 @@ public class BooksServiceImpl implements BooksService {
     User user = getUserOrElseThrow(newBook.getOwner());
 
     Category category = getCategoryOrElseThrow(newBook.getCategoryId());
+    Language language = getLanguageOrElseThrow(newBook.getLanguageId());
+
 
     Book book;
     if (user.getState().equals(User.State.NOT_CONFIRMED)) {
@@ -56,7 +59,7 @@ public class BooksServiceImpl implements BooksService {
           .author(newBook.getAuthor())
           .description(newBook.getDescription())
           .category(category)
-          .language(newBook.getLanguage())
+          .language(language)
           .pages(newBook.getPages())
           .publisherDate(newBook.getPublisherDate())
           .cover(newBook.getCover())
@@ -78,6 +81,7 @@ public class BooksServiceImpl implements BooksService {
     User user = getUserOrElseThrow(updateBook.getOwner());
 
     Category category = getCategoryOrElseThrow(updateBook.getCategoryId());
+    Language language = getLanguageOrElseThrow(updateBook.getLanguageId());
 
     Book book;
     if (!securityService.isUserPermission(user.getUserId())) {
@@ -88,7 +92,7 @@ public class BooksServiceImpl implements BooksService {
       book.setAuthor(updateBook.getAuthor());
       book.setDescription(updateBook.getDescription());
       book.setCategory(category);
-      book.setLanguage(updateBook.getLanguage());
+      book.setLanguage(language);
       book.setPages(updateBook.getPages());
       book.setPublisherDate(updateBook.getPublisherDate());
       book.setCover(updateBook.getCover());
@@ -132,6 +136,13 @@ public class BooksServiceImpl implements BooksService {
         .orElseThrow(() -> new RestException(HttpStatus.NOT_FOUND,
             "Category with id <" + categoryId + "> not found"));
     return category;
+  }
+
+  public Language getLanguageOrElseThrow(Long languageId) {
+    Language language = languageRepository.findById(languageId)
+        .orElseThrow(() -> new RestException(HttpStatus.NOT_FOUND,
+            "Language with id <" + languageId + "> not found"));
+    return language;
   }
 
   public Book getBookOrElseThrow(Long bookId) {
@@ -214,8 +225,8 @@ public class BooksServiceImpl implements BooksService {
     }
 
     List<Book> books = booksFromWaitLine.stream()
-            .filter(book -> !booksFromHistory.contains(book))
-            .collect(Collectors.toList());
+        .filter(book -> !booksFromHistory.contains(book))
+        .collect(Collectors.toList());
 
     return BooksShortDto.from(BookShortDto.from(books));
   }
