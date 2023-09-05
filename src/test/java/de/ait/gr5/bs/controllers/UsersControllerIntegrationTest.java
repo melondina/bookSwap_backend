@@ -41,7 +41,6 @@ public class UsersControllerIntegrationTest {
     void update_current_user() throws Exception {
 
         String body = objectMapper.writeValueAsString(UpdateUserDto.builder()
-                .newRole("USER")
                 .postalCode("78224")
                 .build());
 
@@ -62,7 +61,6 @@ public class UsersControllerIntegrationTest {
     void update_another_user() throws Exception {
 
         String body = objectMapper.writeValueAsString(UpdateUserDto.builder()
-                .newRole("USER")
                 .firstName("Andy")
                 .postalCode("78224")
                 .build());
@@ -82,7 +80,6 @@ public class UsersControllerIntegrationTest {
     @Test
     @WithUserDetails(value = "test@mail.com")
     @Sql(scripts = "/sql/data_for_users.sql")
-  //  @WithMockUser(username = "first.user@gmail.com", password = "Qwerty007!")
     @DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD)
     public void getProfileReturnsOkForAuthenticatedUser() throws Exception {
 
