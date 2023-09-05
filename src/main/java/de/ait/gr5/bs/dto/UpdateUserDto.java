@@ -10,9 +10,6 @@ import lombok.Data;
 @Builder
 public class UpdateUserDto {
 
-    @Schema(description = "Users role - USER - user", example = "USER")
-    private String newRole;
-
     @Schema(description = "Users firstname", example = "Peter")
     private String firstName;
 
