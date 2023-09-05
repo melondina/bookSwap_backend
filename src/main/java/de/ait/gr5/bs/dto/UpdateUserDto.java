@@ -23,5 +23,5 @@ public class UpdateUserDto {
     private City city;
 
     @Schema(description = "Users postal code", example = "23654")
-    private Integer postalCode;
+    private String postalCode;
 }

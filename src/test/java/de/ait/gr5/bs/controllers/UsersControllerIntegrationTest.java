@@ -42,7 +42,7 @@ public class UsersControllerIntegrationTest {
 
         String body = objectMapper.writeValueAsString(UpdateUserDto.builder()
                 .newRole("USER")
-                .postalCode(78224)
+                .postalCode("78224")
                 .build());
 
         mockMvc.perform(put("/api/users/1")
@@ -64,7 +64,7 @@ public class UsersControllerIntegrationTest {
         String body = objectMapper.writeValueAsString(UpdateUserDto.builder()
                 .newRole("USER")
                 .firstName("Andy")
-                .postalCode(78224)
+                .postalCode("78224")
                 .build());
 
         mockMvc.perform(put("/api/users/2")
