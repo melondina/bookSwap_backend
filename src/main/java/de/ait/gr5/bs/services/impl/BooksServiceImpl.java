@@ -37,6 +37,8 @@ public class BooksServiceImpl implements BooksService {
   public static final Sort SORT_BY_DATA_CREATED_DESC = Sort.by(Sort.Direction.DESC, "dateCreate");
   public static final Sort SORT_BY_ID_DESC = Sort.by(Sort.Direction.DESC, "id");
 
+  public static final Sort SORT_BY_ID = Sort.by(Sort.Direction.ASC, "lineId");
+
 
   @Override
   public BookDto addBook(BookNewDto newBook) {
@@ -268,4 +270,22 @@ public class BooksServiceImpl implements BooksService {
 
     return BooksShortDto.from(BookShortDto.from(resultBooks));
   }
+
+  @Override
+  public WaitLineNextUserDto getInfoAboutNextReaderInLine(WaitLineRequestDto waitLineRequestDto) {
+    User user = getUserOrElseThrow(waitLineRequestDto.getUserId());
+    Book book = getBookOrElseThrow(waitLineRequestDto.getBookId());
+
+    if (!securityService.isUserPermission(user.getUserId())) {
+      throw new RestException(HttpStatus.FORBIDDEN, "Not have permission");
+    }
+
+    WaitLine waitline = waitLinesRepository.findTopByBook(book, SORT_BY_ID);
+    if (waitline == null) {
+      throw new RestException(HttpStatus.NOT_FOUND, "Book is not in the wait list");
+    }
+
+    return WaitLineNextUserDto.from(waitline.getUser());
+  }
 }
+

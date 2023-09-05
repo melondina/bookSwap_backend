@@ -12,7 +12,7 @@ Content-Type: application/json
  "pages": 108,
  "publisherDate": "2015-04-11",
  "cover": "f:/book_db/1.jpg",
- "owner": 3
+ "owner": 1
 }
 
 ### Update information of the book
@@ -67,5 +67,15 @@ GET localhost:8080/api/books/filter
 Content-Type: application/json
 
 ### Get my list to send
-GET localhost:8080/api/books/send/3
+GET localhost:8080/api/books/send/1
 Content-Type: application/json
+
+### Get info about next reader
+GET localhost:8080/api/books/send/to
+Content-Type: application/json
+
+{
+  "bookId": 1,
+  "userId": 1
+}
+
