@@ -23,7 +23,7 @@ public class City {
   private String postalCode;
 
   @Column(nullable = false)
-  private String title;
+  private String titleCity;
 
   @OneToMany(mappedBy = "city")
   @Column(nullable = false)

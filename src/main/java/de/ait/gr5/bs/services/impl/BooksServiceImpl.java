@@ -21,6 +21,7 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 import static de.ait.gr5.bs.dto.BookDto.from;
+import static de.ait.gr5.bs.utils.StringFormattingForSql.formatStringForFullTextSearchSql;
 
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 @RequiredArgsConstructor
@@ -35,7 +36,6 @@ public class BooksServiceImpl implements BooksService {
   LocationRepository locationRepository;
 
   private final SecurityService securityService;
-  public static final Sort SORT_BY_DATA_CREATED_DESC = Sort.by(Sort.Direction.DESC, "dateCreate");
   public static final Sort SORT_BY_ID_DESC = Sort.by(Sort.Direction.DESC, "id");
 
 
@@ -103,18 +103,21 @@ public class BooksServiceImpl implements BooksService {
 
 
   @Override
-  public BooksShortDto getBooks(Long userId) {
-    List<Book> books;
-    if (userId == null) {
-      books = booksRepository.findAll(SORT_BY_DATA_CREATED_DESC);
-    } else {
-      if (!securityService.isUserPermission(userId)) {
+  public BooksShortDto getBooks(UserFilterSearchDTO filterForSearch) {
+    if (filterForSearch.getUserId() != null) {
+      User user = getUserOrElseThrow(filterForSearch.getUserId());
+      if (!securityService.isUserPermission(user.getUserId())) {
         throw new RestException(HttpStatus.FORBIDDEN, "Not have permission");
-      } else {
-        User user = getUserOrElseThrow(userId);
-        books = booksRepository.findAllByOwner(user, SORT_BY_DATA_CREATED_DESC);
       }
     }
+    String multiSearchRequest=null;
+    if (filterForSearch.getMultiSearch() != null) {
+       multiSearchRequest = formatStringForFullTextSearchSql(filterForSearch.getMultiSearch());
+    }
+    List<Book> books = booksRepository.findBooksByFilters(filterForSearch.getUserId(),
+        multiSearchRequest, filterForSearch.getCategoryId(),
+        filterForSearch.getLanguage(),filterForSearch.getLocation());
+
     return BooksShortDto.from(BookShortDto.from(books));
   }
 
@@ -214,8 +217,8 @@ public class BooksServiceImpl implements BooksService {
     }
 
     List<Book> books = booksFromWaitLine.stream()
-            .filter(book -> !booksFromHistory.contains(book))
-            .collect(Collectors.toList());
+        .filter(book -> !booksFromHistory.contains(book))
+        .collect(Collectors.toList());
 
     return BooksShortDto.from(BookShortDto.from(books));
   }

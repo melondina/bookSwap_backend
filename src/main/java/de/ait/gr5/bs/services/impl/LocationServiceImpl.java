@@ -7,7 +7,6 @@ import de.ait.gr5.bs.models.City;
 import de.ait.gr5.bs.repositories.LocationRepository;
 import de.ait.gr5.bs.services.LocationService;
 import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.http.HttpStatus;
@@ -33,7 +32,7 @@ public class LocationServiceImpl implements LocationService {
 
   public City getOrCreatedCity(String postCode) {
     City city = locationRepository.findByPostalCode(postCode);
-    if (city != null && !city.getTitle().isEmpty()) {
+    if (city != null && !city.getTitleCity().isEmpty()) {
       return city;
     } else {
       City externalCity = externalApiService.getCityByPostalCode(postCode);

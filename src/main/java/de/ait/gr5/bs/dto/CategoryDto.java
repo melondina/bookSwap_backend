@@ -1,6 +1,5 @@
 package de.ait.gr5.bs.dto;
 
-import de.ait.gr5.bs.models.Book;
 import de.ait.gr5.bs.models.Category;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
@@ -27,7 +26,7 @@ public class CategoryDto {
   public static CategoryDto from(Category category) {
     return CategoryDto.builder()
         .categoryId(category.getCategoryId())
-        .title(category.getTitle())
+        .title(category.getTitleCategory())
         .build();
   }
 

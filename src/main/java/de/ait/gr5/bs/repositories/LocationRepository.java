@@ -10,7 +10,7 @@ import java.util.List;
 public interface LocationRepository extends JpaRepository<City, Long> {
   City findByPostalCode(String postalCode);
 
-  @Query("SELECT CONCAT( c.postalCode,' ', c.title) FROM City c")
+  @Query("SELECT CONCAT( c.postalCode,' ', c.titleCity) FROM City c")
   List<String> findCityPostalCodeForFilter();
 
 }

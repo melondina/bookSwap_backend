@@ -55,7 +55,7 @@ public class UserDto {
                 .lastName(user.getLastName())
                 .agreement(user.isAgreement())
                 .postalCode(user.getCity() != null ? user.getCity().getPostalCode().toString() : null)
-                .city(user.getCity() != null ? user.getCity().getTitle() : null)
+                .city(user.getCity() != null ? user.getCity().getTitleCity() : null)
                 .build();
     }
 

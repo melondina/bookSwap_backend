@@ -4,10 +4,10 @@ POST localhost:8080/api/books
 Content-Type: application/json
 
 {
- "title": "Braiding Sweetgrass",
- "author": "Robin Wall Kimmerer",
- "description": "Drawing on her life as an indigenous scientist, and as a woman, Kimmerer shows how other living beings...",
- "categoryId": 3,
+ "title": "2",
+ "author": "22Robin Wall Kimmerer",
+ "description": "life as an indigenous how other living beings...",
+ "categoryId": 1,
  "language": "English",
  "pages": 108,
  "publisherDate": "2015-04-11",
@@ -32,18 +32,38 @@ Content-Type: application/json
   "owner": 1
 }
 
-###
+### Get all books without filter
 GET localhost:8080/api/books/
 Content-Type: application/json
 
-### Found all books
-GET localhost:8080/api/books/?user_id=1
+### Get all books with filter - user_id
+GET localhost:8080/api/books/?userId=1
+Content-Type: application/json
+
+### Get all books with filter - multiSearch
+GET localhost:8080/api/books/?multiSearch=Детектив WalL title
+Content-Type: application/json
+
+
+### Get all books with filter - categoryId
+GET localhost:8080/api/books/?categoryId=1
+Content-Type: application/json
+
+### Get all books with filter - language
+GET localhost:8080/api/books/?language=English&userId=1&multiSearch=kimmerer
+Content-Type: application/json
+
+### Get all books with filter - language
+GET localhost:8080/api/books/?language=English
+Content-Type: application/json
+
+### Get all books with filter -location
+GET localhost:8080/api/books/?location=Berlin
 Content-Type: application/json
 
 ### Get delail of book
 GET localhost:8080/api/books/1/detail
 Content-Type: application/json
-
 
 ### Add book to user
 POST localhost:8080/api/books/getting

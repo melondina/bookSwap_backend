@@ -32,9 +32,9 @@ public class BooksController implements BooksApi {
   }
 
   @Override
-  public ResponseEntity<BooksShortDto> getBooks(Long userId) {
+  public ResponseEntity<BooksShortDto> getBooks(UserFilterSearchDTO filterForSearch)  {
     return ResponseEntity.ok()
-        .body(booksService.getBooks(userId));
+        .body(booksService.getBooks(filterForSearch));
   }
 
   @Override

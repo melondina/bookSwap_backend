@@ -20,7 +20,7 @@ public class LocationDto {
   public static LocationDto from(City city) {
     return LocationDto.builder()
         .postalCode(city.getPostalCode().toString())
-        .city(city.getTitle())
+        .city(city.getTitleCity())
         .build();
   }
 }
