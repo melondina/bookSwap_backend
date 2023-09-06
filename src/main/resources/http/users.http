@@ -4,7 +4,7 @@ POST http://localhost:8080/api/registration
 Content-Type: application/json
 
 {
-  "email": "n@gmail.com",
+  "email": "n2@gmail.com",
   "password": "Qwerty007!"
 }
 

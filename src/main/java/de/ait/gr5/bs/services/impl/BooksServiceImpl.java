@@ -19,6 +19,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import static de.ait.gr5.bs.dto.BookDto.from;
+import static de.ait.gr5.bs.utils.StringFormattingForSql.formatStringForFullTextSearchSql;
 
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 @RequiredArgsConstructor
@@ -34,7 +35,6 @@ public class BooksServiceImpl implements BooksService {
   LanguageRepository languageRepository;
 
   private final SecurityService securityService;
-  public static final Sort SORT_BY_DATA_CREATED_DESC = Sort.by(Sort.Direction.DESC, "dateCreate");
   public static final Sort SORT_BY_ID_DESC = Sort.by(Sort.Direction.DESC, "id");
 
   public static final Sort SORT_BY_ID = Sort.by(Sort.Direction.ASC, "lineId");
@@ -107,18 +107,21 @@ public class BooksServiceImpl implements BooksService {
 
 
   @Override
-  public BooksShortDto getBooks(Long userId) {
-    List<Book> books;
-    if (userId == null) {
-      books = booksRepository.findAll(SORT_BY_DATA_CREATED_DESC);
-    } else {
-      if (!securityService.isUserPermission(userId)) {
+  public BooksShortDto getBooks(UserFilterSearchDTO filterForSearch) {
+    if (filterForSearch.getUserId() != null) {
+      User user = getUserOrElseThrow(filterForSearch.getUserId());
+      if (!securityService.isUserPermission(user.getUserId())) {
         throw new RestException(HttpStatus.FORBIDDEN, "Not have permission");
-      } else {
-        User user = getUserOrElseThrow(userId);
-        books = booksRepository.findAllByOwner(user, SORT_BY_DATA_CREATED_DESC);
       }
     }
+    String multiSearchRequest=null;
+    if (filterForSearch.getMultiSearch() != null) {
+       multiSearchRequest = formatStringForFullTextSearchSql(filterForSearch.getMultiSearch());
+    }
+    List<Book> books = booksRepository.findBooksByFilters(filterForSearch.getUserId(),
+        multiSearchRequest, filterForSearch.getCategoryId(),
+        filterForSearch.getLanguageId(),filterForSearch.getLocation());
+
     return BooksShortDto.from(BookShortDto.from(books));
   }
 
@@ -249,7 +252,7 @@ public class BooksServiceImpl implements BooksService {
     }
 
     //get all books from owner
-    List<Book> booksFromOwner = booksRepository.findAllByOwner(user, SORT_BY_DATA_CREATED_DESC);
+    List<Book> booksFromOwner = booksRepository.findAllByOwner(user);
 
     List<WaitLine> waitLines = waitLinesRepository.findAll();
     List<Book> booksFromWaitLine = new ArrayList<>();

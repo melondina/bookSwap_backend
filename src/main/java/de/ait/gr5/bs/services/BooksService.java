@@ -7,7 +7,7 @@ public interface BooksService {
 
   BookDto updateBook(Long bookId, BookUpdateDto updateBook);
 
-  BooksShortDto getBooks(Long userId);
+  BooksShortDto getBooks(UserFilterSearchDTO filterForSearch);
 
   WaitLinePlaceDto addBookToUserBooks(WaitLineRequestDto waitLineRequestDto);
 

@@ -20,6 +20,6 @@ public class Category {
   private Long categoryId;
 
   @Column(nullable = false)
-  private String title;
+  private String titleCategory;
 
 }
