@@ -32,10 +32,9 @@ public class BookNewDto {
   @NotNull
   private Long categoryId;
 
-  @Schema(description = "Book language", example = "English")
+  @Schema(description = "Book languages ID", example = "English")
   @NotNull
-  @NotBlank
-  private String language;
+  private Long languageId;
 
   @Schema(description = "Number of pages in the book", example = "408")
   @NotNull

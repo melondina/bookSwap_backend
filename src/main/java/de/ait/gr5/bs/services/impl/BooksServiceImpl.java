@@ -15,9 +15,7 @@ import org.springframework.data.domain.Sort;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static de.ait.gr5.bs.dto.BookDto.from;
@@ -34,9 +32,12 @@ public class BooksServiceImpl implements BooksService {
   WaitLinesRepository waitLinesRepository;
   HistoryRepository historyRepository;
   LocationRepository locationRepository;
+  LanguageRepository languageRepository;
 
   private final SecurityService securityService;
   public static final Sort SORT_BY_ID_DESC = Sort.by(Sort.Direction.DESC, "id");
+
+  public static final Sort SORT_BY_ID = Sort.by(Sort.Direction.ASC, "lineId");
 
 
   @Override
@@ -44,6 +45,8 @@ public class BooksServiceImpl implements BooksService {
     User user = getUserOrElseThrow(newBook.getOwner());
 
     Category category = getCategoryOrElseThrow(newBook.getCategoryId());
+    Language language = getLanguageOrElseThrow(newBook.getLanguageId());
+
 
     Book book;
     if (user.getState().equals(User.State.NOT_CONFIRMED)) {
@@ -56,7 +59,7 @@ public class BooksServiceImpl implements BooksService {
           .author(newBook.getAuthor())
           .description(newBook.getDescription())
           .category(category)
-          .language(newBook.getLanguage())
+          .language(language)
           .pages(newBook.getPages())
           .publisherDate(newBook.getPublisherDate())
           .cover(newBook.getCover())
@@ -78,6 +81,7 @@ public class BooksServiceImpl implements BooksService {
     User user = getUserOrElseThrow(updateBook.getOwner());
 
     Category category = getCategoryOrElseThrow(updateBook.getCategoryId());
+    Language language = getLanguageOrElseThrow(updateBook.getLanguageId());
 
     Book book;
     if (!securityService.isUserPermission(user.getUserId())) {
@@ -88,7 +92,7 @@ public class BooksServiceImpl implements BooksService {
       book.setAuthor(updateBook.getAuthor());
       book.setDescription(updateBook.getDescription());
       book.setCategory(category);
-      book.setLanguage(updateBook.getLanguage());
+      book.setLanguage(language);
       book.setPages(updateBook.getPages());
       book.setPublisherDate(updateBook.getPublisherDate());
       book.setCover(updateBook.getCover());
@@ -116,7 +120,7 @@ public class BooksServiceImpl implements BooksService {
     }
     List<Book> books = booksRepository.findBooksByFilters(filterForSearch.getUserId(),
         multiSearchRequest, filterForSearch.getCategoryId(),
-        filterForSearch.getLanguage(),filterForSearch.getLocation());
+        filterForSearch.getLanguageId(),filterForSearch.getLocation());
 
     return BooksShortDto.from(BookShortDto.from(books));
   }
@@ -135,6 +139,13 @@ public class BooksServiceImpl implements BooksService {
         .orElseThrow(() -> new RestException(HttpStatus.NOT_FOUND,
             "Category with id <" + categoryId + "> not found"));
     return category;
+  }
+
+  public Language getLanguageOrElseThrow(Long languageId) {
+    Language language = languageRepository.findById(languageId)
+        .orElseThrow(() -> new RestException(HttpStatus.NOT_FOUND,
+            "Language with id <" + languageId + "> not found"));
+    return language;
   }
 
   public Book getBookOrElseThrow(Long bookId) {
@@ -231,4 +242,53 @@ public class BooksServiceImpl implements BooksService {
         .location(locationRepository.findCityPostalCodeForFilter())
         .build();
   }
+
+  @Override
+  public BooksShortDto getSendList(Long userId) {
+    User user = getUserOrElseThrow(userId);
+
+    if (!securityService.isUserPermission(userId)) {
+      throw new RestException(HttpStatus.FORBIDDEN, "Not have permission");
+    }
+
+    //get all books from owner
+    List<Book> booksFromOwner = booksRepository.findAllByOwner(user);
+
+    List<WaitLine> waitLines = waitLinesRepository.findAll();
+    List<Book> booksFromWaitLine = new ArrayList<>();
+
+    //get all books from wait list
+    for (WaitLine waitLine : waitLines) {
+      booksFromWaitLine.add(waitLine.getBook());
+    }
+
+    //in result list, will be only same books from owner and wait list
+    List<Book> resultBooks = new ArrayList<>(booksFromWaitLine);
+    resultBooks.retainAll(booksFromOwner);
+
+    //here we clear from doubles list of books
+    Set<Book> uniqueBooks = new HashSet<>(resultBooks);
+    resultBooks.clear();
+    resultBooks.addAll(uniqueBooks);
+
+    return BooksShortDto.from(BookShortDto.from(resultBooks));
+  }
+
+  @Override
+  public WaitLineNextUserDto getInfoAboutNextReaderInLine(WaitLineRequestDto waitLineRequestDto) {
+    User user = getUserOrElseThrow(waitLineRequestDto.getUserId());
+    Book book = getBookOrElseThrow(waitLineRequestDto.getBookId());
+
+    if (!securityService.isUserPermission(user.getUserId())) {
+      throw new RestException(HttpStatus.FORBIDDEN, "Not have permission");
+    }
+
+    WaitLine waitline = waitLinesRepository.findTopByBook(book, SORT_BY_ID);
+    if (waitline == null) {
+      throw new RestException(HttpStatus.NOT_FOUND, "Book is not in the wait list");
+    }
+
+    return WaitLineNextUserDto.from(waitline.getUser());
+  }
 }
+

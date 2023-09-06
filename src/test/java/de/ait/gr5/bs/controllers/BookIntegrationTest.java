@@ -35,7 +35,7 @@ public class   BookIntegrationTest {
       .author("Robin Wall Kimmerer")
       .description("Drawing on her life as an indigenous scientist, and as a woman, Kimmerer shows how other living beings...")
       .categoryId(1L)
-      .language("English")
+      .languageId(1L)
       .pages(408)
       .publisherDate("2015")
       .cover("f:/book_db/1.jpg")
@@ -47,7 +47,7 @@ public class   BookIntegrationTest {
       .author("Robin Wall Kimmerer")
       .description("Drawing on her life as an indigenous scientist, and as a woman, Kimmerer shows how other living beings...")
       .categoryId(1L)
-      .language("English")
+      .languageId(1L)
       .pages(408)
       .publisherDate("2015")
       .cover("f:/book_db/1.jpg")
@@ -58,8 +58,8 @@ public class   BookIntegrationTest {
       .title("Braiding Sweetgrass")
       .author("Robin Wall Kimmerer")
       .description("Drawing on her life as an indigenous scientist, and as a woman, Kimmerer shows how other living beings...")
-      .categoryId(19L)
-      .language("English")
+      .categoryId(29L)
+      .languageId(1L)
       .pages(408)
       .publisherDate("2015")
       .cover("f:/book_db/1.jpg")
@@ -71,7 +71,7 @@ public class   BookIntegrationTest {
       .author("Robin Wall Kimmerer")
       .description("Drawing on her life as an indigenous scientist, and as a woman, Kimmerer shows how other living beings...")
       .categoryId(1L)
-      .language("English")
+      .languageId(1L)
       .pages(408)
       .publisherDate("2015")
       .cover("f:/book_db/1.jpg")
@@ -83,7 +83,7 @@ public class   BookIntegrationTest {
       .author("Update - Robin Wall Kimmerer")
       .description("Update - Drawing on her life as an indigenous scientist, and as a woman, Kimmerer shows how other living beings...")
       .categoryId(1L)
-      .language("Update - English")
+      .languageId(1L)
       .pages(408)
       .publisherDate("2005")
       .cover("f:/book_db1/1.jpg")
@@ -95,9 +95,9 @@ public class   BookIntegrationTest {
       .author("Update - Robin Wall Kimmerer")
       .description("Update - Drawing on her life as an indigenous scientist, and as a woman, Kimmerer shows how other living beings...")
       .categoryId(1L)
-      .language(" ")
+      .languageId(1L)
       .pages(408)
-      .publisherDate("2005")
+      .publisherDate(" ")
       .cover("f:/book_db1/1.jpg")
       .owner(1L)
       .build();
@@ -107,7 +107,7 @@ public class   BookIntegrationTest {
       .author("Update - Robin Wall Kimmerer")
       .description("Update - Drawing on her life as an indigenous scientist, and as a woman, Kimmerer shows how other living beings...")
       .categoryId(1L)
-      .language("English")
+      .languageId(1L)
       .pages(408)
       .publisherDate("2005")
       .cover("f:/book_db1/1.jpg")
@@ -124,6 +124,16 @@ public class   BookIntegrationTest {
       .userId(1L)
       .build();
 
+  private static final WaitLineRequestDto CHECK_DATA_FOR_NEXT_USER_POSITIVE = WaitLineRequestDto.builder()
+          .bookId(1L)
+          .userId(1L)
+          .build();
+
+  private static final WaitLineRequestDto CHECK_DATA_FOR_NEXT_USER_NEGATIVE = WaitLineRequestDto.builder()
+          .bookId(10L)
+          .userId(1L)
+          .build();
+
   @Autowired
   private MockMvc mockMvc;
 
@@ -134,7 +144,7 @@ public class   BookIntegrationTest {
   @DisplayName("POST /api/books is works: ")
   class AddBookTest {
 
-    @Test // не работает
+    @Test
     @Sql(scripts = "/sql/data_for_add_book.sql")
     @DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD)
     @WithMockUser(username = "test1@gmail.com", password = "Qwerty007!")
@@ -213,7 +223,7 @@ public class   BookIntegrationTest {
   @DisplayName("PUT /api/books is works: ")
   class UpdateBookTest {
 
-    @Test  // работает
+    @Test
     @Sql(scripts = "/sql/data_for_update_book.sql")
     @DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD)
     @WithMockUser(username = "test@gmail.com", password = "Qwerty007!")
@@ -234,7 +244,7 @@ public class   BookIntegrationTest {
           .andExpect(jsonPath("$.title", is("Update - Braiding Sweetgrass")))
           .andExpect(jsonPath("$.author", is("Update - Robin Wall Kimmerer")))
           .andExpect(jsonPath("$.description", is("Update - Drawing on her life as an indigenous scientist, and as a woman, Kimmerer shows how other living beings...")))
-          .andExpect(jsonPath("$.language", is("Update - English")))
+          .andExpect(jsonPath("$.language", is("English")))
           .andExpect(jsonPath("$.pages", is("408")))
           .andExpect(jsonPath("$.publisherDate", is("2005")))
           .andExpect(jsonPath("$.cover", is("f:/book_db1/1.jpg")));
@@ -247,6 +257,11 @@ public class   BookIntegrationTest {
     public void update_exist_book_not_valid_negative() throws Exception {
 
       String body = objectMapper.writeValueAsString(UPDATE_BOOK_NOT_VALID);
+
+      User userAuthForTest = createdUser(1L, "test@gmail.com",
+          "$2a$10$Vz4mecaJq32jIGzL8dlgW.Xk6suWG1lhHgawSqmcYEc1vDvcRUlMe",
+          User.State.NOT_CONFIRMED, User.Role.USER, false);
+      userAuthorizationForTest(userAuthForTest);
 
       mockMvc.perform(put("/api/books/1")
               .header("Content-Type", "application/json")
@@ -300,7 +315,7 @@ public class   BookIntegrationTest {
   @DisplayName("GET /api/books/history is works: ")
   class MyHistoryTest {
 
-    @Test // работает !!!!
+    @Test
     @Sql(scripts = "/sql/data_for_my_history.sql")
     @DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD)
     @WithMockUser(username = "test@gmail.com", password = "Qwerty007!")
@@ -310,6 +325,7 @@ public class   BookIntegrationTest {
           "$2a$10$Vz4mecaJq32jIGzL8dlgW.Xk6suWG1lhHgawSqmcYEc1vDvcRUlMe",
           User.State.NOT_CONFIRMED, User.Role.USER, false);
       userAuthorizationForTest(userAuthForTest);
+
       mockMvc.perform(get("/api/books/history/1")
               .header("Content-Type", "application/json")
               .with(SecurityMockMvcRequestPostProcessors.csrf()))
@@ -317,7 +333,7 @@ public class   BookIntegrationTest {
           .andExpect(jsonPath("count", is(2)));
     }
 
-    @Test //не работает
+    @Test
     @Sql(scripts = "/sql/data_for_my_history_empty.sql")
     @DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD)
     @WithMockUser(username = "test@gmail.com", password = "Qwerty007!")
@@ -435,7 +451,143 @@ public class   BookIntegrationTest {
                       .header("Content-Type", "application/json")
                       .with(SecurityMockMvcRequestPostProcessors.csrf()))
               .andExpect(status().isOk())
-              .andExpect(jsonPath("count", is(1)));;
+              .andExpect(jsonPath("count", is(1)));
+    }
+  }
+
+  @Nested
+  @DisplayName("GET /api/books/send/{userId} is works: ")
+  class UserGetListOfBooksToSend {
+
+    @Test
+    @Sql(scripts = "/sql/data_for_get_wait_line.sql")
+    @DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD)
+    @WithMockUser(username = "test@gmail.com", password = "Qwerty007!")
+    public void get_book_to_send_positive() throws Exception {
+
+      User userAuthForTest = createdUser(1L, "test@gmail.com",
+              "$2a$10$Vz4mecaJq32jIGzL8dlgW.Xk6suWG1lhHgawSqmcYEc1vDvcRUlMe",
+              User.State.NOT_CONFIRMED, User.Role.USER, false);
+      userAuthorizationForTest(userAuthForTest);
+
+      mockMvc.perform(get("/api/books/send/1")
+                      .header("Content-Type", "application/json")
+                      .with(SecurityMockMvcRequestPostProcessors.csrf()))
+              .andExpect(status().isOk())
+              .andExpect(jsonPath("count", is(1)));
+    }
+
+    @Test
+    @Sql(scripts = "/sql/data_for_get_wait_line.sql")
+    @DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD)
+    @WithMockUser(username = "test2@gmail.com", password = "Qwerty007!")
+    public void get_book_to_send_negative_not_permission() throws Exception {
+
+      User userAuthForTest = createdUser(2L, "test@gmail.com",
+              "$2a$10$Vz4mecaJq32jIGzL8dlgW.Xk6suWG1lhHgawSqmcYEc1vDvcRUlMe",
+              User.State.NOT_CONFIRMED, User.Role.USER, false);
+      userAuthorizationForTest(userAuthForTest);
+
+      mockMvc.perform(get("/api/books/send/1")
+                      .header("Content-Type", "application/json")
+                      .with(SecurityMockMvcRequestPostProcessors.csrf()))
+              .andExpect(status().isForbidden());
+    }
+
+    @Test
+    @Sql(scripts = "/sql/data_for_get_wait_line.sql")
+    @DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD)
+    public void get_book_to_send_negative_unauthorized() throws Exception {
+
+      mockMvc.perform(get("/api/books/send/1")
+                      .header("Content-Type", "application/json")
+                      .with(SecurityMockMvcRequestPostProcessors.csrf()))
+              .andExpect(status().isForbidden());
+    }
+
+    @Test
+    @Sql(scripts = "/sql/data_for_get_wait_line.sql")
+    @DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD)
+    @WithMockUser(username = "test@gmail.com", password = "Qwerty007!")
+    public void get_book_to_send_negative_user_not_found() throws Exception {
+
+      User userAuthForTest = createdUser(1L, "test@gmail.com",
+              "$2a$10$Vz4mecaJq32jIGzL8dlgW.Xk6suWG1lhHgawSqmcYEc1vDvcRUlMe",
+              User.State.NOT_CONFIRMED, User.Role.USER, false);
+      userAuthorizationForTest(userAuthForTest);
+
+      mockMvc.perform(get("/api/books/send/10")
+                      .header("Content-Type", "application/json")
+                      .with(SecurityMockMvcRequestPostProcessors.csrf()))
+              .andExpect(status().isNotFound());
+    }
+  }
+
+  @Nested
+  @DisplayName("GET /api/books/send/to is works: ")
+  class UserGetInfoAboutNextUserInLine {
+
+    @Test
+    @Sql(scripts = "/sql/data_for_get_wait_line.sql")
+    @DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD)
+    @WithMockUser(username = "test@gmail.com", password = "Qwerty007!")
+    public void get_info_about_next_user_positive() throws Exception {
+
+      String body = objectMapper.writeValueAsString(CHECK_DATA_FOR_NEXT_USER_POSITIVE);
+
+      User userAuthForTest = createdUser(1L, "test@gmail.com",
+              "$2a$10$Vz4mecaJq32jIGzL8dlgW.Xk6suWG1lhHgawSqmcYEc1vDvcRUlMe",
+              User.State.NOT_CONFIRMED, User.Role.USER, false);
+      userAuthorizationForTest(userAuthForTest);
+
+      mockMvc.perform(get("/api/books/send/to")
+                      .header("Content-Type", "application/json")
+                      .content(body))
+              .andExpect(status().isOk())
+              .andExpect(jsonPath("$.userId", is(2)))
+              .andExpect(jsonPath("$.firstName", is("Ivan")))
+              .andExpect(jsonPath("$.lastName", is("Ivanov")))
+              .andExpect(jsonPath("$.email", is("test2@gmail.com")));
+    }
+
+    @Test
+    @Sql(scripts = "/sql/data_for_get_wait_line.sql")
+    @DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD)
+    @WithMockUser(username = "test2@gmail.com", password = "Qwerty007!")
+    public void get_info_about_next_user_negative_unauthorise() throws Exception {
+
+      String body = objectMapper.writeValueAsString(CHECK_DATA_FOR_NEXT_USER_POSITIVE);
+
+      User userAuthForTest = createdUser(2L, "test@gmail.com",
+              "$2a$10$Vz4mecaJq32jIGzL8dlgW.Xk6suWG1lhHgawSqmcYEc1vDvcRUlMe",
+              User.State.NOT_CONFIRMED, User.Role.USER, false);
+      userAuthorizationForTest(userAuthForTest);
+
+      mockMvc.perform(get("/api/books/send/to")
+                      .header("Content-Type", "application/json")
+                      .content(body)
+                      .with(SecurityMockMvcRequestPostProcessors.csrf()))
+
+              .andExpect(status().isForbidden());
+    }
+
+    @Test
+    @Sql(scripts = "/sql/data_for_get_wait_line.sql")
+    @DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD)
+    @WithMockUser(username = "test@gmail.com", password = "Qwerty007!")
+    public void get_info_about_next_user_with_book_not_exist_negative() throws Exception {
+
+      String body = objectMapper.writeValueAsString(CHECK_DATA_FOR_NEXT_USER_NEGATIVE);
+
+      User userAuthForTest = createdUser(1L, "test@gmail.com",
+              "$2a$10$Vz4mecaJq32jIGzL8dlgW.Xk6suWG1lhHgawSqmcYEc1vDvcRUlMe",
+              User.State.NOT_CONFIRMED, User.Role.USER, false);
+      userAuthorizationForTest(userAuthForTest);
+
+      mockMvc.perform(get("/api/books/send/to")
+                      .header("Content-Type", "application/json")
+                      .content(body))
+              .andExpect(status().isNotFound());
     }
   }
 }

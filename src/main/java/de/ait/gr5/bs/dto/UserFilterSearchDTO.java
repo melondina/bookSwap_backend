@@ -8,6 +8,6 @@ public class UserFilterSearchDTO {
   private Long userId;
   private String multiSearch;
   private Long categoryId;
-  private String language;
+  private Long languageId;
   private String location;
 }

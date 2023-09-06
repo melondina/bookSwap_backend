@@ -44,6 +44,8 @@ public class SecurityConfig {
         .antMatchers(HttpMethod.POST, "/api/registration/**").permitAll()
         .antMatchers(HttpMethod.GET, "/api/books/**").permitAll()
         .antMatchers(HttpMethod.GET, "/api/filter/**").permitAll()
+        .antMatchers(HttpMethod.GET, "/api/categories/**").permitAll()
+        .antMatchers(HttpMethod.GET, "/api/location/**").permitAll()
         .antMatchers("/api/**").authenticated()
         .and()
         .formLogin()

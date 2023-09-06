@@ -1,5 +1,4 @@
 package de.ait.gr5.bs.utils;
-
 import org.hibernate.boot.MetadataBuilder;
 import org.hibernate.boot.spi.MetadataBuilderContributor;
 import org.hibernate.dialect.function.SQLFunctionTemplate;

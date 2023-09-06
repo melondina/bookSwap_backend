@@ -1,0 +1,5 @@
+### Get list of languages
+
+GET localhost:8080/api/languages
+Content-Type: application/json
+

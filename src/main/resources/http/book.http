@@ -4,28 +4,28 @@ POST localhost:8080/api/books
 Content-Type: application/json
 
 {
- "title": "2",
- "author": "22Robin Wall Kimmerer",
- "description": "life as an indigenous how other living beings...",
- "categoryId": 1,
- "language": "English",
- "pages": 108,
- "publisherDate": "2015-04-11",
- "cover": "f:/book_db/1.jpg",
- "owner": 1
+  "title": "English Grammar in Use. Book with Answers",
+  "author": "Murphy Raymond",
+  "description": "This book has clear explanations and practice exercises that have helped millions of people around the world improve their English",
+  "categoryId": 2,
+  "languageId": 1,
+  "pages": 256,
+  "publisherDate": "2019-04-11",
+  "cover": "bit.ly/45BSyAI",
+  "owner": 1
 }
 
 ### Update information of the book
 
-PUT localhost:8080/api/books/1
+PUT localhost:8080/api/books/5
 Content-Type: application/json
 
 {
-  "title": "Braiding Sweetgrass",
-  "author": "Robin Wall Kimmerer",
-  "description": "Drawing on her life as an indigenous scientist, and as a woman, Kimmerer shows how other living beings...",
+  "title": "REFACTOR Braiding Sweetgrass",
+  "author": "REFACTOR Wall Kimmerer",
+  "description": "REFACTOR Drawing on her life as an indigenous scientist, and as a woman, Kimmerer shows how other living beings...",
   "categoryId": 1,
-  "language": "English",
+  "languageId": 1,
   "pages": 4008,
   "publisherDate": "2015-04-11",
   "cover": "f:/book_db/1.jpg",
@@ -41,20 +41,20 @@ GET localhost:8080/api/books/?userId=1
 Content-Type: application/json
 
 ### Get all books with filter - multiSearch
-GET localhost:8080/api/books/?multiSearch=Детектив WalL title
+GET localhost:8080/api/books/?multiSearch=book
 Content-Type: application/json
 
 
 ### Get all books with filter - categoryId
-GET localhost:8080/api/books/?categoryId=1
+GET localhost:8080/api/books/?categoryId=2
+Content-Type: application/json
+
+### Get all books with filter - multi
+GET localhost:8080/api/books/?languageId=1&userId=1&multiSearch=book
 Content-Type: application/json
 
 ### Get all books with filter - language
-GET localhost:8080/api/books/?language=English&userId=1&multiSearch=kimmerer
-Content-Type: application/json
-
-### Get all books with filter - language
-GET localhost:8080/api/books/?language=English
+GET localhost:8080/api/books/?languageId=1
 Content-Type: application/json
 
 ### Get all books with filter -location
@@ -71,18 +71,31 @@ Content-Type: application/json
 
 {
  "bookId": 1,
- "userId": 4
+ "userId": 2
 }
 
 ### Get my history
-GET localhost:8080/api/books/history/2
+GET localhost:8080/api/books/history/1
 Content-Type: application/json
 
 ### Get my waiting list
-GET localhost:8080/api/books/waiting/4
+GET localhost:8080/api/books/waiting/1
 Content-Type: application/json
 
 ### Get filter
 GET localhost:8080/api/books/filter
 Content-Type: application/json
+
+### Get my list to send
+GET localhost:8080/api/books/send/1
+Content-Type: application/json
+
+### Get info about next reader
+GET localhost:8080/api/books/send/to
+Content-Type: application/json
+
+{
+  "bookId": 1,
+  "userId": 1
+}
 
