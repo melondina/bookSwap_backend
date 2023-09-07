@@ -349,7 +349,10 @@ public class BooksServiceImpl implements BooksService {
 
   public AllUserBooksDto getAllUserBooks(User user) {
 
-    BooksShortDto booksInLibrary = getBooks(user.getUserId());
+    UserFilterSearchDTO userFilterSearchDTO = UserFilterSearchDTO.builder()
+            .userId(user.getUserId()).build();
+
+    BooksShortDto booksInLibrary = getBooks(userFilterSearchDTO);
     BooksShortDto booksInHistory = getHistory(user.getUserId());
     BooksShortDto booksInWaitLine = getWaitList(user.getUserId());
     BooksShortDto booksToSend = getSendList(user.getUserId());
