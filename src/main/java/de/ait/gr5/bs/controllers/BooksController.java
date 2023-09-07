@@ -81,4 +81,18 @@ public class BooksController implements BooksApi {
             .status(HttpStatus.OK)
             .body(booksService.getInfoAboutNextReaderInLine(waitLineRequestDto));
   }
+
+  @Override
+  public ResponseEntity<AllUserBooksDto> sendBookToNextUser(WaitLineRequestDto waitLineRequestDto) {
+    return ResponseEntity
+            .status(HttpStatus.OK)
+            .body(booksService.sendBookToNextUser(waitLineRequestDto));
+  }
+
+  @Override
+  public ResponseEntity<AllUserBooksDto> getAllUserBooksInfo(Long userId) {
+    return ResponseEntity
+            .status(HttpStatus.OK)
+            .body(booksService.getAllUserBooksInfo(userId));
+  }
 }
