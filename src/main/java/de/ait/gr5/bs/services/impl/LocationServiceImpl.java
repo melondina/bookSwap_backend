@@ -26,7 +26,7 @@ public class LocationServiceImpl implements LocationService {
       return LocationDto.from(city);
     } else {
       throw new RestException(HttpStatus.NOT_FOUND,
-          "City with postal code < " + postCode + " > not found");
+          "City with postal code " + postCode + " not found");
     }
   }
 

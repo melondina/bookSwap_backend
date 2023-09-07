@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class LocationController implements LocationApi {
 
   LocationService locationService;
+
   @Override
   public ResponseEntity<LocationDto> getCity(String postCode) {
     return ResponseEntity.ok().body(locationService.getCity(postCode));

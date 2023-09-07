@@ -14,18 +14,18 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class UsersController implements UsersApi {
 
-    private final UsersService usersService;
+  private final UsersService usersService;
 
-    @Override
-    public ResponseEntity<UserDto> updateUser(Long userId, UpdateUserDto updateUser) {
-        return ResponseEntity
-                .ok(usersService.updateUser(userId, updateUser));
-    }
+  @Override
+  public ResponseEntity<UserDto> updateUser(Long userId, UpdateUserDto updateUser) {
+    return ResponseEntity
+        .ok(usersService.updateUser(userId, updateUser));
+  }
 
-    @Override
-    public ResponseEntity<UserDto> getMyProfile(AuthenticatedUser currentUser) {
-        Long userId = currentUser.id();
-        return ResponseEntity.ok(usersService.getUser(userId));
-    }
+  @Override
+  public ResponseEntity<UserDto> getMyProfile(AuthenticatedUser currentUser) {
+    Long userId = currentUser.id();
+    return ResponseEntity.ok(usersService.getUser(userId));
+  }
 
 }

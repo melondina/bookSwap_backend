@@ -30,9 +30,9 @@ public class ExternalApiService {
 
     if (responseEntity.getStatusCode() == HttpStatus.OK) {
       JsonNode response = responseEntity.getBody();
-      JsonNode resultsNode = response.path("results").path(searchPostalCode);
+      JsonNode resultsNode = response != null ? response.path("results").path(searchPostalCode) : null;
 
-      if (resultsNode.isArray() && resultsNode.size() > 0) {
+      if (resultsNode != null && resultsNode.size() > 0) {
         JsonNode cityNode = resultsNode.get(0);
 
         String city = cityNode.path("city").asText();

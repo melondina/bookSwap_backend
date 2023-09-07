@@ -1,8 +1,7 @@
 package de.ait.gr5.bs.dto;
 
-import de.ait.gr5.bs.models.City;
+
 import de.ait.gr5.bs.models.User;
-import de.ait.gr5.bs.models.WaitLine;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 import lombok.Data;
@@ -26,10 +25,10 @@ public class WaitLineNextUserDto {
 
   public static WaitLineNextUserDto from(User nextUser) {
     return WaitLineNextUserDto.builder()
-            .userId(nextUser.getUserId())
-            .firstName(nextUser.getFirstName())
-            .lastName(nextUser.getLastName())
-            .email(nextUser.getEmail())
-            .build();
+        .userId(nextUser.getUserId())
+        .firstName(nextUser.getFirstName())
+        .lastName(nextUser.getLastName())
+        .email(nextUser.getEmail())
+        .build();
   }
 }

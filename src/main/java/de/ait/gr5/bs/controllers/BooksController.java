@@ -20,19 +20,19 @@ public class BooksController implements BooksApi {
   @Override
   public ResponseEntity<BookDto> addBook(BookNewDto newBook) {
     return ResponseEntity
-            .status(HttpStatus.CREATED)
-            .body(booksService.addBook(newBook));
+        .status(HttpStatus.CREATED)
+        .body(booksService.addBook(newBook));
   }
 
   @Override
   public ResponseEntity<BookDto> updateBook(Long bookId, BookUpdateDto updateBook) {
     return ResponseEntity
-            .status(HttpStatus.OK)
-            .body(booksService.updateBook(bookId, updateBook));
+        .status(HttpStatus.OK)
+        .body(booksService.updateBook(bookId, updateBook));
   }
 
   @Override
-  public ResponseEntity<BooksShortDto> getBooks(UserFilterSearchDTO filterForSearch)  {
+  public ResponseEntity<BooksShortDto> getBooks(UserFilterSearchDTO filterForSearch) {
     return ResponseEntity.ok()
         .body(booksService.getBooks(filterForSearch));
   }
@@ -40,8 +40,8 @@ public class BooksController implements BooksApi {
   @Override
   public ResponseEntity<WaitLinePlaceDto> addBookToUserBooks(WaitLineRequestDto waitLineRequestDto) {
     return ResponseEntity
-            .status(HttpStatus.OK)
-            .body(booksService.addBookToUserBooks(waitLineRequestDto));
+        .status(HttpStatus.OK)
+        .body(booksService.addBookToUserBooks(waitLineRequestDto));
   }
 
   @Override
@@ -52,15 +52,15 @@ public class BooksController implements BooksApi {
   @Override
   public ResponseEntity<BooksShortDto> getHistory(Long userId) {
     return ResponseEntity
-            .status(HttpStatus.OK)
-            .body(booksService.getHistory(userId));
+        .status(HttpStatus.OK)
+        .body(booksService.getHistory(userId));
   }
 
   @Override
   public ResponseEntity<BooksShortDto> getWaitList(Long userId) {
     return ResponseEntity
-            .status(HttpStatus.OK)
-            .body(booksService.getWaitList(userId));
+        .status(HttpStatus.OK)
+        .body(booksService.getWaitList(userId));
   }
 
   @Override
@@ -71,28 +71,28 @@ public class BooksController implements BooksApi {
   @Override
   public ResponseEntity<BooksShortDto> getSendList(Long userId) {
     return ResponseEntity
-            .status(HttpStatus.OK)
-            .body(booksService.getSendList(userId));
+        .status(HttpStatus.OK)
+        .body(booksService.getSendList(userId));
   }
 
   @Override
   public ResponseEntity<WaitLineNextUserDto> getInfoAboutNextReaderInLine(WaitLineRequestDto waitLineRequestDto) {
     return ResponseEntity
-            .status(HttpStatus.OK)
-            .body(booksService.getInfoAboutNextReaderInLine(waitLineRequestDto));
+        .status(HttpStatus.OK)
+        .body(booksService.getInfoAboutNextReaderInLine(waitLineRequestDto));
   }
 
   @Override
   public ResponseEntity<AllUserBooksDto> sendBookToNextUser(WaitLineRequestDto waitLineRequestDto) {
     return ResponseEntity
-            .status(HttpStatus.OK)
-            .body(booksService.sendBookToNextUser(waitLineRequestDto));
+        .status(HttpStatus.OK)
+        .body(booksService.sendBookToNextUser(waitLineRequestDto));
   }
 
   @Override
   public ResponseEntity<AllUserBooksDto> getAllUserBooksInfo(Long userId) {
     return ResponseEntity
-            .status(HttpStatus.OK)
-            .body(booksService.getAllUserBooksInfo(userId));
+        .status(HttpStatus.OK)
+        .body(booksService.getAllUserBooksInfo(userId));
   }
 }

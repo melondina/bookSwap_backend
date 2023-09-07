@@ -1,6 +1,5 @@
 package de.ait.gr5.bs.controllers;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import de.ait.gr5.bs.models.User;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,9 +26,6 @@ public class LanguagesIntegrationTest {
 
   @Autowired
   private MockMvc mockMvc;
-
-  @Autowired
-  private ObjectMapper objectMapper;
 
   @Nested
   @DisplayName("GET /api/languages is works: ")

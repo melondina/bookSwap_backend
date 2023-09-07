@@ -13,6 +13,6 @@ import lombok.NoArgsConstructor;
 @Schema(description = "Message from the server. Errors and statuses")
 public class StandardResponseDto {
 
-    @Schema(description = "Message text")
-    private String message;
+  @Schema(description = "Message text")
+  private String message;
 }

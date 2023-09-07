@@ -1,5 +1,6 @@
 package de.ait.gr5.bs.dto;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import de.ait.gr5.bs.models.Book;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
@@ -11,6 +12,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@JsonInclude(JsonInclude.Include.NON_NULL)
 @Schema(description = "Book")
 public class BookDto {
 
@@ -35,16 +37,16 @@ public class BookDto {
   @Schema(description = "Number of pages in the book", example = "408")
   private String pages;
 
-  @Schema(description = "Publisher date of the book, format YYYY-MM-DD", example = "2015")
+  @Schema(description = "Publisher date of the book, format YYYY", example = "2015")
   private String publisherDate;
 
-  @Schema(description = "Book cover photo", example = "f:/db/1.jpg")
+  @Schema(description = "Book cover photo", example = "https://bilder.buecher.de/produkte/66/66249/66249530n.jpg")
   private String cover;
 
-  @Schema(description = "Book owner", example = "User1")
+  @Schema(description = "Owner ID", example = "1")
   private String owner;
 
-  @Schema(description = "Location of the book", example = "13599 Berlin Germany")
+  @Schema(description = "Location of the book", example = "13599 Berlin")
   private String location;
 
   @Schema(description = "Number of readers in the queue", example = "3")
@@ -52,7 +54,7 @@ public class BookDto {
 
 
   public static BookDto from(Book book) {
-    BookDto result = BookDto.builder()
+    return BookDto.builder()
         .bookId(book.getBookId())
         .title(book.getTitle())
         .author(book.getAuthor())
@@ -62,9 +64,9 @@ public class BookDto {
         .pages(book.getPages().toString())
         .cover(book.getCover())
         .owner(book.getOwner().getUserId().toString())
-        .publisherDate(book.getPublisherDate().toString())
+        .publisherDate(book.getPublisherDate())
         .build();
-    return result;
+
   }
 
 }

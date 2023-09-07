@@ -34,11 +34,15 @@ public interface BooksApi {
           }),
       @ApiResponse(responseCode = "403", description = "Fill in full details about yourself in your profile",
           content = {
-              @Content(mediaType = "application/json", schema = @Schema(implementation = BookDto.class))
+              @Content(mediaType = "application/json", schema = @Schema(implementation = StandardResponseDto.class))
           }),
       @ApiResponse(responseCode = "403", description = "Not have permission",
           content = {
-              @Content(mediaType = "application/json", schema = @Schema(implementation = BookDto.class))
+              @Content(mediaType = "application/json", schema = @Schema(implementation = StandardResponseDto.class))
+          }),
+      @ApiResponse(responseCode = "401", description = "User not authenticated",
+          content = {
+              @Content(mediaType = "application/json", schema = @Schema(implementation = StandardResponseDto.class))
           })
   })
   @PostMapping
@@ -58,9 +62,13 @@ public interface BooksApi {
           }),
       @ApiResponse(responseCode = "403", description = "Not have permission",
           content = {
-              @Content(mediaType = "application/json", schema = @Schema(implementation = BookDto.class))
+              @Content(mediaType = "application/json", schema = @Schema(implementation = StandardResponseDto.class))
           }),
       @ApiResponse(responseCode = "404", description = "Book not found",
+          content = {
+              @Content(mediaType = "application/json", schema = @Schema(implementation = StandardResponseDto.class))
+          }),
+      @ApiResponse(responseCode = "401", description = "User not authenticated",
           content = {
               @Content(mediaType = "application/json", schema = @Schema(implementation = StandardResponseDto.class))
           })
@@ -79,7 +87,7 @@ public interface BooksApi {
           }),
       @ApiResponse(responseCode = "403", description = "Not have permission",
           content = {
-              @Content(mediaType = "application/json", schema = @Schema(implementation = RestException.class))
+              @Content(mediaType = "application/json", schema = @Schema(implementation = StandardResponseDto.class))
           })
   })
   @GetMapping()
@@ -95,15 +103,15 @@ public interface BooksApi {
           }),
       @ApiResponse(responseCode = "401", description = "User unauthorized",
           content = {
-              @Content(mediaType = "application/json", schema = @Schema(implementation = RestException.class))
+              @Content(mediaType = "application/json", schema = @Schema(implementation = StandardResponseDto.class))
           }),
       @ApiResponse(responseCode = "404", description = "Book or user not found",
           content = {
-              @Content(mediaType = "application/json", schema = @Schema(implementation = RestException.class))
+              @Content(mediaType = "application/json", schema = @Schema(implementation = StandardResponseDto.class))
           }),
       @ApiResponse(responseCode = "403", description = "User already get book or stay in line for that book",
           content = {
-              @Content(mediaType = "application/json", schema = @Schema(implementation = RestException.class))
+              @Content(mediaType = "application/json", schema = @Schema(implementation = StandardResponseDto.class))
           })
   })
   @PostMapping("/getting")
@@ -115,7 +123,7 @@ public interface BooksApi {
   @ApiResponses(value = {
       @ApiResponse(responseCode = "404", description = "Book not found",
           content = {
-              @Content(mediaType = "application/json", schema = @Schema(implementation = RestException.class))
+              @Content(mediaType = "application/json", schema = @Schema(implementation = StandardResponseDto.class))
           }),
       @ApiResponse(responseCode = "200", description = "Book detail",
           content = {
@@ -124,7 +132,7 @@ public interface BooksApi {
   })
   @GetMapping("/{book_id}/detail")
   ResponseEntity<BookDto> getBookDetail(@Parameter(required = true, description = "Book id", example = "2")
-                                        @PathVariable(name = "book_id", required = true) Long bookId);
+                                        @PathVariable(name = "book_id") Long bookId);
 
 
   @Operation(summary = "List of books read", description = "List of books read")
@@ -135,11 +143,11 @@ public interface BooksApi {
           }),
       @ApiResponse(responseCode = "403", description = "Not have permission",
           content = {
-              @Content(mediaType = "application/json", schema = @Schema(implementation = RestException.class))
+              @Content(mediaType = "application/json", schema = @Schema(implementation = StandardResponseDto.class))
           }),
       @ApiResponse(responseCode = "404", description = "User not found",
           content = {
-              @Content(mediaType = "application/json", schema = @Schema(implementation = RestException.class))
+              @Content(mediaType = "application/json", schema = @Schema(implementation = StandardResponseDto.class))
           })
   })
   @GetMapping("/history/{user-id}")
@@ -155,15 +163,15 @@ public interface BooksApi {
           }),
       @ApiResponse(responseCode = "403", description = "Not have permission",
           content = {
-              @Content(mediaType = "application/json", schema = @Schema(implementation = RestException.class))
+              @Content(mediaType = "application/json", schema = @Schema(implementation = StandardResponseDto.class))
           }),
       @ApiResponse(responseCode = "401", description = "User unauthorized",
           content = {
-              @Content(mediaType = "application/json", schema = @Schema(implementation = RestException.class))
+              @Content(mediaType = "application/json", schema = @Schema(implementation = StandardResponseDto.class))
           }),
       @ApiResponse(responseCode = "404", description = "User not found",
           content = {
-              @Content(mediaType = "application/json", schema = @Schema(implementation = RestException.class))
+              @Content(mediaType = "application/json", schema = @Schema(implementation = StandardResponseDto.class))
           })
   })
   @GetMapping("/waiting/{user-id}")
@@ -179,27 +187,26 @@ public interface BooksApi {
           })
   })
   @GetMapping("/filter")
-
-  ResponseEntity<FilterDTO> getFilter ();
+  ResponseEntity<FilterDTO> getFilter();
 
   @Operation(summary = "List books to send", description = "List books to send")
   @ApiResponses(value = {
-          @ApiResponse(responseCode = "200", description = "List books to send",
-                  content = {
-                          @Content(mediaType = "application/json", schema = @Schema(implementation = BooksShortDto.class))
-                  }),
-          @ApiResponse(responseCode = "403", description = "Not have permission",
-                  content = {
-                          @Content(mediaType = "application/json", schema = @Schema(implementation = RestException.class))
-                  }),
-          @ApiResponse(responseCode = "401", description = "User unauthorized",
-                  content = {
-                          @Content(mediaType = "application/json", schema = @Schema(implementation = RestException.class))
-                  }),
-          @ApiResponse(responseCode = "404", description = "User not found",
-                  content = {
-                          @Content(mediaType = "application/json", schema = @Schema(implementation = RestException.class))
-                  })
+      @ApiResponse(responseCode = "200", description = "List books to send",
+          content = {
+              @Content(mediaType = "application/json", schema = @Schema(implementation = BooksShortDto.class))
+          }),
+      @ApiResponse(responseCode = "403", description = "Not have permission",
+          content = {
+              @Content(mediaType = "application/json", schema = @Schema(implementation = StandardResponseDto.class))
+          }),
+      @ApiResponse(responseCode = "401", description = "User unauthorized",
+          content = {
+              @Content(mediaType = "application/json", schema = @Schema(implementation = StandardResponseDto.class))
+          }),
+      @ApiResponse(responseCode = "404", description = "User not found",
+          content = {
+              @Content(mediaType = "application/json", schema = @Schema(implementation = StandardResponseDto.class))
+          })
   })
   @GetMapping("/send/{user-id}")
   ResponseEntity<BooksShortDto> getSendList(@Parameter(required = true, description = "User ID", example = "1")
@@ -207,70 +214,70 @@ public interface BooksApi {
 
   @Operation(summary = "Data of next reader of particular book", description = "next reader of particular book")
   @ApiResponses(value = {
-          @ApiResponse(responseCode = "200", description = "Book info",
-                  content = {
-                          @Content(mediaType = "application/json", schema = @Schema(implementation = BooksShortDto.class))
-                  }),
-          @ApiResponse(responseCode = "403", description = "Not have permission",
-                  content = {
-                          @Content(mediaType = "application/json", schema = @Schema(implementation = RestException.class))
-                  }),
-          @ApiResponse(responseCode = "401", description = "User unauthorized",
-                  content = {
-                          @Content(mediaType = "application/json", schema = @Schema(implementation = RestException.class))
-                  }),
-          @ApiResponse(responseCode = "404", description = "User not found, Book not found, Book not in wait list",
-                  content = {
-                          @Content(mediaType = "application/json", schema = @Schema(implementation = RestException.class))
-                  })
+      @ApiResponse(responseCode = "200", description = "Book info",
+          content = {
+              @Content(mediaType = "application/json", schema = @Schema(implementation = BooksShortDto.class))
+          }),
+      @ApiResponse(responseCode = "403", description = "Not have permission",
+          content = {
+              @Content(mediaType = "application/json", schema = @Schema(implementation = StandardResponseDto.class))
+          }),
+      @ApiResponse(responseCode = "401", description = "User unauthorized",
+          content = {
+              @Content(mediaType = "application/json", schema = @Schema(implementation = StandardResponseDto.class))
+          }),
+      @ApiResponse(responseCode = "404", description = "User not found, Book not found, Book not in wait list",
+          content = {
+              @Content(mediaType = "application/json", schema = @Schema(implementation = StandardResponseDto.class))
+          })
   })
   @GetMapping("/send/to")
   ResponseEntity<WaitLineNextUserDto> getInfoAboutNextReaderInLine(
-          @RequestBody @Valid WaitLineRequestDto waitLineRequestDto);
+      @RequestBody @Valid WaitLineRequestDto waitLineRequestDto);
 
   @Operation(summary = "Book was send to next user in line", description = "Book to next user")
   @ApiResponses(value = {
-          @ApiResponse(responseCode = "200", description = "Book was send",
-                  content = {
-                          @Content(mediaType = "application/json", schema = @Schema(implementation = BooksShortDto.class))
-                  }),
-          @ApiResponse(responseCode = "403", description = "Not have permission",
-                  content = {
-                          @Content(mediaType = "application/json", schema = @Schema(implementation = RestException.class))
-                  }),
-          @ApiResponse(responseCode = "401", description = "User unauthorized",
-                  content = {
-                          @Content(mediaType = "application/json", schema = @Schema(implementation = RestException.class))
-                  }),
-          @ApiResponse(responseCode = "404", description = "User not found, Book not found, Book is not in the wait list",
-                  content = {
-                          @Content(mediaType = "application/json", schema = @Schema(implementation = RestException.class))
-                  })
+      @ApiResponse(responseCode = "200", description = "Book was send",
+          content = {
+              @Content(mediaType = "application/json", schema = @Schema(implementation = BooksShortDto.class))
+          }),
+      @ApiResponse(responseCode = "403", description = "Not have permission",
+          content = {
+              @Content(mediaType = "application/json", schema = @Schema(implementation = StandardResponseDto.class))
+          }),
+      @ApiResponse(responseCode = "401", description = "User unauthorized",
+          content = {
+              @Content(mediaType = "application/json", schema = @Schema(implementation = StandardResponseDto.class))
+          }),
+      @ApiResponse(responseCode = "404", description = "User not found, Book not found, Book is not in the wait list",
+          content = {
+              @Content(mediaType = "application/json", schema = @Schema(implementation = RestException.class))
+          })
   })
   @PostMapping("/send/to")
   ResponseEntity<AllUserBooksDto> sendBookToNextUser(
-          @RequestBody @Valid WaitLineRequestDto waitLineRequestDto);
+      @RequestBody @Valid WaitLineRequestDto waitLineRequestDto);
 
   @Operation(summary = "All info about user books", description = "All info about user books")
   @ApiResponses(value = {
-          @ApiResponse(responseCode = "200", description = "List was send",
-                  content = {
-                          @Content(mediaType = "application/json", schema = @Schema(implementation = BooksShortDto.class))
-                  }),
-          @ApiResponse(responseCode = "403", description = "Not have permission",
-                  content = {
-                          @Content(mediaType = "application/json", schema = @Schema(implementation = RestException.class))
-                  }),
-          @ApiResponse(responseCode = "401", description = "User unauthorized",
-                  content = {
-                          @Content(mediaType = "application/json", schema = @Schema(implementation = RestException.class))
-                  }),
-          @ApiResponse(responseCode = "404", description = "User not found",
-                  content = {
-                          @Content(mediaType = "application/json", schema = @Schema(implementation = RestException.class))
-                  })
+      @ApiResponse(responseCode = "200", description = "List was send",
+          content = {
+              @Content(mediaType = "application/json", schema = @Schema(implementation = AllUserBooksDto.class))
+          }),
+      @ApiResponse(responseCode = "403", description = "Not have permission",
+          content = {
+              @Content(mediaType = "application/json", schema = @Schema(implementation = StandardResponseDto.class))
+          }),
+      @ApiResponse(responseCode = "401", description = "User unauthorized",
+          content = {
+              @Content(mediaType = "application/json", schema = @Schema(implementation = StandardResponseDto.class))
+          }),
+      @ApiResponse(responseCode = "404", description = "User not found",
+          content = {
+              @Content(mediaType = "application/json", schema = @Schema(implementation = StandardResponseDto.class))
+          })
   })
   @GetMapping("/all/{user-id}")
   ResponseEntity<AllUserBooksDto> getAllUserBooksInfo(@Parameter(required = true, description = "User ID", example = "1")
-                                            @PathVariable("user-id") Long userId);
+                                                      @PathVariable("user-id") Long userId);
 }
