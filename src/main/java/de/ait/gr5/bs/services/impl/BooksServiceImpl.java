@@ -347,12 +347,15 @@ public class BooksServiceImpl implements BooksService {
     return getAllUserBooks(user);
   }
 
+  private BooksShortDto getBookByUser(User user) {
+    List<Book> books = booksRepository.findAllByOwner(user);
+
+    return BooksShortDto.from(BookShortDto.from(books));
+  }
+
   public AllUserBooksDto getAllUserBooks(User user) {
 
-    UserFilterSearchDTO userFilterSearchDTO = UserFilterSearchDTO.builder()
-            .userId(user.getUserId()).build();
-
-    BooksShortDto booksInLibrary = getBooks(userFilterSearchDTO);
+    BooksShortDto booksInLibrary = getBookByUser(user);
     BooksShortDto booksInHistory = getHistory(user.getUserId());
     BooksShortDto booksInWaitLine = getWaitList(user.getUserId());
     BooksShortDto booksToSend = getSendList(user.getUserId());

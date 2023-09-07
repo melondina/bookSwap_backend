@@ -12,7 +12,7 @@ Content-Type: application/json
   "pages": 256,
   "publisherDate": "2019-04-11",
   "cover": "bit.ly/45BSyAI",
-  "owner": 1
+  "owner": 2
 }
 
 ### Update information of the book
@@ -109,5 +109,5 @@ Content-Type: application/json
 }
 
 ### Get info about all users book
-GET localhost:8080/api/books/all/1
+GET localhost:8080/api/books/all/2
 Content-Type: application/json
