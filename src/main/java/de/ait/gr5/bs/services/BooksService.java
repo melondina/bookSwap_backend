@@ -22,4 +22,8 @@ public interface BooksService {
   BooksShortDto getSendList(Long userId);
 
   WaitLineNextUserDto getInfoAboutNextReaderInLine(WaitLineRequestDto waitLineRequestDto);
+
+  AllUserBooksDto sendBookToNextUser(WaitLineRequestDto waitLineRequestDto);
+
+  AllUserBooksDto getAllUserBooksInfo(Long userId);
 }

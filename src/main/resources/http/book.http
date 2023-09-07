@@ -95,7 +95,19 @@ GET localhost:8080/api/books/send/to
 Content-Type: application/json
 
 {
-  "bookId": 1,
+  "bookId": 3,
   "userId": 1
 }
 
+### Send book to next reader
+POST localhost:8080/api/books/send/to
+Content-Type: application/json
+
+{
+  "bookId": 3,
+  "userId": 1
+}
+
+### Get info about all users book
+GET localhost:8080/api/books/all/1
+Content-Type: application/json

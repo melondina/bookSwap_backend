@@ -114,6 +114,7 @@ public class   BookIntegrationTest {
       .owner(2L)
       .build();
 
+  //todo - reuse existing constant
   private static final WaitLineRequestDto NEW_BOOK_TO_USER_POSITIVE = WaitLineRequestDto.builder()
       .bookId(1L)
       .userId(2L)
@@ -131,6 +132,11 @@ public class   BookIntegrationTest {
 
   private static final WaitLineRequestDto CHECK_DATA_FOR_NEXT_USER_NEGATIVE = WaitLineRequestDto.builder()
           .bookId(10L)
+          .userId(1L)
+          .build();
+
+  private static final WaitLineRequestDto CHECK_DATA_FOR_SEND_BOOK_POSITIVE = WaitLineRequestDto.builder()
+          .bookId(1L)
           .userId(1L)
           .build();
 
@@ -588,6 +594,83 @@ public class   BookIntegrationTest {
                       .header("Content-Type", "application/json")
                       .content(body))
               .andExpect(status().isNotFound());
+    }
+  }
+
+  @Nested
+  @DisplayName("POST /api/books/send/to is works: ")
+  class sendBookToNextReader {
+
+    @Test
+    @Sql(scripts = "/sql/data_for_get_wait_line.sql")
+    @DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD)
+    @WithMockUser(username = "test@gmail.com", password = "Qwerty007!")
+    public void send_book_to_the_next_user_positive() throws Exception {
+
+      String body = objectMapper.writeValueAsString(CHECK_DATA_FOR_SEND_BOOK_POSITIVE);
+
+      User userAuthForTest = createdUser(1L, "test@gmail.com",
+              "$2a$10$Vz4mecaJq32jIGzL8dlgW.Xk6suWG1lhHgawSqmcYEc1vDvcRUlMe",
+              User.State.CONFIRMED, User.Role.USER, false);
+      userAuthorizationForTest(userAuthForTest);
+
+      mockMvc.perform(post("/api/books/send/to")
+                      .header("Content-Type", "application/json")
+                      .content(body))
+              .andExpect(status().isOk())
+              .andExpect(jsonPath("$.booksInLibrary.count", is(0)))
+              .andExpect(jsonPath("$.booksInHistory.count", is(1)))
+              .andExpect(jsonPath("$.booksInHistory.books[0].bookId", is(1)))
+              .andExpect(jsonPath("$.booksInWaitLine.count", is(0)))
+              .andExpect(jsonPath("$.booksToSend.count", is(0)));
+    }
+
+    @Test
+    @Sql(scripts = "/sql/data_for_get_wait_line.sql")
+    @DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD)
+    @WithMockUser(username = "test@gmail.com", password = "Qwerty007!")
+    public void send_book_to_the_next_user_negative_book_not_exist() throws Exception {
+
+      String body = objectMapper.writeValueAsString(CHECK_DATA_FOR_NEXT_USER_NEGATIVE);
+
+      User userAuthForTest = createdUser(1L, "test@gmail.com",
+              "$2a$10$Vz4mecaJq32jIGzL8dlgW.Xk6suWG1lhHgawSqmcYEc1vDvcRUlMe",
+              User.State.CONFIRMED, User.Role.USER, false);
+      userAuthorizationForTest(userAuthForTest);
+
+      mockMvc.perform(post("/api/books/send/to")
+                      .header("Content-Type", "application/json")
+                      .content(body))
+              .andExpect(status().isNotFound());
+
+    }
+  }
+
+  @Nested
+  @DisplayName("GET /api/books/all/{UserId} is works: ")
+  class getAllUserBooksInfo {
+
+    @Test
+    @Sql(scripts = "/sql/data_for_get_wait_line.sql")
+    @DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD)
+    @WithMockUser(username = "test@gmail.com", password = "Qwerty007!")
+    public void get_all_user_books_info_positive() throws Exception {
+
+      User userAuthForTest = createdUser(1L, "test@gmail.com",
+              "$2a$10$Vz4mecaJq32jIGzL8dlgW.Xk6suWG1lhHgawSqmcYEc1vDvcRUlMe",
+              User.State.CONFIRMED, User.Role.USER, false);
+      userAuthorizationForTest(userAuthForTest);
+
+      mockMvc.perform(get("/api/books/all/1")
+                      .header("Content-Type", "application/json")
+                      .with(SecurityMockMvcRequestPostProcessors.csrf()))
+              .andExpect(status().isOk())
+              .andExpect(jsonPath("$.booksInLibrary.count", is(1)))
+              .andExpect(jsonPath("$.booksInLibrary.books[0].bookId", is(1)))
+              .andExpect(jsonPath("$.booksInHistory.count", is(0)))
+              .andExpect(jsonPath("$.booksInWaitLine.count", is(0)))
+              .andExpect(jsonPath("$.booksToSend.count", is(1)))
+              .andExpect(jsonPath("$.booksToSend.books[0].bookId", is(1)));
     }
   }
 }

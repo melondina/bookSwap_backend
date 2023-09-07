@@ -39,7 +39,6 @@ public class BooksServiceImpl implements BooksService {
 
   public static final Sort SORT_BY_ID = Sort.by(Sort.Direction.ASC, "lineId");
 
-
   @Override
   public BookDto addBook(BookNewDto newBook) {
     User user = getUserOrElseThrow(newBook.getOwner());
@@ -73,7 +72,6 @@ public class BooksServiceImpl implements BooksService {
     return from(book);
   }
 
-
   @Override
   public BookDto updateBook(Long bookId, BookUpdateDto updateBook) {
     Book book1 = getBookOrElseThrow(bookId);
@@ -104,7 +102,6 @@ public class BooksServiceImpl implements BooksService {
     }
     return from(book);
   }
-
 
   @Override
   public BooksShortDto getBooks(UserFilterSearchDTO filterForSearch) {
@@ -161,6 +158,14 @@ public class BooksServiceImpl implements BooksService {
     return user;
   }
 
+  public WaitLine getNextUserInWaitLineOrThrow(Book book) {
+    WaitLine waitline = waitLinesRepository.findTopByBook(book, SORT_BY_ID);
+    if (waitline == null) {
+      throw new RestException(HttpStatus.NOT_FOUND, "Book is not in the wait list");
+    }
+    return waitline;
+  }
+
   @Override
   public WaitLinePlaceDto addBookToUserBooks(WaitLineRequestDto waitLineRequestDto) {
     User user = getUserOrElseThrow(waitLineRequestDto.getUserId());
@@ -187,7 +192,6 @@ public class BooksServiceImpl implements BooksService {
 
     return WaitLinePlaceDto.from(waitLine, usersInLine.size() + 1);
   }
-
 
   @Override
   public BooksShortDto getHistory(Long userId) {
@@ -255,6 +259,7 @@ public class BooksServiceImpl implements BooksService {
     List<Book> booksFromOwner = booksRepository.findAllByOwner(user);
 
     List<WaitLine> waitLines = waitLinesRepository.findAll();
+
     List<Book> booksFromWaitLine = new ArrayList<>();
 
     //get all books from wait list
@@ -283,12 +288,78 @@ public class BooksServiceImpl implements BooksService {
       throw new RestException(HttpStatus.FORBIDDEN, "Not have permission");
     }
 
-    WaitLine waitline = waitLinesRepository.findTopByBook(book, SORT_BY_ID);
-    if (waitline == null) {
-      throw new RestException(HttpStatus.NOT_FOUND, "Book is not in the wait list");
-    }
+    WaitLine waitline = getNextUserInWaitLineOrThrow(book);
 
     return WaitLineNextUserDto.from(waitline.getUser());
+  }
+
+  @Override
+  public AllUserBooksDto sendBookToNextUser(WaitLineRequestDto waitLineRequestDto) {
+    User user = getUserOrElseThrow(waitLineRequestDto.getUserId());
+    Book book = getBookOrElseThrow(waitLineRequestDto.getBookId());
+
+    if (!securityService.isUserPermission(user.getUserId())) {
+      throw new RestException(HttpStatus.FORBIDDEN, "Not have permission");
+    }
+
+    //find next reader in line
+    WaitLine nextSignForBookInLine = getNextUserInWaitLineOrThrow(book);
+
+    //add book to the history with current user
+    History history = History.builder()
+            .book(book)
+            .user(user)
+            .build();
+    historyRepository.save(history);
+
+    //add book with the new owner (next user)
+    Book bookWithNewOwner =  Book.builder()
+            .bookId(book.getBookId())
+            .title(book.getTitle())
+            .author(book.getAuthor())
+            .description(book.getDescription())
+            .category(book.getCategory())
+            .language(book.getLanguage())
+            .pages(book.getPages())
+            .publisherDate(book.getPublisherDate())
+            .cover(book.getCover())
+            .owner(nextSignForBookInLine.getUser())
+            .dateCreate(book.getDateCreate())
+            .state(book.getState())
+            .build();
+    booksRepository.save(bookWithNewOwner);
+
+    //delete from wait line
+    waitLinesRepository.delete(nextSignForBookInLine);
+
+    //return dto for all books
+    return getAllUserBooks(user);
+  }
+
+  @Override
+  public AllUserBooksDto getAllUserBooksInfo(Long userId) {
+    User user = getUserOrElseThrow(userId);
+
+    if (!securityService.isUserPermission(user.getUserId())) {
+      throw new RestException(HttpStatus.FORBIDDEN, "Not have permission");
+    }
+
+    return getAllUserBooks(user);
+  }
+
+  public AllUserBooksDto getAllUserBooks(User user) {
+
+    BooksShortDto booksInLibrary = getBooks(user.getUserId());
+    BooksShortDto booksInHistory = getHistory(user.getUserId());
+    BooksShortDto booksInWaitLine = getWaitList(user.getUserId());
+    BooksShortDto booksToSend = getSendList(user.getUserId());
+
+    return AllUserBooksDto.builder()
+            .booksInLibrary(booksInLibrary)
+            .booksInHistory(booksInHistory)
+            .booksInWaitLine(booksInWaitLine)
+            .booksToSend(booksToSend)
+            .build();
   }
 }
 
