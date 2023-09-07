@@ -2,7 +2,7 @@ package de.ait.gr5.bs.controllers.api;
 
 
 import de.ait.gr5.bs.dto.LocationDto;
-import de.ait.gr5.bs.handler.RestException;
+import de.ait.gr5.bs.dto.StandardResponseDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -24,7 +24,7 @@ public interface LocationApi {
   @ApiResponses(value = {
       @ApiResponse(responseCode = "404", description = "City not found",
           content = {
-              @Content(mediaType = "application/json", schema = @Schema(implementation = RestException.class))
+              @Content(mediaType = "application/json", schema = @Schema(implementation = StandardResponseDto.class))
           }),
       @ApiResponse(responseCode = "200", description = "Found city according to postal code",
           content = {
@@ -33,6 +33,6 @@ public interface LocationApi {
   })
   @GetMapping("/{postal_code}")
   ResponseEntity<LocationDto> getCity(@Parameter(required = true, description = "Postal code", example = "13599")
-                                        @PathVariable(name = "postal_code", required = true) String postalCode);
+                                      @PathVariable(name = "postal_code") String postalCode);
 
- }
+}

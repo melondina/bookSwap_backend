@@ -17,12 +17,12 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class RegistrationController implements RegistrationApi {
 
-    RegistrationService registrationService;
+  RegistrationService registrationService;
 
-    @Override
-    public ResponseEntity<UserDto> registration(RegistrationDto registerData) {
-        return ResponseEntity
-                .status(HttpStatus.CREATED)
-                .body(registrationService.registration(registerData));
-    }
+  @Override
+  public ResponseEntity<UserDto> registration(RegistrationDto registerData) {
+    return ResponseEntity
+        .status(HttpStatus.CREATED)
+        .body(registrationService.registration(registerData));
+  }
 }

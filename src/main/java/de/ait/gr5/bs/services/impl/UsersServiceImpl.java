@@ -3,8 +3,6 @@ package de.ait.gr5.bs.services.impl;
 
 import de.ait.gr5.bs.dto.UpdateUserDto;
 import de.ait.gr5.bs.dto.UserDto;
-import de.ait.gr5.bs.exceptions.CityNotFoundException;
-import de.ait.gr5.bs.exceptions.ForbiddenUpdateUserOperationException;
 import de.ait.gr5.bs.exceptions.NotFoundException;
 import de.ait.gr5.bs.handler.RestException;
 import de.ait.gr5.bs.models.City;
@@ -38,7 +36,7 @@ public class UsersServiceImpl implements UsersService {
     @Override
     public UserDto updateUser(Long userId, UpdateUserDto updateUser) {
 
-        String postalCode = updateUser.getPostalCode().toString();
+        String postalCode = updateUser.getPostalCode();
         City city = locationService.getOrCreatedCity(postalCode);
 
         if (city == null) {

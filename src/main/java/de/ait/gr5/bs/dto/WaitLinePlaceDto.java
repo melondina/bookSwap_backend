@@ -28,10 +28,10 @@ public class WaitLinePlaceDto {
 
   public static WaitLinePlaceDto from(WaitLine waitLine, Integer numberUserInLine) {
     return WaitLinePlaceDto.builder()
-            .lineId(waitLine.getLineId())
-            .bookId(String.valueOf(waitLine.getBook().getBookId()))
-            .userId(String.valueOf(waitLine.getUser().getUserId()))
-            .numberUserInLine(numberUserInLine)
-            .build();
+        .lineId(waitLine.getLineId())
+        .bookId(String.valueOf(waitLine.getBook().getBookId()))
+        .userId(String.valueOf(waitLine.getUser().getUserId()))
+        .numberUserInLine(numberUserInLine)
+        .build();
   }
 }

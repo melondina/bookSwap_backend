@@ -12,8 +12,7 @@ public class SecurityService {
     if (authentication.isAuthenticated()) {
       Object principal = authentication.getPrincipal();
 
-      if (principal instanceof AuthenticatedUser) {
-        AuthenticatedUser authenticatedUser = (AuthenticatedUser) principal;
+      if (principal instanceof AuthenticatedUser authenticatedUser) {
         return authenticatedUser.id().equals(userId);
       }
     }

@@ -31,7 +31,7 @@ public class BookUpdateDto {
   @NotNull
   private Long categoryId;
 
-  @Schema(description = "Book language", example = "English")
+  @Schema(description = "Book language", example = "1")
   @NotNull
   private Long languageId;
 
@@ -39,12 +39,12 @@ public class BookUpdateDto {
   @NotNull
   private Integer pages;
 
-  @Schema(description = "Publisher date of the book", example = "2015")
+  @Schema(description = "Publisher date of the book, format YYYY", example = "2015")
   @NotNull
   @NotBlank
   private String publisherDate;
 
-  @Schema(description = "Book cover photo", example = "f:/book_db/1.jpg")
+  @Schema(description = "Book cover photo", example = "https://bilder.buecher.de/produkte/66/66249/66249530n.jpg")
   @NotNull
   @NotBlank
   private String cover;

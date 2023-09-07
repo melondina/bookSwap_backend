@@ -50,17 +50,11 @@ public class SecurityConfig {
         .and()
         .formLogin()
         .loginProcessingUrl("/api/login")
-        .successHandler((request, response, authentication) -> {
-          fillResponse(response, HttpStatus.OK, "Login successful");
-        })
-        .failureHandler(((request, response, exception) -> {
-          fillResponse(response, HttpStatus.UNAUTHORIZED, "Incorrect username or password");
-        }))
+        .successHandler((request, response, authentication) -> fillResponse(response, HttpStatus.OK, "Login successful"))
+        .failureHandler(((request, response, exception) -> fillResponse(response, HttpStatus.UNAUTHORIZED, "Incorrect username or password")))
         .and()
         .exceptionHandling()
-        .defaultAuthenticationEntryPointFor(((request, response, authException) -> {
-          fillResponse(response, HttpStatus.UNAUTHORIZED, "User unauthorized");
-        }), new AntPathRequestMatcher("/api/**"))
+        .defaultAuthenticationEntryPointFor(((request, response, authException) -> fillResponse(response, HttpStatus.UNAUTHORIZED, "User unauthorized")), new AntPathRequestMatcher("/api/**"))
         .accessDeniedHandler((request, response, accessDeniedException) -> {
           Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
@@ -71,9 +65,7 @@ public class SecurityConfig {
         .and()
         .logout()
         .logoutUrl("/api/logout")
-        .logoutSuccessHandler((request, response, authentication) -> {
-          fillResponse(response, HttpStatus.OK, "Logout successful");
-        });
+        .logoutSuccessHandler((request, response, authentication) -> fillResponse(response, HttpStatus.OK, "Logout successful"));
     return httpSecurity.build();
   }
 

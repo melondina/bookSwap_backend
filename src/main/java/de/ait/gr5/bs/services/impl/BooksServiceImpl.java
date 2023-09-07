@@ -132,30 +132,27 @@ public class BooksServiceImpl implements BooksService {
   }
 
   public Category getCategoryOrElseThrow(Long categoryId) {
-    Category category = categoriesRepository.findById(categoryId)
+    return categoriesRepository.findById(categoryId)
         .orElseThrow(() -> new RestException(HttpStatus.NOT_FOUND,
-            "Category with id <" + categoryId + "> not found"));
-    return category;
+            "Category with id " + categoryId + " not found"));
   }
 
   public Language getLanguageOrElseThrow(Long languageId) {
-    Language language = languageRepository.findById(languageId)
+    return languageRepository.findById(languageId)
         .orElseThrow(() -> new RestException(HttpStatus.NOT_FOUND,
-            "Language with id <" + languageId + "> not found"));
-    return language;
+            "Language with id " + languageId + " not found"));
   }
 
   public Book getBookOrElseThrow(Long bookId) {
     return booksRepository.findById(bookId)
         .orElseThrow(() -> new RestException(HttpStatus.NOT_FOUND,
-            "Book with id < " + bookId + " > not found"));
+            "Book with id " + bookId + " not found"));
   }
 
   public User getUserOrElseThrow(Long userId) {
-    User user = usersRepository.findById(userId)
+    return usersRepository.findById(userId)
         .orElseThrow(() -> new RestException(HttpStatus.NOT_FOUND,
-            "User with id <" + userId + "> not found"));
-    return user;
+            "User with id " + userId + " not found"));
   }
 
   public WaitLine getNextUserInWaitLineOrThrow(Book book) {

@@ -13,6 +13,6 @@ import lombok.NoArgsConstructor;
 @Schema(description = "Error information")
 public class ErrorDto {
 
-    @Schema(description = "Error message", example = "User with this ID is not found")
-    private String message;
+  @Schema(description = "Error message", example = "User with this ID is not found")
+  private String message;
 }
