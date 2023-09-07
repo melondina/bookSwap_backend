@@ -41,7 +41,7 @@ public class ExternalApiService {
         if (!city.isEmpty()) {
           return City.builder()
               .postalCode(searchPostalCode)
-              .title(city).build();
+              .titleCity(city).build();
         }
       }
     }

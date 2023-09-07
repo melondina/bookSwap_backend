@@ -1,4 +1,4 @@
-insert into categories (title)
+insert into categories (title_category)
 values ('Esse');
 
 insert into languages (title)

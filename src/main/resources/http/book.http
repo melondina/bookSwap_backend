@@ -4,15 +4,15 @@ POST localhost:8080/api/books
 Content-Type: application/json
 
 {
- "title": "2",
- "author": "Robin Wall Kimmerer",
- "description": "Drawing on her life as an indigenous scientist, and as a woman, Kimmerer shows how other living beings...",
- "categoryId": 1,
- "languageId": 1,
- "pages": 108,
- "publisherDate": "2015-04-11",
- "cover": "f:/book_db/1.jpg",
- "owner": 2
+  "title": "English Grammar in Use. Book with Answers",
+  "author": "Murphy Raymond",
+  "description": "This book has clear explanations and practice exercises that have helped millions of people around the world improve their English",
+  "categoryId": 2,
+  "languageId": 1,
+  "pages": 256,
+  "publisherDate": "2019-04-11",
+  "cover": "bit.ly/45BSyAI",
+  "owner": 1
 }
 
 ### Update information of the book
@@ -29,29 +29,49 @@ Content-Type: application/json
   "pages": 4008,
   "publisherDate": "2015-04-11",
   "cover": "f:/book_db/1.jpg",
-  "owner": 3
+  "owner": 1
 }
 
-###
+### Get all books without filter
 GET localhost:8080/api/books/
 Content-Type: application/json
 
-### Found all books
-GET localhost:8080/api/books/?user_id=3
+### Get all books with filter - user_id
+GET localhost:8080/api/books/?userId=1
+Content-Type: application/json
+
+### Get all books with filter - multiSearch
+GET localhost:8080/api/books/?multiSearch=book
+Content-Type: application/json
+
+
+### Get all books with filter - categoryId
+GET localhost:8080/api/books/?categoryId=2
+Content-Type: application/json
+
+### Get all books with filter - multi
+GET localhost:8080/api/books/?languageId=1&userId=1&multiSearch=book
+Content-Type: application/json
+
+### Get all books with filter - language
+GET localhost:8080/api/books/?languageId=1
+Content-Type: application/json
+
+### Get all books with filter -location
+GET localhost:8080/api/books/?location=Berlin
 Content-Type: application/json
 
 ### Get delail of book
-GET localhost:8080/api/books/5/detail
+GET localhost:8080/api/books/1/detail
 Content-Type: application/json
-
 
 ### Add book to user
 POST localhost:8080/api/books/getting
 Content-Type: application/json
 
 {
- "bookId": 5,
- "userId": 1
+ "bookId": 1,
+ "userId": 2
 }
 
 ### Get my history

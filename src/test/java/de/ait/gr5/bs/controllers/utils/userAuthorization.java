@@ -28,7 +28,7 @@ public class userAuthorization {
         .state(state)
         .role(role)
         .agreement(agreement)
-        .city(City.builder().title("Berlin").build())
+        .city(City.builder().titleCity("Berlin").build())
         .build();
 
   }
