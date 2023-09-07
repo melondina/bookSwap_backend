@@ -16,8 +16,8 @@ public class UpdateUserDto {
     @Schema(description = "Users lastname", example = "Wolf")
     private String lastName;
 
-    @Schema(description = "Users city", example = "Berlin")
-    private City city;
+//    @Schema(description = "Users city", example = "Berlin")
+//    private City city;
 
     @Schema(description = "Users postal code", example = "23654")
     private String postalCode;
