@@ -95,4 +95,12 @@ public class BooksController implements BooksApi {
         .status(HttpStatus.OK)
         .body(booksService.getAllUserBooksInfo(userId));
   }
+
+  @Override
+  public ResponseEntity<AllUserBooksDto> removeBookFromUserBooks(WaitLineRequestDto waitLineRequestDto) {
+    return ResponseEntity.status(HttpStatus.OK)
+        .body(booksService.removeBookFromUserBooks(waitLineRequestDto));
+  }
+
+
 }

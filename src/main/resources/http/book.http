@@ -12,12 +12,12 @@ Content-Type: application/json
   "pages": 256,
   "publisherDate": "2019-04-11",
   "cover": "bit.ly/45BSyAI",
-  "owner": 2
+  "owner": 1
 }
 
 ### Update information of the book
 
-PUT localhost:8080/api/books/5
+PUT localhost:8080/api/books/9
 Content-Type: application/json
 
 {
@@ -37,7 +37,7 @@ GET localhost:8080/api/books/
 Content-Type: application/json
 
 ### Get all books with filter - user_id
-GET localhost:8080/api/books/?userId=1
+GET localhost:8080/api/books/?userId=5
 Content-Type: application/json
 
 ### Get all books with filter - multiSearch
@@ -62,7 +62,7 @@ GET localhost:8080/api/books/?location=Berlin
 Content-Type: application/json
 
 ### Get delail of book
-GET localhost:8080/api/books/1/detail
+GET localhost:8080/api/books/10/detail
 Content-Type: application/json
 
 ### Add book to user
@@ -111,3 +111,12 @@ Content-Type: application/json
 ### Get info about all users book
 GET localhost:8080/api/books/all/2
 Content-Type: application/json
+
+### Remove book from wait line
+DELETE localhost:8080/api/books/remove
+Content-Type: application/json
+
+{
+  "bookId": 2,
+  "userId": 1
+}
