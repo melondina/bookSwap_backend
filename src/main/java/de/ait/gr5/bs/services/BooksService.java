@@ -26,4 +26,6 @@ public interface BooksService {
   AllUserBooksDto sendBookToNextUser(WaitLineRequestDto waitLineRequestDto);
 
   AllUserBooksDto getAllUserBooksInfo(Long userId);
+
+  AllUserBooksDto removeBookFromUserBooks(WaitLineRequestDto waitLineRequestDto);
 }

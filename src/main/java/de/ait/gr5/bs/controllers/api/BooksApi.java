@@ -280,4 +280,25 @@ public interface BooksApi {
   @GetMapping("/all/{user-id}")
   ResponseEntity<AllUserBooksDto> getAllUserBooksInfo(@Parameter(required = true, description = "User ID", example = "1")
                                                       @PathVariable("user-id") Long userId);
+
+  @Operation(summary = "Remove book from list to user books")
+  @ApiResponses(value = {
+
+      @ApiResponse(responseCode = "200", description = "The book has been removed from the user's waiting list",
+          content = {
+              @Content(mediaType = "application/json", schema = @Schema(implementation = WaitLinePlaceDto.class))
+          }),
+      @ApiResponse(responseCode = "401", description = "User unauthorized",
+          content = {
+              @Content(mediaType = "application/json", schema = @Schema(implementation = StandardResponseDto.class))
+          }),
+      @ApiResponse(responseCode = "404", description = "Book or user not found",
+          content = {
+              @Content(mediaType = "application/json", schema = @Schema(implementation = StandardResponseDto.class))
+          }),
+  })
+  @DeleteMapping("/remove")
+  ResponseEntity<AllUserBooksDto> removeBookFromUserBooks(
+      @RequestBody @Valid WaitLineRequestDto waitLineRequestDto);
+
 }

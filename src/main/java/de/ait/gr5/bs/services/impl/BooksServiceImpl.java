@@ -111,13 +111,13 @@ public class BooksServiceImpl implements BooksService {
         throw new RestException(HttpStatus.FORBIDDEN, "Not have permission");
       }
     }
-    String multiSearchRequest=null;
+    String multiSearchRequest = null;
     if (filterForSearch.getMultiSearch() != null) {
-       multiSearchRequest = formatStringForFullTextSearchSql(filterForSearch.getMultiSearch());
+      multiSearchRequest = formatStringForFullTextSearchSql(filterForSearch.getMultiSearch());
     }
     List<Book> books = booksRepository.findBooksByFilters(filterForSearch.getUserId(),
         multiSearchRequest, filterForSearch.getCategoryId(),
-        filterForSearch.getLanguageId(),filterForSearch.getLocation());
+        filterForSearch.getLanguageId(), filterForSearch.getLocation());
 
     return BooksShortDto.from(BookShortDto.from(books));
   }
@@ -304,26 +304,26 @@ public class BooksServiceImpl implements BooksService {
 
     //add book to the history with current user
     History history = History.builder()
-            .book(book)
-            .user(user)
-            .build();
+        .book(book)
+        .user(user)
+        .build();
     historyRepository.save(history);
 
     //add book with the new owner (next user)
-    Book bookWithNewOwner =  Book.builder()
-            .bookId(book.getBookId())
-            .title(book.getTitle())
-            .author(book.getAuthor())
-            .description(book.getDescription())
-            .category(book.getCategory())
-            .language(book.getLanguage())
-            .pages(book.getPages())
-            .publisherDate(book.getPublisherDate())
-            .cover(book.getCover())
-            .owner(nextSignForBookInLine.getUser())
-            .dateCreate(book.getDateCreate())
-            .state(book.getState())
-            .build();
+    Book bookWithNewOwner = Book.builder()
+        .bookId(book.getBookId())
+        .title(book.getTitle())
+        .author(book.getAuthor())
+        .description(book.getDescription())
+        .category(book.getCategory())
+        .language(book.getLanguage())
+        .pages(book.getPages())
+        .publisherDate(book.getPublisherDate())
+        .cover(book.getCover())
+        .owner(nextSignForBookInLine.getUser())
+        .dateCreate(book.getDateCreate())
+        .state(book.getState())
+        .build();
     booksRepository.save(bookWithNewOwner);
 
     //delete from wait line
@@ -344,6 +344,24 @@ public class BooksServiceImpl implements BooksService {
     return getAllUserBooks(user);
   }
 
+  @Override
+  public AllUserBooksDto removeBookFromUserBooks(WaitLineRequestDto waitLineRequestDto) {
+    User user = getUserOrElseThrow(waitLineRequestDto.getUserId());
+    if (!securityService.isUserPermission(user.getUserId())) {
+      throw new RestException(HttpStatus.FORBIDDEN, "Not have permission");
+    }
+    List<WaitLine> queueUserAndBook = waitLinesRepository.foundQueueUserAndBook
+        (waitLineRequestDto.getBookId(), waitLineRequestDto.getUserId());
+
+    if (!queueUserAndBook.isEmpty()) {
+      waitLinesRepository.removeBookFromWaitLine(waitLineRequestDto.getBookId(), waitLineRequestDto.getUserId());
+      return getAllUserBooks(user);
+    } else {
+      throw new RestException(HttpStatus.FORBIDDEN, "The user does not have this book in the queue");
+    }
+
+  }
+
   private BooksShortDto getBookByUser(User user) {
     List<Book> books = booksRepository.findAllByOwner(user);
 
@@ -358,11 +376,11 @@ public class BooksServiceImpl implements BooksService {
     BooksShortDto booksToSend = getSendList(user.getUserId());
 
     return AllUserBooksDto.builder()
-            .booksInLibrary(booksInLibrary)
-            .booksInHistory(booksInHistory)
-            .booksInWaitLine(booksInWaitLine)
-            .booksToSend(booksToSend)
-            .build();
+        .booksInLibrary(booksInLibrary)
+        .booksInHistory(booksInHistory)
+        .booksInWaitLine(booksInWaitLine)
+        .booksToSend(booksToSend)
+        .build();
   }
 }
 
