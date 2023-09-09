@@ -15,12 +15,12 @@ import java.util.List;
 @Schema(description = "List of categories, languages and locations for filters")
 public class FilterDTO {
   @Schema(description = "List of languages")
-  private List<String> language;
+  private List<LanguageDto> language;
 
   @Schema(description = "List of locations")
   private List<String> location;
 
   @Schema(description = "List of categories")
-  private List<String> category;
+  private List<CategoryDto> category;
 
 }

@@ -238,8 +238,8 @@ public class BooksServiceImpl implements BooksService {
   @Override
   public FilterDTO getFilter() {
     return FilterDTO.builder()
-        .language(booksRepository.findLanguageForFilter())
-        .category(booksRepository.findCategoryForFilter())
+        .category(CategoryDto.from(categoriesRepository.findCategoryForFilter()))
+        .language(LanguageDto.from(languageRepository.findLanguageForFilter()))
         .location(locationRepository.findCityPostalCodeForFilter())
         .build();
   }
