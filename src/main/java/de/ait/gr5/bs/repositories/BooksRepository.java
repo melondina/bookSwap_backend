@@ -19,12 +19,6 @@ public interface BooksRepository extends JpaRepository<Book, Long> {
       "WHERE b.bookId = :bookId")
   String findLocationBook(@Param("bookId") Long bookId);
 
-  @Query("SELECT DISTINCT l.title FROM Book b JOIN b.language l")
-  List<String> findLanguageForFilter();
-
-  @Query("SELECT DISTINCT c.titleCategory FROM Book b JOIN b.category c")
-  List<String> findCategoryForFilter();
-
   @Query(value = "SELECT b FROM Book b " +
       "JOIN b.owner u " +
       "JOIN u.city c " +
