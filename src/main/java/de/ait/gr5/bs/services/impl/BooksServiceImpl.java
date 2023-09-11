@@ -115,10 +115,10 @@ public class BooksServiceImpl implements BooksService {
     if (filterForSearch.getMultiSearch() != null) {
       multiSearchRequest = formatStringForFullTextSearchSql(filterForSearch.getMultiSearch());
     }
-    if (filterForSearch.getLocation()=="") {
+    if (Objects.equals(filterForSearch.getLocation(),"")) {
       filterForSearch.setLocation(null);
     }
-    if (filterForSearch.getMultiSearch()=="") {
+    if (Objects.equals(filterForSearch.getMultiSearch(), "")) {
       filterForSearch.setMultiSearch(null);
     }
     List<Book> books = booksRepository.findBooksByFilters(filterForSearch.getUserId(),
