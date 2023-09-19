@@ -80,7 +80,7 @@ found in the swagger http://localhost:8080/swagger-ui/index.html after the proje
 
 ### 3.c. Database structure ###
 
-![DB](https://drive.google.com/uc?export=view&id=1jZdlgGFPyX92_rdtt3sUBf8nJ8UkLFiU)
+![DB](https://drive.google.com/uc?export=view&id=1RCQkpt_D7lHe2gDLYm-8Ok2_oHGS_yaA)
 
 ## 4. Tests ##
 
