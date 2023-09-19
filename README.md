@@ -35,4 +35,8 @@ Join Book Share today and be a part of this innovative book-sharing community th
 access to a wide variety of books for everyone.
 
 ### Interface ###
-![First_page](https://drive.google.com/file/d/1SOLNWrTHm6QBcY0GH3m5WieSJmKFFjyy/view?usp=sharing)
+![First_page](https://drive.google.com/uc?export=view&id=1SOLNWrTHm6QBcY0GH3m5WieSJmKFFjyy)
+![Book_page](https://drive.google.com/uc?export=view&id=1YG7zMQvU4xS1vNX1b7QQKDY9wdzh-v8e)
+![My_library](https://drive.google.com/uc?export=view&id=1yjLbQ_D7_VHD4il2ODhdBjYgBcf3Xtrv)
+
+### 
