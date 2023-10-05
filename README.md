@@ -1,4 +1,5 @@
 # BookShare project #
+
 *those who do not read - live one life, those who read - thousands*
 
 ## 1. User view ##
@@ -62,7 +63,8 @@ please:
 
 ### 3.a. Technology stack ###
 
-Model View Controller (MVC) was used as the main architectural pattern
+A RESTful application that combines programming patterns such as MVC (Model-View-Controller) and DTO (Data Transfer
+Object).
 
 + Java 17
 + Spring Framework (Boot, Web, JPA, Security, Validation, Test)
