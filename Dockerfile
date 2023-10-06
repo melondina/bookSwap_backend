@@ -32,8 +32,19 @@ FROM eclipse-temurin:17-jre-alpine
 # in other Dockerfile statements
 ARG DEPENDENCY=/workspace/app/target/dependency
 
-#todo - finish exploneishon and try to check, if it is work or not
+#This command copies the files from the ${DEPENDENCY}/BOOT-INF/lib folder (which probably contains the libraries needed
+# to run the application) to /app/lib inside the container.
 COPY --from=build ${DEPENDENCY}/BOOT-INF/lib /app/lib
+
+#This command copies files from the ${DEPENDENCY}/META-INF folder (often used for application metadata)
+#to /app/META-INF inside the container.
 COPY --from=build ${DEPENDENCY}/META-INF /app/META-INF
+
+#This command copies files from the ${DEPENDENCY}/BOOT-INF/classes folder (which probably contains your application's
+#compiled classes) to the root directory / app inside a container.
 COPY --from=build ${DEPENDENCY}/BOOT-INF/classes /app
+
+#ENTRYPOINT [...]: Эта строка определяет точку входа для контейнера. В данном случае, при запуске контейнера будет
+# выполнена команда java -cp app:app/lib/* -Dspring.profiles.active=prod de.ait.BackendDemoApplication. Это запустит
+#Java-приложение с указанными параметрами класспаса, профилем Spring (prod) и основным классом de.ait.BackendDemoApplication.
 ENTRYPOINT ["java","-cp","app:app/lib/*", "-Dspring.profiles.active=prod", "de.ait.todo.BackendDemoApplication"]
