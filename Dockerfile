@@ -47,4 +47,4 @@ COPY --from=build ${DEPENDENCY}/BOOT-INF/classes /app
 #ENTRYPOINT [...]: Эта строка определяет точку входа для контейнера. В данном случае, при запуске контейнера будет
 # выполнена команда java -cp app:app/lib/* -Dspring.profiles.active=prod de.ait.BackendDemoApplication. Это запустит
 #Java-приложение с указанными параметрами класспаса, профилем Spring (prod) и основным классом de.ait.BackendDemoApplication.
-ENTRYPOINT ["java","-cp","app:app/lib/*", "-Dspring.profiles.active=prod", "de.ait.todo.BackendDemoApplication"]
+ENTRYPOINT ["java","-cp","app:app/lib/*", "-Dspring.profiles.active=prod", "de.ait.gr5.bs.BookSwapBackendApplication"]
