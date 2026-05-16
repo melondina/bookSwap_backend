@@ -51,10 +51,16 @@ please:
 
 * download the [frontend](https://github.com/melondina/bookSwap_frontend)
   and [backend](https://github.com/melondina/bookSwap_backend) from the repositories.
-* install the PostgreSQL database and create the `book_db` database there.
+* install the PostgreSQL database and create the `book_bd` database there.
+* проверить, что служба БД запущена (командная строка se).
+* при первом запуске БД
+  * spring.sql.init.mode=always
+  * spring.sql.init.data-locations=classpath:data.sql
+* при следующих запусках
+  * spring.sql.init.mode=never
+* https://zipcodebase.com - код взят 16.05.2026 на год
 * please, check that the application.properties file from backend contains the correct address, password and username
-  for
-  your local database.
+  for your local database.
 * using the file data.sql from the \src\main\resources\sql folder, you can autofill the database with starting values.
 * please, start the backend (BookSwapBackendApplication file) and frontend (npm start) code.
 

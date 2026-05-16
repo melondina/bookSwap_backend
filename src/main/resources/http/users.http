@@ -4,7 +4,7 @@ POST http://localhost:8080/api/registration
 Content-Type: application/json
 
 {
-  "email": "n2@gmail.com",
+  "email": "test@gmail.com",
   "password": "Qwerty007!"
 }
 
@@ -21,7 +21,7 @@ POST http://localhost:8080/api/logout
 
 ### Update user
 
-PUT http://localhost:8080/api/users/2
+PUT http://localhost:8080/api/users/1
 Content-Type: application/json
 
 {

@@ -28,7 +28,7 @@ Content-Type: application/json
   "languageId": 1,
   "pages": 4008,
   "publisherDate": "2015-04-11",
-  "cover": "f:/book_db/1.jpg",
+  "cover": "f:/book_bd/1.jpg",
   "owner": 1
 }
 

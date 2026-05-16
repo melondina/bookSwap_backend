@@ -19,21 +19,43 @@ public interface BooksRepository extends JpaRepository<Book, Long> {
       "WHERE b.bookId = :bookId")
   String findLocationBook(@Param("bookId") Long bookId);
 
-  @Query(value = "SELECT b FROM Book b " +
+  /*@Query(value = "SELECT b FROM Book b " +
       "JOIN b.owner u " +
       "JOIN u.city c " +
       "WHERE (:userId IS NULL OR  u.userId  = :userId) " +
-      "AND (:multiSearch IS NULL OR " +
-      "     tsvector_match(:multiSearch) = true) " +
       "AND (:categoryId IS NULL OR  b.category.categoryId = :categoryId) " +
       "AND (:languageId IS NULL OR b.language.languageId = :languageId) " +
       "AND (:location IS NULL OR c.titleCity = :location) " +
-      "ORDER BY b.bookId DESC")
+      "ORDER BY b.bookId DESC")*/
+  @Query("""
+    SELECT b
+    FROM Book b
+    JOIN b.owner u
+    JOIN u.city c
+    WHERE (:userId IS NULL OR u.userId = :userId)
+      AND (
+            :multiSearch IS NULL OR
+            function(
+                'tsvector_match',
+                concat(
+                    coalesce(b.description, ''),
+                    ' ',
+                    coalesce(b.title, ''),
+                    ' ',
+                    coalesce(b.author, '')
+                ),
+                :multiSearch
+            ) = true
+      )
+      AND (:categoryId IS NULL OR b.category.categoryId = :categoryId)
+      AND (:languageId IS NULL OR b.language.languageId = :languageId)
+      AND (:location IS NULL OR lower(c.titleCity) = lower(:location))
+    ORDER BY b.bookId DESC
+""")
   List<Book> findBooksByFilters(@Param("userId") Long userId,
                                 @Param("multiSearch") String multiSearch,
                                 @Param("categoryId") Long categoryId,
                                 @Param("languageId") Long languageId,
                                 @Param("location") String location);
-
 
 }

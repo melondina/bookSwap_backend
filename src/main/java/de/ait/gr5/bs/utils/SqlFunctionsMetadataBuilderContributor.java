@@ -11,7 +11,8 @@ public class SqlFunctionsMetadataBuilderContributor implements MetadataBuilderCo
   public void contribute(MetadataBuilder metadataBuilder) {
     metadataBuilder.applySqlFunction("tsvector_match",
         new SQLFunctionTemplate(BooleanType.INSTANCE,
-            "to_tsvector('english', coalesce(description, '') || ' ' || coalesce(title, '') || ' ' || coalesce(author, '')) @@ to_tsquery('english', ?1)"));
+            //"to_tsvector('english', coalesce(description, '') || ' ' || coalesce(title, '') || ' ' || coalesce(author, '')) @@ to_tsquery('english', ?1)"));
+            "to_tsvector('english', ?1) @@ plainto_tsquery('english', ?2)"));
   }
 
 }

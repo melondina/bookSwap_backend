@@ -38,7 +38,7 @@ public class   BookIntegrationTest {
       .languageId(1L)
       .pages(408)
       .publisherDate("2015")
-      .cover("f:/book_db/1.jpg")
+      .cover("f:/book_bd/1.jpg")
       .owner(1L)
       .build();
 
@@ -50,7 +50,7 @@ public class   BookIntegrationTest {
       .languageId(1L)
       .pages(408)
       .publisherDate("2015")
-      .cover("f:/book_db/1.jpg")
+      .cover("f:/book_bd/1.jpg")
       .owner(1L)
       .build();
 
@@ -62,7 +62,7 @@ public class   BookIntegrationTest {
       .languageId(1L)
       .pages(408)
       .publisherDate("2015")
-      .cover("f:/book_db/1.jpg")
+      .cover("f:/book_bd/1.jpg")
       .owner(1L)
       .build();
 
@@ -74,7 +74,7 @@ public class   BookIntegrationTest {
       .languageId(1L)
       .pages(408)
       .publisherDate("2015")
-      .cover("f:/book_db/1.jpg")
+      .cover("f:/book_bd/1.jpg")
       .owner(2L)
       .build();
 
@@ -86,7 +86,7 @@ public class   BookIntegrationTest {
       .languageId(1L)
       .pages(408)
       .publisherDate("2005")
-      .cover("f:/book_db1/1.jpg")
+      .cover("f:/book_bd1/1.jpg")
       .owner(1L)
       .build();
 
@@ -98,7 +98,7 @@ public class   BookIntegrationTest {
       .languageId(1L)
       .pages(408)
       .publisherDate(" ")
-      .cover("f:/book_db1/1.jpg")
+      .cover("f:/book_bd1/1.jpg")
       .owner(1L)
       .build();
 
@@ -110,7 +110,7 @@ public class   BookIntegrationTest {
       .languageId(1L)
       .pages(408)
       .publisherDate("2005")
-      .cover("f:/book_db1/1.jpg")
+      .cover("f:/book_bd1/1.jpg")
       .owner(2L)
       .build();
 
@@ -253,7 +253,7 @@ public class   BookIntegrationTest {
           .andExpect(jsonPath("$.language", is("English")))
           .andExpect(jsonPath("$.pages", is("408")))
           .andExpect(jsonPath("$.publisherDate", is("2005")))
-          .andExpect(jsonPath("$.cover", is("f:/book_db1/1.jpg")));
+          .andExpect(jsonPath("$.cover", is("f:/book_bd1/1.jpg")));
     }
 
     @Test
